@@ -1,17 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
 
 export default function Footer() {
-  const [spinDeg, setSpinDeg] = useState(0);
   const { openJoinModal } = usePortal();
-
-  const handlePlusClick = () => {
-    setSpinDeg(prev => prev + 90);
-  };
 
   return (
     <footer className="site-footer">
@@ -20,11 +15,21 @@ export default function Footer() {
           ENGINEERING THE FUTURE
           <span
             className="plus-icon-spin"
-            onClick={handlePlusClick}
-            style={{ transform: `rotate(${spinDeg}deg)` }}
-            title="Click to spin!"
+            title="Hover to rotate"
           >
-            +
+            <svg
+              width="0.75em"
+              height="0.75em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="12" y1="4" x2="12" y2="20" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+            </svg>
           </span>
           OF FINANCIAL TECH
         </div>

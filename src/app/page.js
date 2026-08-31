@@ -28,7 +28,7 @@ const DOMAINS_DATA = [
     title: 'AI & Machine Learning in Finance',
     desc: 'Transformer networks for market regime forecasting, sentiment extraction from financial SEC filings, and credit scoring.',
     tags: ['PyTorch', 'LLMs', 'Transformer', 'Risk AI'],
-    theme: 'blue'
+    theme: 'dark'
   },
   {
     num: '04',
@@ -313,31 +313,8 @@ export default function HomePage() {
         </div>
 
         <div className="domains-habito-container">
-          {DOMAINS_DATA.slice(0, 3).map((domain, index) => (
-            <div key={index} className={`habito-col ${index === 2 ? 'col-wide' : 'col-small'}`}>
-              <div className="habito-col-header">
-                <span className="habito-col-title">TRACK {domain.num}</span>
-                <span className="habito-col-year">2026</span>
-              </div>
-              <div className={`habito-card habito-card-${domain.theme}`}>
-                <div className="habito-card-inner">
-                  <span className="habito-card-badge">{domain.num}</span>
-                  <h3 className="habito-card-heading">{domain.title}</h3>
-                  <p className="habito-card-text">{domain.desc}</p>
-                  <div className="habito-card-tags">
-                    {domain.tags.map((tag, tIdx) => (
-                      <span key={tIdx}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="domains-habito-container alt-layout" style={{ marginTop: '24px' }}>
-          {DOMAINS_DATA.slice(3, 6).map((domain, index) => (
-            <div key={index} className={`habito-col ${index === 0 ? 'col-wide' : 'col-small'}`}>
+          {DOMAINS_DATA.map((domain, index) => (
+            <div key={index} className="habito-col">
               <div className="habito-col-header">
                 <span className="habito-col-title">TRACK {domain.num}</span>
                 <span className="habito-col-year">2026</span>
