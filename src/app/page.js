@@ -131,7 +131,6 @@ const ORBIT_TAGS = ['QUANT', 'ALGO', 'DEFI', 'AI', 'RISK', 'HFT'];
 
 export default function HomePage() {
   const [moneyWordIndex, setMoneyWordIndex] = useState(0);
-  const [eventsTab, setEventsTab] = useState('upcoming');
   const [flippedCards, setFlippedCards] = useState({});
   const { events, openDetailModal, openJoinModal } = usePortal();
 
@@ -149,10 +148,7 @@ export default function HomePage() {
 
   // Only Super-Admin-approved events are ever shown publicly.
   const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
-  const filteredEvents = approvedEvents.filter(evt => {
-    if (eventsTab === 'upcoming') return !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past');
-    return evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past');
-  });
+  const upcomingEvents = approvedEvents.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
 
   return (
     <div className="home-wrapper">
@@ -345,24 +341,16 @@ export default function HomePage() {
             <div className="events-tabs">
               <button
                 type="button"
-                className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
-                onClick={() => setEventsTab('upcoming')}
+                className="tab-btn active"
               >
-                UPCOMING
-              </button>
-              <button
-                type="button"
-                className={`tab-btn ${eventsTab === 'past' ? 'active' : ''}`}
-                onClick={() => setEventsTab('past')}
-              >
-                PAST SESSIONS
+                UPCOMING SESSIONS
               </button>
             </div>
           </div>
 
           <div className="events-marquee-wrapper">
             <div className="events-marquee-track">
-              {filteredEvents.map((evt, idx) => (
+              {upcomingEvents.map((evt, idx) => (
                 <div
                   key={evt.id}
                   className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
