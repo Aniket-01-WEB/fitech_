@@ -1589,31 +1589,41 @@ canvas{display:block}
 
 .team-marquee-wrapper {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
   position: relative;
   padding: 16px 0 40px;
-  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
   touch-action: pan-y;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.team-marquee-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.team-marquee-wrapper.is-grabbing {
+  cursor: grabbing !important;
+}
+
 .team-marquee-track {
   display: flex;
   gap: 28px;
   width: max-content;
-  will-change: transform;
 }
 
 .team-card {
-  width: 300px;
+  width: 290px;
   height: 380px;
   flex-shrink: 0;
-  border-radius: 24px;
+  border-radius: 20px;
   position: relative;
   perspective: 1000px;
-  cursor: pointer;
+  cursor: default;
   padding: 0 !important;
   background: transparent !important;
   border: none !important;
@@ -1625,9 +1635,9 @@ canvas{display:block}
   width: 100%;
   height: 100%;
   text-align: center;
-  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   transform-style: preserve-3d;
-  border-radius: 24px;
+  border-radius: 20px;
   will-change: transform;
 }
 
@@ -1635,12 +1645,13 @@ canvas{display:block}
   transform: rotateY(180deg);
 }
 
-.flip-card-front, .flip-card-back {
+.flip-card-front,
+.flip-card-back {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: 24px;
+  border-radius: 20px;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
@@ -1648,18 +1659,8 @@ canvas{display:block}
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 36px 24px;
+  padding: 32px 24px;
   box-sizing: border-box;
-  will-change: transform;
-}
-
-.team-avatar,
-.team-linkedin,
-.flip-hint,
-.team-name {
-  transform-style: preserve-3d;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  will-change: transform;
 }
 
 .flip-card-front {
@@ -1667,100 +1668,223 @@ canvas{display:block}
   transform: rotateY(0deg);
 }
 
-.flip-card-front.has-bg-img {
-  background-size: cover;
-  background-position: center 15%;
-  background-repeat: no-repeat;
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 24px;
-  overflow: hidden;
-}
-
-.flip-card-front.has-bg-img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(15,23,42,0.65) 0%, rgba(15,23,42,0.1) 40%, transparent 70%);
-  border-radius: 24px;
-  z-index: 1;
-}
-
-.flip-card-front.has-bg-img .team-linkedin,
-.flip-card-front.has-bg-img .flip-hint {
-  position: relative;
-  z-index: 2;
-  color: #ffffff!important;
-}
-
-.flip-card-front.has-bg-img .team-linkedin {
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #ffffff!important;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .flip-card-back {
   transform: rotateY(180deg);
   z-index: 1;
 }
 
-.team-card.theme-white .flip-card-front,
-.team-card.theme-white .flip-card-back {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.06);
-}
-.team-card.theme-white .flip-card-back .team-name {
-  color: #0f172a;
-}
-.team-card.theme-white .team-avatar {
-  background: #f1f5f9;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
-}
-
-.team-card.theme-black .flip-card-front,
-.team-card.theme-black .flip-card-back {
-  background: #0f172a;
-  border: 1px solid #1e293b;
-  box-shadow: 0 24px 56px rgba(15,23,42,0.35);
-}
-.team-card.theme-black .flip-card-back .team-name {
-  color: #ffffff;
-}
-.team-card.theme-black .team-avatar {
-  background: #1e293b;
-  color: #ffffff;
-  border: 1px solid #334155;
+/* Image Frame */
+.team-image-frame {
+  width: 135px;
+  height: 135px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.team-role-label {
-  font-size: 12px;
-  font-weight: 700;
+.team-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Typography & Base Components */
+.team-name {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  margin: 0 0 20px 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 8px;
-  opacity: 0.7;
+  line-height: 1.1;
+}
+
+.team-role-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 8px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .flip-hint {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.8px;
-  margin-top: 18px;
-  text-transform: uppercase;
-  opacity: 0.55;
-  color: inherit;
+  letter-spacing: 1px;
+  margin-top: auto;
+}
+
+.team-bio-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 12px 0;
+}
+
+.team-linkedin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-family: var(--font-heading);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: auto;
+}
+
+/* ==========================================================================
+   THEME 1: BLACK / DARK AESTHETIC (.theme-black)
+   ========================================================================== */
+.team-card.theme-black .flip-card-front,
+.team-card.theme-black .flip-card-back {
+  background: #0e172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 48px rgba(10, 15, 30, 0.4);
+}
+
+.team-card.theme-black .team-image-frame {
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+.team-card.theme-black .team-empty-avatar {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.team-card.theme-black .team-name {
+  color: #ffffff;
+}
+
+.team-card.theme-black .team-role-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+.team-card.theme-black .flip-hint {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.team-card.theme-black .team-bio-text {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.team-card.theme-black .team-linkedin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff !important;
+}
+
+.team-card.theme-black .team-linkedin-btn:hover {
+  background: #ffffff;
+  color: #0e172a !important;
+}
+
+/* ==========================================================================
+   THEME 2: LIGHT AESTHETIC (.theme-white)
+   ========================================================================== */
+.team-card.theme-white .flip-card-front,
+.team-card.theme-white .flip-card-back {
+  background: linear-gradient(155deg, #ffffff 0%, #f8fafc 45%, #eef2f6 100%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 
+    0 20px 42px -10px rgba(15, 23, 42, 0.1),
+    0 6px 16px -4px rgba(15, 23, 42, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.team-card.theme-white:hover .flip-card-front,
+.team-card.theme-white:hover .flip-card-back {
+  border-color: #cbd5e1;
+  box-shadow: 
+    0 28px 56px -12px rgba(15, 23, 42, 0.16),
+    0 10px 24px -6px rgba(15, 23, 42, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.team-card.theme-white .team-image-frame {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border: 3px solid #ffffff;
+  box-shadow: 
+    0 8px 24px -4px rgba(15, 23, 42, 0.14),
+    0 2px 6px -1px rgba(15, 23, 42, 0.08),
+    inset 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.team-card.theme-white .team-empty-avatar {
+  font-family: var(--font-heading);
+  font-size: 34px;
+  font-weight: 800;
+  color: #475569;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.team-card.theme-white .team-name {
+  color: #0e172a; /* Dark navy - same as background color of dark theme cards */
+  text-shadow: none;
+}
+
+.team-card.theme-white .team-role-pill {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a; /* Deep black text */
+  box-shadow: 
+    0 3px 10px rgba(15, 23, 42, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+}
+
+.team-card.theme-white .flip-hint {
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.team-card.theme-white .team-bio-text {
+  color: #334155;
+  font-weight: 500;
+}
+
+.team-card.theme-white .team-linkedin-btn {
+  background: #0f172a;
+  border: 1px solid #0f172a;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  font-weight: 700;
+}
+
+.team-card.theme-white .team-linkedin-btn:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.28);
+  transform: translateY(-2px);
 }
 
 .team-avatar{

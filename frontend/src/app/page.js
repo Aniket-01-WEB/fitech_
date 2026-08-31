@@ -88,54 +88,143 @@ const PROJECTS_DATA = [
     category: 'QUANT RESEARCH',
     desc: 'Deep learning pipeline predicting implied volatility surfaces across multi-asset option chains.',
     tags: ['PyTorch', 'Options', 'SVI', 'ML']
-  },
-  {
-    num: '04',
-    name: 'MEV Sandwich Protection RPC',
-    category: 'WEB3 INFRASTRUCTURE',
-    desc: 'Private transaction routing RPC node shielding retail Swaps from front-running and sandwich attacks.',
-    tags: ['Rust', 'Geth', 'MEV', 'Ethereum']
   }
 ];
 
 const TEAM_DATA = [
   {
-    name: 'ANIKET',
-    role: 'FOUNDER & PRESIDENT',
+    name: 'ARIJIT DEY',
+    role: 'PRESIDENT',
     avatar: 'A',
-    image: '/prof_file/aniket_prof.jpg',
+    image: null,
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
   {
-    name: 'GOURAV',
-    role: 'HEAD OF QUANT RESEARCH',
+    name: 'DIGANT MISHRA',
+    role: 'PRESIDENT',
+    avatar: 'D',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'PRITESH SHRIVASTAV',
+    role: 'V. PRESIDENT',
+    avatar: 'P',
+    image: '/prof_file/pritesh.jpeg',
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'SHIVAM JAISWAL',
+    role: 'V. PRESIDENT',
+    avatar: 'S',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'SOUVIK BANDOPADHYA',
+    role: 'SECRETARY',
+    avatar: 'S',
+    image: '/prof_file/souvik.jpeg',
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'AVIRUP CHATTERJEE',
+    role: 'JT. SECRETARY',
+    avatar: 'A',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'ARNAB MANDAL',
+    role: 'MEDIA LEAD',
+    avatar: 'A',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'AZAD HUSSAIN',
+    role: 'ASST. MEDIA',
+    avatar: 'A',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'NORCHEN GOLAY',
+    role: 'ASST. MEDIA',
+    avatar: 'N',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'ANIKET DUTTA',
+    role: 'TECH LEAD',
+    avatar: 'A',
+    image: '/prof_file/aniket.jpeg',
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'SHORYA SINGH',
+    role: 'ASST. TECH',
+    avatar: 'S',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'AYUSH JAISWAL',
+    role: 'ASST. TECH',
+    avatar: 'A',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'GOURAV GHOSH',
+    role: 'DESIGN LEAD',
     avatar: 'G',
-    image: '/prof_file/gourav_prof.jpg',
-    linkedin: 'https://linkedin.com',
-    theme: 'theme-white'
-  },
-  {
-    name: 'ADITYA',
-    role: 'ALGO TRADING LEAD',
-    avatar: 'A',
-    image: '/prof_file/aditya_prof.jpg',
+    image: '/prof_file/Gourav.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
   {
-    name: 'VANSH',
-    role: 'DEFI ARCHITECT',
-    avatar: 'V',
-    image: '/prof_file/vansh_prof.jpg',
-    linkedin: 'https://linkedin.com',
-    theme: 'theme-white'
-  },
-  {
-    name: 'PRIYA',
-    role: 'AI IN FINANCE LEAD',
+    name: 'PRITAM BARAI',
+    role: 'ASST. DESIGN',
     avatar: 'P',
     image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'SAYAN SHEIKH',
+    role: 'SOCIAL LEAD',
+    avatar: 'S',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'PRIYAM CHHETRI',
+    role: 'ASST. SOCIAL',
+    avatar: 'P',
+    image: null,
+    linkedin: 'https://linkedin.com',
+    theme: 'theme-black'
+  },
+  {
+    name: 'DEBJIT MODAK',
+    role: 'DOCUMENTATION',
+    avatar: 'D',
+    image: '/prof_file/debjit.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   }
@@ -149,6 +238,13 @@ export default function HomePage() {
   const [flippedCards, setFlippedCards] = useState({});
   const sequenceIndexRef = useRef(0);
   const { events, openDetailModal, openJoinModal } = usePortal();
+
+  const teamWrapperRef = useRef(null);
+  const isMouseDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const isDraggingRef = useRef(false);
+  const [isGrabbing, setIsGrabbing] = useState(false);
 
   // Hero Money Ticker dynamic duration sequence
   useEffect(() => {
@@ -169,16 +265,94 @@ export default function HomePage() {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // Team Slider continuous scroll & drag setup
+  useEffect(() => {
+    const wrapper = teamWrapperRef.current;
+    if (!wrapper) return;
+
+    // Start in the middle set of duplicated items for bidirectional drag room
+    wrapper.scrollLeft = wrapper.scrollWidth / 3;
+
+    let animationFrameId;
+    const speed = 0.8;
+
+    const step = () => {
+      if (!isMouseDownRef.current && wrapper) {
+        wrapper.scrollLeft -= speed;
+        if (wrapper.scrollLeft <= 0) {
+          wrapper.scrollLeft += wrapper.scrollWidth / 3;
+        } else if (wrapper.scrollLeft >= (wrapper.scrollWidth * 2) / 3) {
+          wrapper.scrollLeft -= wrapper.scrollWidth / 3;
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
+
+  const handleTeamMouseDown = (e) => {
+    isMouseDownRef.current = true;
+    isDraggingRef.current = false;
+    const wrapper = teamWrapperRef.current;
+    if (!wrapper) return;
+    startXRef.current = e.pageX - wrapper.offsetLeft;
+    scrollLeftRef.current = wrapper.scrollLeft;
+    setIsGrabbing(true);
+  };
+
+  const handleTeamMouseMove = (e) => {
+    if (!isMouseDownRef.current) return;
+    const wrapper = teamWrapperRef.current;
+    if (!wrapper) return;
+    e.preventDefault();
+    const x = e.pageX - wrapper.offsetLeft;
+    const walk = (x - startXRef.current) * 1.5;
+    if (Math.abs(walk) > 5) {
+      isDraggingRef.current = true;
+    }
+    wrapper.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const handleTeamMouseUp = () => {
+    isMouseDownRef.current = false;
+    setIsGrabbing(false);
+  };
+
+  const handleTeamTouchStart = (e) => {
+    isMouseDownRef.current = true;
+    isDraggingRef.current = false;
+    const wrapper = teamWrapperRef.current;
+    if (!wrapper) return;
+    startXRef.current = e.touches[0].pageX - wrapper.offsetLeft;
+    scrollLeftRef.current = wrapper.scrollLeft;
+  };
+
+  const handleTeamTouchMove = (e) => {
+    if (!isMouseDownRef.current) return;
+    const wrapper = teamWrapperRef.current;
+    if (!wrapper) return;
+    const x = e.touches[0].pageX - wrapper.offsetLeft;
+    const walk = (x - startXRef.current) * 1.5;
+    if (Math.abs(walk) > 5) {
+      isDraggingRef.current = true;
+    }
+    wrapper.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const handleTeamTouchEnd = () => {
+    isMouseDownRef.current = false;
+  };
+
   const handleCardFlip = (index) => {
+    if (isDraggingRef.current) return;
     setFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
   // Only Super-Admin-approved events are ever shown publicly.
   const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
-  const filteredEvents = approvedEvents.filter(evt => {
-    if (eventsTab === 'upcoming') return !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past');
-    return evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past');
-  });
+  const upcomingEvents = approvedEvents.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
 
   return (
     <div className="home-wrapper">
@@ -314,31 +488,21 @@ export default function HomePage() {
               />
               <button
                 type="button"
-                className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
-                onClick={() => setEventsTab('upcoming')}
+                className="tab-btn active"
               >
-                UPCOMING
-              </button>
-              <button
-                type="button"
-                className={`tab-btn ${eventsTab === 'past' ? 'active' : ''}`}
-                onClick={() => setEventsTab('past')}
-              >
-                PAST SESSIONS
+                UPCOMING SESSIONS
               </button>
             </div>
           </div>
 
           <div className="events-marquee-wrapper">
-            {filteredEvents.length === 0 ? (
+            {upcomingEvents.length === 0 ? (
               <div className="empty-events-box">
-                <p className="empty-events-text">
-                  {eventsTab === 'upcoming' ? 'No upcoming events.' : 'No past sessions.'}
-                </p>
+                <p className="empty-events-text">No upcoming events.</p>
               </div>
             ) : (
               <div className="events-marquee-track">
-                {filteredEvents.map((evt, idx) => (
+                {upcomingEvents.map((evt, idx) => (
                   <div
                     key={evt.id}
                     className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
@@ -395,36 +559,32 @@ export default function HomePage() {
         <div className="container">
           <h2 className="section-title">CORE LEADERSHIP</h2>
 
-          <div className="team-marquee-wrapper">
+          <div
+            ref={teamWrapperRef}
+            className={`team-marquee-wrapper ${isGrabbing ? 'is-grabbing' : ''}`}
+            onMouseDown={handleTeamMouseDown}
+            onMouseMove={handleTeamMouseMove}
+            onMouseUp={handleTeamMouseUp}
+            onMouseLeave={handleTeamMouseUp}
+            onTouchStart={handleTeamTouchStart}
+            onTouchMove={handleTeamTouchMove}
+            onTouchEnd={handleTeamTouchEnd}
+          >
             <div className="team-marquee-track">
-              {TEAM_DATA.map((member, idx) => (
+              {[...TEAM_DATA, ...TEAM_DATA, ...TEAM_DATA].map((member, idx) => (
                 <div
                   key={idx}
-                  className={`team-card ${member.theme} ${flippedCards[idx] ? 'flipped' : ''}`}
-                  onClick={() => handleCardFlip(idx)}
+                  className="team-card theme-black"
                 >
                   <div className="flip-card-inner">
-                    <div className={`flip-card-front ${member.image ? 'has-bg-img' : ''}`} style={member.image ? { backgroundImage: `url(${member.image})` } : {}}>
-                      {!member.image && <div className="team-avatar">{member.avatar}</div>}
+                    <div className="flip-card-front">
+                      <div className="team-image-frame">
+                        {member.image && (
+                          <img src={member.image} alt={member.name} className="team-img" />
+                        )}
+                      </div>
                       <h3 className="team-name">{member.name}</h3>
-                      <span className="team-role-label">{member.role}</span>
-                      <span className="flip-hint">TAP TO FLIP ↵</span>
-                    </div>
-                    <div className="flip-card-back">
-                      <h3 className="team-name">{member.name}</h3>
-                      <span className="team-role">{member.role}</span>
-                      <p style={{ fontSize: '12px', lineHeight: '1.5', margin: '12px 0' }}>
-                        Leading research and software architecture for MATRIX FinTech Club.
-                      </p>
-                      <a
-                        href={member.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="team-linkedin"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        LinkedIn ↗
-                      </a>
+                      <span className="team-role-pill">{member.role}</span>
                     </div>
                   </div>
                 </div>
