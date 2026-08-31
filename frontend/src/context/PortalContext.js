@@ -287,6 +287,32 @@ export function PortalProvider({ children }) {
     setCurrentUser(null);
   };
 
+  // ---- password reset (email OTP) ----
+  // Step 1: Supabase emails a 6-digit recovery code to a registered
+  // address (requires the project's Reset Password template to include
+  // {{ .Token }}, and custom SMTP configured to send from the club's
+  // address — both are dashboard-side settings, not app code).
+  const requestPasswordReset = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) throw new Error(error.message);
+  };
+
+  // Step 2: verifying the code proves the applicant owns that inbox and
+  // hands back a real (temporary) Supabase session — no service-role key
+  // involved, this is the standard client-side recovery flow.
+  const verifyPasswordResetOtp = async (email, token) => {
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: 'recovery' });
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  // Step 3: with that recovery session active, the user can set their own
+  // new password directly.
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw new Error(error.message);
+  };
+
   // ---- events ----
   const createEvent = async (eventData) => {
     await api.post('/api/events', {
@@ -521,6 +547,9 @@ export function PortalProvider({ children }) {
         login,
         signUp,
         logout,
+        requestPasswordReset,
+        verifyPasswordResetOtp,
+        updatePassword,
         events,
         createEvent,
         updateEvent,

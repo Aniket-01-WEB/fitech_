@@ -204,7 +204,8 @@ export default function AdminPortalPage() {
                 MATRIX CLUB ADMINISTRATION
               </h1>
               <p style={{ color: '#a1a1aa', fontSize: '14px', margin: 0 }}>
-                Authenticated as: <strong style={{ color: '#ffffff' }}>{currentUser.email}</strong>
+                Authenticated as: <strong style={{ color: '#ffffff' }}>{currentUser.name || currentUser.email}</strong>
+                {currentUser.name && <span style={{ color: '#71717a' }}> ({currentUser.email})</span>}
               </p>
             </div>
 

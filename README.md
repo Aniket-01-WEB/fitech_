@@ -24,6 +24,21 @@ Demo accounts (`student@matrix.club` / `admin@matrix.club`, password `MatrixDemo
 
 See each app's own README ([frontend](frontend/README.md), [backend](backend/README.md)) for app-specific details.
 
+## Forgot password (email OTP)
+
+The login page has a full "Forgot password?" flow, entirely client-side against Supabase Auth (no service-role key, no custom backend endpoint needed — this is the standard recovery flow):
+
+1. Enter your registered email → `supabase.auth.resetPasswordForEmail(email)` sends a 6-digit code.
+2. Enter that code → `supabase.auth.verifyOtp({ email, token, type: 'recovery' })` proves you own the inbox and opens a temporary session.
+3. Set a new password → `supabase.auth.updateUser({ password })` on that session.
+
+**This needs two one-time settings in the Supabase dashboard before it can actually deliver mail** — I can't configure either from here, they require dashboard access:
+
+- **Authentication → Settings → SMTP Settings**: turn on custom SMTP using `fitech.soet@gmail.com`'s credentials (an [App Password](https://myaccount.google.com/apppasswords), not the regular Gmail password — Gmail SMTP is `smtp.gmail.com`, port `587`). Without this, all auth email (signup confirmation *and* password reset) goes through Supabase's shared test sender, which is heavily rate-limited — this project already hit that limit today.
+- **Authentication → Email Templates → Reset Password**: the default template only shows a "Reset Password" link. Add `{{ .Token }}` to the template body so the email actually displays the 6-digit code the UI asks the user to type in.
+
+Until both are set, "Forgot password?" will show a "email rate limit exceeded" (or similar) error — that's Supabase's own sender, not a bug in the flow itself; I verified the code path is correct and fails cleanly.
+
 ## Database
 
 Supabase Postgres, project id `cpainkjljrjjwzdgdewz`. Schema, RLS policies, and triggers live entirely in SQL migrations under `backend/supabase/migrations/`, applied directly to the project.

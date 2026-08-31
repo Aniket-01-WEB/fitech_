@@ -54,7 +54,7 @@ export default function SuperAdminPortalPage() {
                 MATRIX CLUB SUPER ADMIN
               </h1>
               <p style={{ color: '#ddd6fe', fontSize: '14px' }}>
-                Authenticated as: <strong style={{ color: '#ffffff' }}>{currentUser.email}</strong> — final approver for all club events.
+                Authenticated as: <strong style={{ color: '#ffffff' }}>{currentUser.name || currentUser.email}</strong> — final approver for all club events.
               </p>
             </div>
 
