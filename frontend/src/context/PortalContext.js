@@ -8,8 +8,8 @@ const KEYS = {
   REGISTRATIONS: 'matrix_student_registrations',
   MEMBERS: 'matrix_members',
   RECORDINGS: 'matrix_recordings',
-  ACTIVITY: 'matrix_student_activity',
-  NOTES: 'matrix_notes'
+  NOTES: 'matrix_notes',
+  ACTIVITY: 'matrix_student_activity'
 };
 
 // Shared domain/track options — used by the Join form, the Notes uploader, and profile editing.
@@ -19,6 +19,48 @@ export const DOMAIN_OPTIONS = [
   'AI & Machine Learning in Finance',
   'Risk Analytics & Economic Modeling',
   'High-Frequency Trading & Systems'
+];
+
+const SEED_NOTES = [
+  {
+    id: 'note-1',
+    title: 'Quantitative Portfolio Optimization & Mean-Variance Matrix Guide',
+    domain: 'Quantitative Finance & Algo Trading',
+    fileType: 'PDF / Mathematical Guide',
+    description: 'Comprehensive derivation of Markowitz efficient frontier, Lagrange multipliers, Sharpe ratio maximization, and shrinkage covariance estimators in Python.',
+    topics: ['Mean-Variance Frontier', 'Covariance Shrinkage', 'Sharpe Optimization', 'Python Scipy Implementation'],
+    fileName: '',
+    fileData: '',
+    link: '',
+    uploadedBy: 'admin@matrix.club',
+    uploadedAt: 1770000000000
+  },
+  {
+    id: 'note-2',
+    title: 'Stochastic Calculus & Black-Scholes Volatility Formulations',
+    domain: 'Risk Analytics & Economic Modeling',
+    fileType: 'Formula Sheet / Lecture Notes',
+    description: "Itô's Lemma derivations, risk-neutral valuation formulas, Greeks sensitivity matrix, and Monte Carlo path simulation algorithms.",
+    topics: ["Itô's Lemma", 'Black-Scholes PDE', 'The Greeks (Delta, Gamma, Vega)', 'Monte Carlo Simulation'],
+    fileName: '',
+    fileData: '',
+    link: '',
+    uploadedBy: 'admin@matrix.club',
+    uploadedAt: 1771000000000
+  },
+  {
+    id: 'note-3',
+    title: 'High-Frequency Order Book Simulation & C++ Architecture',
+    domain: 'High-Frequency Trading & Systems',
+    fileType: 'Technical Architecture Doc',
+    description: 'Lock-free ring buffers, cache line alignment, CPU pinning (isolcpus), and Level 2 order book reconstructor patterns in C++20.',
+    topics: ['L2 Order Book Rebuilding', 'Lock-free Ring Buffers', 'Cache Locality', 'C++20 Memory Model'],
+    fileName: '',
+    fileData: '',
+    link: '',
+    uploadedBy: 'admin@matrix.club',
+    uploadedAt: 1772000000000
+  }
 ];
 
 const SEED_RECORDINGS = [
@@ -253,41 +295,16 @@ const SEED_ACTIVITY = {
   }
 };
 
-const SEED_NOTES = [
-  {
-    id: 'note-1',
-    title: 'Order Book Microstructure — Cheat Sheet',
-    domain: 'High-Frequency Trading & Systems',
-    description: 'Quick-reference notes on limit order book depth, queue priority, and matching engine mechanics from the HFT masterclass.',
-    fileName: 'order-book-cheatsheet.pdf',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1770000000000
-  },
-  {
-    id: 'note-2',
-    title: 'AMM Invariant Derivations',
-    domain: 'DeFi & Blockchain Infrastructure',
-    description: 'Step-by-step derivation of the constant product formula and concentrated liquidity math covered in the DeFi engineering session.',
-    fileName: 'amm-invariants.pdf',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1771000000000
-  }
-];
-
 const PortalContext = createContext();
 
 export function PortalProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [events, setEvents] = useState(SEED_EVENTS);
   const [recordings, setRecordings] = useState(SEED_RECORDINGS);
+  const [notes, setNotes] = useState(SEED_NOTES);
   const [members, setMembers] = useState(SEED_MEMBERS);
   const [registrations, setRegistrations] = useState(SEED_REGISTRATIONS);
   const [activity, setActivity] = useState(SEED_ACTIVITY);
-  const [notes, setNotes] = useState(SEED_NOTES);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals state
@@ -307,6 +324,9 @@ export function PortalProvider({ children }) {
       const storedRecordings = localStorage.getItem(KEYS.RECORDINGS);
       if (storedRecordings) setRecordings(JSON.parse(storedRecordings));
 
+      const storedNotes = localStorage.getItem(KEYS.NOTES);
+      if (storedNotes) setNotes(JSON.parse(storedNotes));
+
       const storedMembers = localStorage.getItem(KEYS.MEMBERS);
       if (storedMembers) setMembers(JSON.parse(storedMembers));
 
@@ -315,9 +335,6 @@ export function PortalProvider({ children }) {
 
       const storedAct = localStorage.getItem(KEYS.ACTIVITY);
       if (storedAct) setActivity(JSON.parse(storedAct));
-
-      const storedNotes = localStorage.getItem(KEYS.NOTES);
-      if (storedNotes) setNotes(JSON.parse(storedNotes));
     } catch (err) {
       console.error('Failed to load from localStorage:', err);
     } finally {
@@ -349,7 +366,6 @@ export function PortalProvider({ children }) {
     } catch (e) {}
   };
 
-  // Event actions
   // New events always start as a pending request — a Super Admin must approve
   // them before they appear as an "upcoming event" in the student portal.
   const createEvent = (eventData) => {
@@ -550,17 +566,21 @@ export function PortalProvider({ children }) {
     saveStorage(KEYS.RECORDINGS, updated);
   };
 
-  // Notes management (admin uploads, students read/download)
+  // Notes management (admin uploads, students read/download). Merges the
+  // richer catalog fields (fileType label, topics tags) with an actual
+  // attachable file (fileData, a base64 data URL) or external link.
   const saveNote = (noteData) => {
     const newNote = {
       id: 'note-' + Date.now(),
       title: noteData.title,
       domain: noteData.domain || DOMAIN_OPTIONS[0],
+      fileType: noteData.fileType || 'PDF / Notes',
       description: noteData.description || '',
+      topics: noteData.topics && noteData.topics.length ? noteData.topics : ['Study Material'],
       fileName: noteData.fileName || '',
       fileData: noteData.fileData || '',
       link: noteData.link || '',
-      uploadedBy: currentUser ? currentUser.email : 'admin@matrix.club',
+      uploadedBy: noteData.author || (currentUser ? currentUser.email : 'admin@matrix.club'),
       uploadedAt: Date.now()
     };
     const updated = [newNote, ...notes];

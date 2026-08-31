@@ -3,10 +3,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import MatrixCanvas from '@/components/MatrixCanvas';
 import { usePortal } from '@/context/PortalContext';
 
-const MONEY_WORDS = ['MONEY', 'PAISA', 'DHARMA', 'ARGENT', 'GELD', 'DINERO', 'CURRENCY', 'CAPITAL'];
+const WORD_SEQUENCE = [
+  // 10 multilingual money words dropping rapidly at 0.2s (200ms) each
+  { word: 'MONEY', duration: 200 },
+  { word: 'पैसा (Paisa)', duration: 200 },
+  { word: 'টাকা (Taka)', duration: 200 },
+  { word: 'பணம் (Paṇam)', duration: 200 },
+  { word: 'డబ్బు (Dabbu)', duration: 200 },
+  { word: 'ಹಣ (Haṇa)', duration: 200 },
+  { word: 'पैसे (Paise)', duration: 200 },
+  { word: 'પૈસા (Paisa)', duration: 200 },
+  { word: 'Argent', duration: 200 },
+  { word: 'Dinero', duration: 200 },
+  { word: 'お金 (Okane)', duration: 200 },
+  // Followed by continuation words with longer 2s duration (2000ms)
+  { word: 'CURRENCY', duration: 2000 },
+  { word: 'CAPITAL', duration: 2000 },
+];
 
 const DOMAINS_DATA = [
   {
@@ -28,7 +43,7 @@ const DOMAINS_DATA = [
     title: 'AI & Machine Learning in Finance',
     desc: 'Transformer networks for market regime forecasting, sentiment extraction from financial SEC filings, and credit scoring.',
     tags: ['PyTorch', 'LLMs', 'Transformer', 'Risk AI'],
-    theme: 'blue'
+    theme: 'dark'
   },
   {
     num: '04',
@@ -130,17 +145,29 @@ const TEAM_DATA = [
 const ORBIT_TAGS = ['QUANT', 'ALGO', 'DEFI', 'AI', 'RISK', 'HFT'];
 
 export default function HomePage() {
-  const [moneyWordIndex, setMoneyWordIndex] = useState(0);
+  const [currentWord, setCurrentWord] = useState(WORD_SEQUENCE[0].word);
   const [eventsTab, setEventsTab] = useState('upcoming');
   const [flippedCards, setFlippedCards] = useState({});
+  const sequenceIndexRef = useRef(0);
   const { events, openDetailModal, openJoinModal } = usePortal();
 
-  // Hero Money Ticker effect
+  // Hero Money Ticker dynamic duration sequence
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMoneyWordIndex(prev => (prev + 1) % MONEY_WORDS.length);
-    }, 1200);
-    return () => clearInterval(interval);
+    let timeoutId;
+
+    const runSequence = () => {
+      const currentItem = WORD_SEQUENCE[sequenceIndexRef.current];
+      setCurrentWord(currentItem.word);
+
+      timeoutId = setTimeout(() => {
+        sequenceIndexRef.current = (sequenceIndexRef.current + 1) % WORD_SEQUENCE.length;
+        runSequence();
+      }, currentItem.duration);
+    };
+
+    runSequence();
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const handleCardFlip = (index) => {
@@ -158,10 +185,6 @@ export default function HomePage() {
     <div className="home-wrapper">
       {/* 1. HERO SECTION */}
       <section className="habito-hero">
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <MatrixCanvas />
-        </div>
-
         <div className="habito-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="habito-hero-top">
             <div className="habito-media-col">
@@ -184,7 +207,7 @@ export default function HomePage() {
               <h1 className="habito-main-title">
                 WE MAKE
                 <br />
-                <span className="hero-money-ticker">{MONEY_WORDS[moneyWordIndex]}</span>
+                <span className="hero-money-ticker">{currentWord}</span>
                 <br />
                 WORK FOR YOU
               </h1>
@@ -210,77 +233,18 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        <div className="habito-ticker-bar">
-          <div className="habito-ticker-track">
-            <div className="habito-ticker-content">
-              <span>QUANTITATIVE FINANCE</span><span className="dot">•</span>
-              <span>ALGORITHMIC TRADING</span><span className="dot">•</span>
-              <span>DECENTRALIZED FINANCE</span><span className="dot">•</span>
-              <span>ARTIFICIAL INTELLIGENCE IN MARKETS</span><span className="dot">•</span>
-              <span>HIGH FREQUENCY ORDER BOOKS</span><span className="dot">•</span>
-            </div>
-            <div className="habito-ticker-content">
-              <span>QUANTITATIVE FINANCE</span><span className="dot">•</span>
-              <span>ALGORITHMIC TRADING</span><span className="dot">•</span>
-              <span>DECENTRALIZED FINANCE</span><span className="dot">•</span>
-              <span>ARTIFICIAL INTELLIGENCE IN MARKETS</span><span className="dot">•</span>
-              <span>HIGH FREQUENCY ORDER BOOKS</span><span className="dot">•</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. STATS STRIP */}
-      <section className="stats">
-        <div className="container">
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-number">500<span className="stat-plus">+</span></span>
-              <span className="stat-label">Active Members</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <span className="stat-number">12<span className="stat-plus">+</span></span>
-              <span className="stat-label">Quant Models Built</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <span className="stat-number">$2.4M<span className="stat-plus">+</span></span>
-              <span className="stat-label">Simulated Trading Vol</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <span className="stat-number">100<span className="stat-plus">%</span></span>
-              <span className="stat-label">Open Source Code</span>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 3. ABOUT SECTION */}
-      <section className="habito-about-card-section" style={{ padding: '80px 0' }}>
-        <div className="container" style={{ height: '100%' }}>
-          <div className="habito-about-marquee">
-            <div className="habito-about-marquee-track">
-              <div className="habito-about-marquee-content">
-                <span>MATRIX FINTECH CLUB</span>
-                <svg className="clover-icon" viewBox="0 0 100 100" fill="none"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#0A0A0A"/></svg>
-                <span>QUANTITATIVE RESEARCH</span>
-                <svg className="clover-icon" viewBox="0 0 100 100" fill="none"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#0A0A0A"/></svg>
-              </div>
-              <div className="habito-about-marquee-content">
-                <span>MATRIX FINTECH CLUB</span>
-                <svg className="clover-icon" viewBox="0 0 100 100" fill="none"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#0A0A0A"/></svg>
-                <span>QUANTITATIVE RESEARCH</span>
-                <svg className="clover-icon" viewBox="0 0 100 100" fill="none"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#0A0A0A"/></svg>
-              </div>
-            </div>
+      <section className="habito-about-card-section" style={{ padding: '80px 0' }} id="about">
+        <div className="habito-container" style={{ height: '100%' }}>
+          <div style={{ textAlign: 'center', width: '100%' }}>
+            <h2 className="about-section-heading">AboutUs</h2>
           </div>
 
           <div className="habito-about-grid-container">
             <div className="habito-about-grid">
-              <div>
+              <div className="habito-about-left">
                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: '900', color: '#0a0a0a', lineHeight: '1.05', textTransform: 'uppercase' }}>
                   REDEFINING FINANCIAL TECHNOLOGY AT THE ACADEMIC FRONTIER
                 </h2>
@@ -313,31 +277,8 @@ export default function HomePage() {
         </div>
 
         <div className="domains-habito-container">
-          {DOMAINS_DATA.slice(0, 3).map((domain, index) => (
-            <div key={index} className={`habito-col ${index === 2 ? 'col-wide' : 'col-small'}`}>
-              <div className="habito-col-header">
-                <span className="habito-col-title">TRACK {domain.num}</span>
-                <span className="habito-col-year">2026</span>
-              </div>
-              <div className={`habito-card habito-card-${domain.theme}`}>
-                <div className="habito-card-inner">
-                  <span className="habito-card-badge">{domain.num}</span>
-                  <h3 className="habito-card-heading">{domain.title}</h3>
-                  <p className="habito-card-text">{domain.desc}</p>
-                  <div className="habito-card-tags">
-                    {domain.tags.map((tag, tIdx) => (
-                      <span key={tIdx}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="domains-habito-container alt-layout" style={{ marginTop: '24px' }}>
-          {DOMAINS_DATA.slice(3, 6).map((domain, index) => (
-            <div key={index} className={`habito-col ${index === 0 ? 'col-wide' : 'col-small'}`}>
+          {DOMAINS_DATA.map((domain, index) => (
+            <div key={index} className="habito-col">
               <div className="habito-col-header">
                 <span className="habito-col-title">TRACK {domain.num}</span>
                 <span className="habito-col-year">2026</span>
@@ -362,7 +303,7 @@ export default function HomePage() {
       {/* 5. EVENTS MARQUEE SECTION */}
       <section className="section" id="events" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
             <h2 className="section-title" style={{ margin: 0 }}>EVENTS & MASTERCLASSES</h2>
 
             <div className="events-tabs">
@@ -524,9 +465,6 @@ export default function HomePage() {
 
       {/* 9. CTA ORBIT SECTION */}
       <section className="cta-section">
-        <div className="cta-canvas">
-          <MatrixCanvas />
-        </div>
         <div className="cta-overlay"></div>
 
         <div className="cta-content container">

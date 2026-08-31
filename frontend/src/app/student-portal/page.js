@@ -319,12 +319,20 @@ export default function StudentPortalPage() {
                       <div className="simple-card-top">
                         <span className="simple-card-category">{note.domain}</span>
                         <h3 className="simple-card-title">{note.title}</h3>
+                        {note.topics && note.topics.length > 0 && (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '8px 0' }}>
+                            {note.topics.map((topic, i) => (
+                              <span key={i} style={{ fontSize: '11px', fontWeight: '600', color: '#0f172a', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '2px 10px', borderRadius: '100px' }}>{topic}</span>
+                            ))}
+                          </div>
+                        )}
                         <p className="simple-card-desc">{note.description}</p>
                       </div>
                       <div className="simple-card-bottom">
                         <div className="simple-card-meta">
                           <span>👤 {note.uploadedBy}</span>
                           <span>🗓 {new Date(note.uploadedAt).toLocaleDateString()}</span>
+                          {note.fileType && <span>📎 {note.fileType}</span>}
                         </div>
                         <button
                           type="button"
