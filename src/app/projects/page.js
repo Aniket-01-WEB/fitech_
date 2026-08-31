@@ -26,13 +26,6 @@ const ALL_PROJECTS = [
     tags: ['PyTorch', 'Options', 'SVI', 'ML', 'Python']
   },
   {
-    num: '04',
-    name: 'MEV Sandwich Protection RPC',
-    category: 'WEB3 INFRASTRUCTURE',
-    desc: 'Private transaction routing RPC node shielding retail decentralized exchange swaps from front-running, back-running, and sandwich attacks through private mempool bundlers.',
-    tags: ['Rust', 'Geth', 'MEV', 'Ethereum', 'Flashbots']
-  },
-  {
     num: '05',
     name: 'QuantRisk Monte Carlo Engine',
     category: 'RISK ANALYTICS',
