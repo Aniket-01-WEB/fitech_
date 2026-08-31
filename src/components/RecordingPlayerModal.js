@@ -7,7 +7,6 @@ export default function RecordingPlayerModal() {
   const { activeRecordingPlayer, closeRecordingPlayer, updateStudentActivity, currentUser } = usePortal();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlaySec, setCurrentPlaySec] = useState(0);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
   const formatTimeCode = (totalSeconds) => {
     const sec = Math.max(0, Number(totalSeconds) || 0);
@@ -20,28 +19,12 @@ export default function RecordingPlayerModal() {
     if (!activeRecordingPlayer) return;
     setIsPlaying(false);
     setCurrentPlaySec(0);
-    setPlaybackSpeed(1);
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeRecordingPlayer();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeRecordingPlayer, closeRecordingPlayer]);
+  }, [activeRecordingPlayer]);
 
   useEffect(() => {
     if (!isPlaying || !activeRecordingPlayer) return;
 
     const totalSec = activeRecordingPlayer.durationSec || 3240;
-    const intervalMs = 1000 / playbackSpeed;
-
     const interval = setInterval(() => {
       setCurrentPlaySec(prev => {
         if (prev >= totalSec) {
@@ -54,10 +37,10 @@ export default function RecordingPlayerModal() {
       if (currentUser) {
         updateStudentActivity(currentUser.email, 0, 1, false);
       }
-    }, intervalMs);
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, activeRecordingPlayer, currentUser, updateStudentActivity, playbackSpeed]);
+  }, [isPlaying, activeRecordingPlayer, currentUser, updateStudentActivity]);
 
   if (!activeRecordingPlayer) return null;
 
@@ -71,12 +54,6 @@ export default function RecordingPlayerModal() {
     setCurrentPlaySec(Math.floor(ratio * totalSec));
   };
 
-  const skipTime = (deltaSec) => {
-    setCurrentPlaySec(prev => Math.max(0, Math.min(totalSec, prev + deltaSec)));
-  };
-
-  const speedOptions = [1, 1.25, 1.5, 2];
-
   return (
     <div
       className={`portal-detail-backdrop ${activeRecordingPlayer ? 'active' : ''}`}
@@ -88,7 +65,7 @@ export default function RecordingPlayerModal() {
         <div
           className="portal-detail-banner"
           style={{
-            height: '260px',
+            height: '240px',
             background: activeRecordingPlayer.banner || 'linear-gradient(135deg, #090d16, #1e293b)',
             position: 'relative',
             flexDirection: 'column',
@@ -100,110 +77,41 @@ export default function RecordingPlayerModal() {
             <span className="event-category" style={{ position: 'static' }}>
               {activeRecordingPlayer.type || 'MASTERCLASS'}
             </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {speedOptions.map(spd => (
-                <button
-                  key={spd}
-                  type="button"
-                  onClick={() => setPlaybackSpeed(spd)}
-                  style={{
-                    background: playbackSpeed === spd ? '#ffffff' : 'rgba(255,255,255,0.2)',
-                    color: playbackSpeed === spd ? '#0f172a' : '#ffffff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    padding: '2px 8px',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {spd}x
-                </button>
-              ))}
-              <button
-                type="button"
-                className="join-modal-close"
-                onClick={closeRecordingPlayer}
-                aria-label="Close"
-                style={{ position: 'static', background: 'rgba(255,255,255,0.8)', marginLeft: '8px' }}
-              >
-                ×
-              </button>
-            </div>
+            <button
+              type="button"
+              className="join-modal-close"
+              onClick={closeRecordingPlayer}
+              aria-label="Close"
+              style={{ position: 'static', background: 'rgba(255,255,255,0.8)' }}
+            >
+              ×
+            </button>
           </div>
 
-          <div style={{ textAlign: 'center', width: '100%', margin: '16px 0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-              <button
-                type="button"
-                onClick={() => skipTime(-10)}
-                title="Rewind 10s"
-                style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  color: '#ffffff',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                ↺10
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsPlaying(!isPlaying)}
-                style={{
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.25)',
-                  backdropFilter: 'blur(8px)',
-                  border: '1.5px solid rgba(255,255,255,0.5)',
-                  color: '#ffffff',
-                  fontSize: '22px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'transform 0.15s ease'
-                }}
-              >
-                {isPlaying ? '❚❚' : '▶'}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => skipTime(10)}
-                title="Forward 10s"
-                style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  color: '#ffffff',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                10↻
-              </button>
-            </div>
-
-            <span style={{ display: 'block', color: '#ffffff', fontSize: '11px', marginTop: '10px', fontWeight: '600', letterSpacing: '1px' }}>
-              {isPlaying ? `PLAYING AT ${playbackSpeed}x SPEED...` : 'CLICK TO START SESSION'}
+          <div style={{ textAlign: 'center', width: '100%', marginBottom: '20px' }}>
+            <button
+              type="button"
+              onClick={() => setIsPlaying(!isPlaying)}
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(8px)',
+                border: '1.5px solid rgba(255,255,255,0.4)',
+                color: '#ffffff',
+                fontSize: '24px',
+                cursor: 'pointer',
+                margin: '0 auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {isPlaying ? '❚❚' : '▶'}
+            </button>
+            <span style={{ display: 'block', color: '#ffffff', fontSize: '12px', marginTop: '8px', fontWeight: '600', letterSpacing: '1px' }}>
+              {isPlaying ? 'PLAYING MASTERCLASS STREAM...' : 'CLICK TO START SESSION'}
             </span>
           </div>
 
@@ -250,7 +158,7 @@ export default function RecordingPlayerModal() {
           <p className="portal-detail-desc">{activeRecordingPlayer.description}</p>
 
           {activeRecordingPlayer.takeaways && activeRecordingPlayer.takeaways.length > 0 && (
-            <div style={{ marginTop: '20px', background: '#f8fafc', padding: '18px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+            <div style={{ marginTop: '20px', background: '#f8fafc', padding: '18px', border: '1px solid #e2e8f0' }}>
               <strong style={{ display: 'block', fontSize: '13px', color: '#0f172a', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Key Technical Takeaways
               </strong>
@@ -269,4 +177,3 @@ export default function RecordingPlayerModal() {
     </div>
   );
 }
-

@@ -1,30 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { usePortal } from '@/context/PortalContext';
 import { useRouter } from 'next/navigation';
 
 export default function EventDetailModal() {
   const { activeDetailEvent, closeDetailModal, isEventJoined, toggleJoinEvent, currentUser, openJoinModal } = usePortal();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!activeDetailEvent) return;
-
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeDetailModal();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeDetailEvent, closeDetailModal]);
 
   if (!activeDetailEvent) return null;
 

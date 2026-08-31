@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { usePortal } from '@/context/PortalContext';
 
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyd1SmdJymqZ1B0Z-d5K0J5N28h-M4jJq1rF-vX1Q1s9J4x2m/exec';
@@ -23,6 +23,8 @@ export default function JoinModal() {
     gmail: '',
     interestedDomain: 'Quantitative Finance & Algo'
   });
+
+  if (!isJoinModalOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,33 +68,11 @@ export default function JoinModal() {
     }
   };
 
-  useEffect(() => {
-    if (!isJoinModalOpen) return;
-
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setSubmitted(false);
-        setErrorMsg('');
-        closeJoinModal();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isJoinModalOpen, closeJoinModal]);
-
   const handleClose = () => {
     setSubmitted(false);
     setErrorMsg('');
     closeJoinModal();
   };
-
-  if (!isJoinModalOpen) return null;
 
   return (
     <div className={`join-modal-backdrop ${isJoinModalOpen ? 'active' : ''}`} onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}>

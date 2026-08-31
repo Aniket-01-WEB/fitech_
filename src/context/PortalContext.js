@@ -8,17 +8,41 @@ const KEYS = {
   REGISTRATIONS: 'matrix_student_registrations',
   MEMBERS: 'matrix_members',
   RECORDINGS: 'matrix_recordings',
-  ACTIVITY: 'matrix_student_activity',
-  NOTES: 'matrix_notes'
+  NOTES: 'matrix_notes',
+  ACTIVITY: 'matrix_student_activity'
 };
 
-// Shared domain/track options — used by the Join form, the Notes uploader, and profile editing.
-export const DOMAIN_OPTIONS = [
-  'Quantitative Finance & Algo',
-  'DeFi & Blockchain Infrastructure',
-  'AI & Machine Learning in Finance',
-  'Risk Analytics & Economic Modeling',
-  'High-Frequency Trading & Systems'
+const SEED_NOTES = [
+  {
+    id: 'note-1',
+    title: 'Quantitative Portfolio Optimization & Mean-Variance Matrix Guide',
+    domain: 'Quantitative Finance & Algo Trading',
+    author: 'Admin / Quant Research Lead',
+    date: 'Feb 15, 2026',
+    fileType: 'PDF / Mathematical Guide',
+    description: 'Comprehensive derivation of Markowitz efficient frontier, Lagrange multipliers, Sharpe ratio maximization, and shrinkage covariance estimators in Python.',
+    topics: ['Mean-Variance Frontier', 'Covariance Shrinkage', 'Sharpe Optimization', 'Python Scipy Implementation']
+  },
+  {
+    id: 'note-2',
+    title: 'Stochastic Calculus & Black-Scholes Volatility Formulations',
+    domain: 'Risk Analytics & Economic Modeling',
+    author: 'Admin / Risk Analytics Division',
+    date: 'Feb 02, 2026',
+    fileType: 'Formula Sheet / Lecture Notes',
+    description: "Itô's Lemma derivations, risk-neutral valuation formulas, Greeks sensitivity matrix, and Monte Carlo path simulation algorithms.",
+    topics: ["Itô's Lemma", 'Black-Scholes PDE', 'The Greeks (Delta, Gamma, Vega)', 'Monte Carlo Simulation']
+  },
+  {
+    id: 'note-3',
+    title: 'High-Frequency Order Book Simulation & C++ Architecture',
+    domain: 'High-Frequency Trading & Systems',
+    author: 'Admin / Core Systems Architecture',
+    date: 'Jan 20, 2026',
+    fileType: 'Technical Architecture Doc',
+    description: 'Lock-free ring buffers, cache line alignment, CPU pinning (isolcpus), and Level 2 order book reconstructor patterns in C++20.',
+    topics: ['L2 Order Book Rebuilding', 'Lock-free Ring Buffers', 'Cache Locality', 'C++20 Memory Model']
+  }
 ];
 
 const SEED_RECORDINGS = [
@@ -97,7 +121,6 @@ const SEED_EVENTS = [
     time: 'Mar 15, 2026 • 10:00 AM',
     venue: 'Main Auditorium',
     description: 'Flagship summit uniting global industry founders, investors, and student innovators exploring the future of global finance.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1773550800000
   },
@@ -109,7 +132,6 @@ const SEED_EVENTS = [
     time: 'Feb 22, 2026 • 2:00 PM',
     venue: 'Lab 301',
     description: 'Deep dive into systematic market analysis, high-frequency execution, and algorithmic trading strategies.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1771768800000
   },
@@ -121,7 +143,6 @@ const SEED_EVENTS = [
     time: 'Apr 5, 2026 • 9:00 AM',
     venue: 'Tech Center',
     description: '48-hour national hackathon challenging student developers to build AI-powered credit, risk, and trading bots.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1775360400000
   },
@@ -133,7 +154,6 @@ const SEED_EVENTS = [
     time: 'Apr 20, 2026 • 4:00 PM',
     venue: 'Innovation Hub',
     description: 'Hands-on session building order book simulation engines and liquidity management protocols.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1776657600000
   },
@@ -145,7 +165,6 @@ const SEED_EVENTS = [
     time: 'May 2, 2026 • 11:00 AM',
     venue: 'Auditorium B',
     description: 'Panel discussion featuring blockchain architects on automated market makers, ZK proofs, and liquidity pools.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1777694400000
   },
@@ -157,7 +176,6 @@ const SEED_EVENTS = [
     time: 'May 18, 2026 • 3:00 PM',
     venue: 'Venture Hub',
     description: 'Pitch session where student fintech startups present MVPs directly to institutional angel investors.',
-    status: 'approved',
     createdBy: 'admin@matrix.club',
     createdAt: 1779078000000
   }
@@ -253,42 +271,16 @@ const SEED_ACTIVITY = {
   }
 };
 
-const SEED_NOTES = [
-  {
-    id: 'note-1',
-    title: 'Order Book Microstructure — Cheat Sheet',
-    domain: 'High-Frequency Trading & Systems',
-    description: 'Quick-reference notes on limit order book depth, queue priority, and matching engine mechanics from the HFT masterclass.',
-    fileName: 'order-book-cheatsheet.pdf',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1770000000000
-  },
-  {
-    id: 'note-2',
-    title: 'AMM Invariant Derivations',
-    domain: 'DeFi & Blockchain Infrastructure',
-    description: 'Step-by-step derivation of the constant product formula and concentrated liquidity math covered in the DeFi engineering session.',
-    fileName: 'amm-invariants.pdf',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1771000000000
-  }
-];
-
 const PortalContext = createContext();
 
 export function PortalProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [events, setEvents] = useState(SEED_EVENTS);
   const [recordings, setRecordings] = useState(SEED_RECORDINGS);
+  const [notes, setNotes] = useState(SEED_NOTES);
   const [members, setMembers] = useState(SEED_MEMBERS);
   const [registrations, setRegistrations] = useState(SEED_REGISTRATIONS);
   const [activity, setActivity] = useState(SEED_ACTIVITY);
-  const [notes, setNotes] = useState(SEED_NOTES);
-  const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals state
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
@@ -307,6 +299,9 @@ export function PortalProvider({ children }) {
       const storedRecordings = localStorage.getItem(KEYS.RECORDINGS);
       if (storedRecordings) setRecordings(JSON.parse(storedRecordings));
 
+      const storedNotes = localStorage.getItem(KEYS.NOTES);
+      if (storedNotes) setNotes(JSON.parse(storedNotes));
+
       const storedMembers = localStorage.getItem(KEYS.MEMBERS);
       if (storedMembers) setMembers(JSON.parse(storedMembers));
 
@@ -315,19 +310,36 @@ export function PortalProvider({ children }) {
 
       const storedAct = localStorage.getItem(KEYS.ACTIVITY);
       if (storedAct) setActivity(JSON.parse(storedAct));
-
-      const storedNotes = localStorage.getItem(KEYS.NOTES);
-      if (storedNotes) setNotes(JSON.parse(storedNotes));
     } catch (err) {
       console.error('Failed to load from localStorage:', err);
-    } finally {
-      setIsHydrated(true);
     }
   }, []);
 
+  // Notes management
+  const saveNote = (noteData) => {
+    const newNote = {
+      id: 'note-' + Date.now(),
+      title: noteData.title,
+      domain: noteData.domain || 'Quantitative Finance & Algo Trading',
+      author: noteData.author || (currentUser ? currentUser.email : 'Admin'),
+      date: noteData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      fileType: noteData.fileType || 'PDF / Notes',
+      description: noteData.description || '',
+      topics: noteData.topics && noteData.topics.length ? noteData.topics : ['Quant Study Material', 'Research Notes']
+    };
+    const updated = [newNote, ...notes];
+    setNotes(updated);
+    saveStorage(KEYS.NOTES, updated);
+  };
+
+  const deleteNote = (noteId) => {
+    const updated = notes.filter(n => n.id !== noteId);
+    setNotes(updated);
+    saveStorage(KEYS.NOTES, updated);
+  };
+
   // Sync state helpers to localStorage
   const saveStorage = (key, data) => {
-    if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
@@ -350,8 +362,6 @@ export function PortalProvider({ children }) {
   };
 
   // Event actions
-  // New events always start as a pending request — a Super Admin must approve
-  // them before they appear as an "upcoming event" in the student portal.
   const createEvent = (eventData) => {
     const newEvent = {
       id: 'evt-' + Date.now(),
@@ -361,11 +371,8 @@ export function PortalProvider({ children }) {
       time: eventData.time,
       venue: eventData.venue,
       description: eventData.description,
-      status: 'pending',
       createdBy: currentUser ? currentUser.email : 'admin@matrix.club',
-      createdAt: Date.now(),
-      reviewedBy: null,
-      reviewedAt: null
+      createdAt: Date.now()
     };
     const updated = [newEvent, ...events];
     setEvents(updated);
@@ -397,30 +404,6 @@ export function PortalProvider({ children }) {
     setEvents(updated);
     saveStorage(KEYS.EVENTS, updated);
   };
-
-  // Super Admin event-approval workflow
-  const setEventStatus = (eventId, status) => {
-    const updated = events.map(evt => {
-      if (evt.id === eventId) {
-        return {
-          ...evt,
-          status,
-          reviewedBy: currentUser ? currentUser.email : evt.reviewedBy,
-          reviewedAt: Date.now()
-        };
-      }
-      return evt;
-    });
-    setEvents(updated);
-    saveStorage(KEYS.EVENTS, updated);
-  };
-
-  const approveEvent = (eventId) => setEventStatus(eventId, 'approved');
-  const rejectEvent = (eventId) => setEventStatus(eventId, 'rejected');
-  const resubmitEvent = (eventId) => setEventStatus(eventId, 'pending');
-
-  const getApprovedEvents = useCallback(() => events.filter(e => e.status === 'approved'), [events]);
-  const getPendingEvents = useCallback(() => events.filter(e => e.status === 'pending'), [events]);
 
   // Event registration toggling
   const isEventJoined = useCallback((eventId, email) => {
@@ -550,31 +533,6 @@ export function PortalProvider({ children }) {
     saveStorage(KEYS.RECORDINGS, updated);
   };
 
-  // Notes management (admin uploads, students read/download)
-  const saveNote = (noteData) => {
-    const newNote = {
-      id: 'note-' + Date.now(),
-      title: noteData.title,
-      domain: noteData.domain || DOMAIN_OPTIONS[0],
-      description: noteData.description || '',
-      fileName: noteData.fileName || '',
-      fileData: noteData.fileData || '',
-      link: noteData.link || '',
-      uploadedBy: currentUser ? currentUser.email : 'admin@matrix.club',
-      uploadedAt: Date.now()
-    };
-    const updated = [newNote, ...notes];
-    setNotes(updated);
-    saveStorage(KEYS.NOTES, updated);
-    return newNote;
-  };
-
-  const deleteNote = (noteId) => {
-    const updated = notes.filter(n => n.id !== noteId);
-    setNotes(updated);
-    saveStorage(KEYS.NOTES, updated);
-  };
-
   // Activity tracking
   const updateStudentActivity = (email, deltaWebSec = 0, deltaRecSec = 0, watchedSessionIncrement = false) => {
     const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
@@ -631,7 +589,6 @@ export function PortalProvider({ children }) {
   return (
     <PortalContext.Provider
       value={{
-        isHydrated,
         currentUser,
         login,
         logout,
@@ -639,11 +596,6 @@ export function PortalProvider({ children }) {
         createEvent,
         updateEvent,
         deleteEvent,
-        approveEvent,
-        rejectEvent,
-        resubmitEvent,
-        getApprovedEvents,
-        getPendingEvents,
         isEventJoined,
         toggleJoinEvent,
         getJoinedEventsForUser,

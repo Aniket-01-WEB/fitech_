@@ -13,8 +13,6 @@ export default function DashboardPage() {
       router.push('/login');
     } else if (currentUser.role === 'admin') {
       router.push('/admin-portal');
-    } else if (currentUser.role === 'superadmin') {
-      router.push('/super-admin');
     } else {
       router.push('/student-portal');
     }

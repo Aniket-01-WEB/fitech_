@@ -2,31 +2,25 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { usePortal } from '@/context/PortalContext';
 
-const ROLE_HOME = {
-  admin: '/admin-portal',
-  superadmin: '/super-admin',
-  student: '/student-portal'
-};
-
 export default function LoginPage() {
-  const [role, setRole] = useState('student'); // 'student' | 'admin' | 'superadmin'
+  const [role, setRole] = useState('student'); // 'student' | 'admin'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const { login, currentUser, openJoinModal } = usePortal();
   const router = useRouter();
 
   useEffect(() => {
     if (currentUser) {
-      router.push(ROLE_HOME[currentUser.role] || '/student-portal');
+      if (currentUser.role === 'admin') router.push('/admin-portal');
+      else router.push('/student-portal');
     }
   }, [currentUser, router]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -37,44 +31,21 @@ export default function LoginPage() {
     }
 
     if (role === 'admin') {
-      if (!password || (password !== 'admin123' && password !== 'matrix2026' && password !== 'admin')) {
+      if (password !== 'admin123' && password !== 'matrix2026' && password !== 'admin') {
         setErrorMsg('Invalid admin credentials. (Demo pass: admin123 or matrix2026)');
         return;
       }
     }
 
-    if (role === 'superadmin') {
-      if (!password || (password !== 'super2026' && password !== 'superadmin123')) {
-        setErrorMsg('Invalid super admin credentials. (Demo pass: super2026 or superadmin123)');
-        return;
-      }
-    }
-
-    setIsSubmitting(true);
-
-    // Simulated network delay for realistic auth response
-    setTimeout(() => {
-      login(role, trimmedEmail);
-      setIsSubmitting(false);
-      router.push(ROLE_HOME[role] || '/student-portal');
-    }, 400);
+    login(role, trimmedEmail);
+    if (role === 'admin') router.push('/admin-portal');
+    else router.push('/student-portal');
   };
 
   const handleQuickDemo = (demoRole, demoEmail) => {
-    setErrorMsg('');
-    setIsSubmitting(true);
-    setTimeout(() => {
-      login(demoRole, demoEmail);
-      setIsSubmitting(false);
-      router.push(ROLE_HOME[demoRole] || '/student-portal');
-    }, 300);
-  };
-
-  const handleRoleSwitch = (newRole) => {
-    setRole(newRole);
-    setErrorMsg('');
-    setPassword('');
-    setShowPassword(false);
+    login(demoRole, demoEmail);
+    if (demoRole === 'admin') router.push('/admin-portal');
+    else router.push('/student-portal');
   };
 
   return (
@@ -86,95 +57,51 @@ export default function LoginPage() {
           <p className="portal-login-subtitle">Sign in to access masterclass recordings, event passes, and project dashboards.</p>
         </div>
 
-        <div className="portal-role-switch" role="tablist">
+        <div className="portal-role-switch">
           <button
             type="button"
-            role="tab"
-            aria-selected={role === 'student'}
             className={`portal-role-tab ${role === 'student' ? 'active' : ''}`}
-            onClick={() => handleRoleSwitch('student')}
+            onClick={() => { setRole('student'); setErrorMsg(''); }}
           >
             STUDENT PORTAL
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={role === 'admin'}
             className={`portal-role-tab ${role === 'admin' ? 'active' : ''}`}
-            onClick={() => handleRoleSwitch('admin')}
+            onClick={() => { setRole('admin'); setErrorMsg(''); }}
           >
             ADMIN CONSOLE
           </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={role === 'superadmin'}
-            className={`portal-role-tab ${role === 'superadmin' ? 'active' : ''}`}
-            onClick={() => handleRoleSwitch('superadmin')}
-          >
-            SUPER ADMIN
-          </button>
         </div>
 
-        {errorMsg && (
-          <div className="portal-field-error" style={{ marginBottom: '16px', animation: 'fadeIn 0.2s ease-in-out' }}>
-            <span>⚠️ {errorMsg}</span>
-          </div>
-        )}
+        {errorMsg && <p className="portal-field-error" style={{ marginBottom: '16px' }}>{errorMsg}</p>}
 
         <form onSubmit={handleSubmit} className="portal-form">
           <div className="form-group">
-            <label htmlFor="login-email">{role === 'superadmin' ? 'Super Admin Gmail / Username' : role === 'admin' ? 'Admin Gmail / Username' : 'Student Registered Email'}</label>
+            <label htmlFor="login-email">{role === 'admin' ? 'Admin Gmail / Username' : 'Student Registered Email'}</label>
             <input
               type="email"
               id="login-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'superadmin' ? 'superadmin@matrix.club' : role === 'admin' ? 'admin@matrix.club' : 'student@matrix.club'}
-              autoComplete="email"
+              placeholder={role === 'admin' ? 'admin@matrix.club' : 'student@matrix.club'}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="login-pass">{role === 'superadmin' ? 'Super Admin Security Password' : role === 'admin' ? 'Admin Security Password' : 'Password (Optional)'}</label>
-            <div className="password-input-wrapper">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="login-pass"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={role !== 'student' ? 'Enter password' : '••••••••'}
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                )}
-              </button>
-            </div>
+            <label htmlFor="login-pass">{role === 'admin' ? 'Admin Security Password' : 'Password (Optional)'}</label>
+            <input
+              type="password"
+              id="login-pass"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={role === 'admin' ? 'Enter admin password' : '••••••••'}
+            />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isSubmitting}
-            style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}
-          >
-            {isSubmitting ? 'AUTHENTICATING...' : 'AUTHENTICATE & LOG IN →'}
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
+            AUTHENTICATE & LOG IN →
           </button>
         </form>
 
@@ -182,13 +109,12 @@ export default function LoginPage() {
           <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '10px' }}>
             QUICK DEMO ACCESSIBILITY:
           </span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               type="button"
               onClick={() => handleQuickDemo('student', 'student@matrix.club')}
               className="btn btn-secondary"
-              disabled={isSubmitting}
-              style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
+              style={{ flex: 1, fontSize: '12px', padding: '10px 12px' }}
             >
               ⚡ Student Demo
             </button>
@@ -196,19 +122,9 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleQuickDemo('admin', 'admin@matrix.club')}
               className="btn btn-secondary"
-              disabled={isSubmitting}
-              style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
+              style={{ flex: 1, fontSize: '12px', padding: '10px 12px' }}
             >
               ⚡ Admin Demo
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('superadmin', 'superadmin@matrix.club')}
-              className="btn btn-secondary"
-              disabled={isSubmitting}
-              style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
-            >
-              ⚡ Super Admin Demo
             </button>
           </div>
         </div>
@@ -229,4 +145,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

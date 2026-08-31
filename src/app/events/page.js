@@ -7,10 +7,8 @@ import { usePortal } from '@/context/PortalContext';
 export default function EventsPage() {
   const { events, openDetailModal } = usePortal();
 
-  // Only Super-Admin-approved events are ever shown publicly.
-  const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
-  const upcomingEvents = approvedEvents.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
-  const pastEvents = approvedEvents.filter(evt => evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past'));
+  const upcomingEvents = events.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
+  const pastEvents = events.filter(evt => evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past'));
 
   return (
     <div className="simple-events-shell">

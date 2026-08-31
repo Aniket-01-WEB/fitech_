@@ -5,25 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePortal } from '@/context/PortalContext';
 
-const DEFAULT_PROFILE_TEMPLATE = {
-  name: '',
-  regNumber: '2024REG1092',
-  rollNumber: '24CS084',
-  school: 'School of Computer Science',
-  department: 'Computer Science',
-  section: 'CSE-B',
-  currentYear: '2nd Year',
-  contactNumber: '+91 98765 43210',
-  interestedDomain: 'Quantitative Finance & Algo',
-  gmail: ''
-};
-
 export default function StudentPortalPage() {
   const {
     currentUser,
-    getApprovedEvents,
+    events,
     recordings,
-    notes,
     getJoinedEventsForUser,
     isEventJoined,
     toggleJoinEvent,
@@ -39,22 +25,12 @@ export default function StudentPortalPage() {
   const [activeTab, setActiveTab] = useState('my-events');
   const [editingProfile, setEditingProfile] = useState(false);
 
-  // memberProfile is derived every render so it's always safe to call as a hook
-  // initializer below, regardless of whether currentUser has hydrated yet.
-  const memberProfile = currentUser
-    ? (getMemberByEmail(currentUser.email) || { ...DEFAULT_PROFILE_TEMPLATE, name: currentUser.email.split('@')[0], gmail: currentUser.email })
-    : DEFAULT_PROFILE_TEMPLATE;
-
-  const [profileForm, setProfileForm] = useState(memberProfile);
-
-  // Sync redirect for unauthenticated, admin, or super admin users
+  // Sync redirect for unauthenticated or admin users
   useEffect(() => {
     if (!currentUser) {
       router.push('/login');
     } else if (currentUser.role === 'admin') {
       router.push('/admin-portal');
-    } else if (currentUser.role === 'superadmin') {
-      router.push('/super-admin');
     }
   }, [currentUser, router]);
 
@@ -71,8 +47,20 @@ export default function StudentPortalPage() {
     return null;
   }
 
-  // Only Super-Admin-approved events are ever visible/joinable here.
-  const approvedEvents = getApprovedEvents();
+  const memberProfile = getMemberByEmail(currentUser.email) || {
+    name: currentUser.email.split('@')[0],
+    regNumber: '2024REG1092',
+    rollNumber: '24CS084',
+    school: 'School of Computer Science',
+    department: 'Computer Science',
+    section: 'CSE-B',
+    currentYear: '2nd Year',
+    contactNumber: '+91 98765 43210',
+    interestedDomain: 'Quantitative Finance & Algo',
+    gmail: currentUser.email
+  };
+
+  const [profileForm, setProfileForm] = useState(memberProfile);
   const userActivity = getStudentActivity(currentUser.email);
   const myEvents = getJoinedEventsForUser(currentUser.email);
 
@@ -80,19 +68,6 @@ export default function StudentPortalPage() {
     e.preventDefault();
     saveMember(profileForm);
     setEditingProfile(false);
-  };
-
-  const handleNoteDownload = (note) => {
-    if (note.fileData) {
-      const a = document.createElement('a');
-      a.href = note.fileData;
-      a.download = note.fileName || `${note.title}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else if (note.link) {
-      window.open(note.link, '_blank', 'noopener,noreferrer');
-    }
   };
 
   const formatHoursMins = (sec) => {
@@ -148,7 +123,7 @@ export default function StudentPortalPage() {
             className={`portal-role-tab ${activeTab === 'all-events' ? 'active' : ''}`}
             onClick={() => setActiveTab('all-events')}
           >
-            ALL EVENTS ({approvedEvents.length})
+            ALL EVENTS ({events.length})
           </button>
           <button
             type="button"
@@ -156,13 +131,6 @@ export default function StudentPortalPage() {
             onClick={() => setActiveTab('recordings')}
           >
             RECORDED SESSIONS ({recordings.length})
-          </button>
-          <button
-            type="button"
-            className={`portal-role-tab ${activeTab === 'notes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notes')}
-          >
-            NOTES ({notes.length})
           </button>
           <button
             type="button"
@@ -225,11 +193,8 @@ export default function StudentPortalPage() {
         {activeTab === 'all-events' && (
           <div>
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>ALL CLUB EVENTS & WORKSHOPS</h2>
-            {approvedEvents.length === 0 && (
-              <p style={{ color: '#94a3b8', fontStyle: 'italic', marginBottom: '20px' }}>No approved events yet — check back once the Super Admin reviews pending requests.</p>
-            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-              {approvedEvents.map(evt => {
+              {events.map(evt => {
                 const joined = isEventJoined(evt.id, currentUser.email);
                 return (
                   <div key={evt.id} className="simple-event-card">
@@ -299,48 +264,6 @@ export default function StudentPortalPage() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* TAB: NOTES LIBRARY */}
-        {activeTab === 'notes' && (
-          <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>SHARED NOTES & STUDY MATERIAL</h2>
-            {notes.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No notes have been uploaded yet. Check back soon.</p>
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-                {notes.map(note => {
-                  const hasFile = Boolean(note.fileData || note.link);
-                  return (
-                    <div key={note.id} className="simple-event-card">
-                      <div className="simple-card-top">
-                        <span className="simple-card-category">{note.domain}</span>
-                        <h3 className="simple-card-title">{note.title}</h3>
-                        <p className="simple-card-desc">{note.description}</p>
-                      </div>
-                      <div className="simple-card-bottom">
-                        <div className="simple-card-meta">
-                          <span>👤 {note.uploadedBy}</span>
-                          <span>🗓 {new Date(note.uploadedAt).toLocaleDateString()}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleNoteDownload(note)}
-                          className="btn btn-primary"
-                          disabled={!hasFile}
-                          style={{ width: '100%', justifyContent: 'center', marginTop: '12px', opacity: hasFile ? 1 : 0.5, cursor: hasFile ? 'pointer' : 'not-allowed' }}
-                        >
-                          {hasFile ? '📄 READ / DOWNLOAD NOTE →' : 'NO FILE ATTACHED'}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         )}
 

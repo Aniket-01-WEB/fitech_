@@ -1,20 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { usePortal } from '@/context/PortalContext';
-
-const ROLE_HOME = {
-  admin: '/admin-portal',
-  superadmin: '/super-admin',
-  student: '/student-portal'
-};
-
-function getDashboardHref(role) {
-  return ROLE_HOME[role] || '/student-portal';
-}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -22,11 +12,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, logout, openJoinModal } = usePortal();
-
-  const handleCloseMenu = useCallback(() => {
-    setMobileMenuOpen(false);
-    document.body.style.overflow = '';
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,20 +21,11 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change & on Escape key
+  // Close mobile menu on route change
   useEffect(() => {
-    handleCloseMenu();
-  }, [pathname, handleCloseMenu]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        handleCloseMenu();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen, handleCloseMenu]);
+    setMobileMenuOpen(false);
+    document.body.style.overflow = '';
+  }, [pathname]);
 
   const toggleMobileMenu = () => {
     const nextState = !mobileMenuOpen;
@@ -66,17 +42,9 @@ export default function Navbar() {
     router.push('/');
   };
 
-  const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Domains', href: '/domain' },
-    { label: 'Events', href: '/events' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Team', href: '/team' },
-  ];
-
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} aria-label="Main Navigation">
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <Link href="/" className="nav-brand" aria-label="MATRIX Home">
             <Image
@@ -90,14 +58,14 @@ export default function Navbar() {
           </Link>
 
           <Link href="/" className="nav-center-title">
-            MATRIX
+            FITECH
           </Link>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {currentUser && (
               <div className="nav-user-indicator" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Link
-                  href={getDashboardHref(currentUser.role)}
+                  href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}
                   className="nav-dashboard-link"
                 >
                   Dashboard →
@@ -112,7 +80,6 @@ export default function Navbar() {
               type="button"
               className={`nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
               onClick={toggleMobileMenu}
-              aria-expanded={mobileMenuOpen}
               aria-label="Toggle Navigation Menu"
             >
               <span></span>
@@ -124,22 +91,27 @@ export default function Navbar() {
       </nav>
 
       {/* Fullscreen Mobile Drawer */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`} aria-hidden={!mobileMenuOpen}>
+      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         <ul className="mobile-links">
-          {navItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={pathname === item.href ? 'active-mobile-link' : ''}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          <li>
+            <Link href="/">Home</Link>
+          </li>
+          <li>
+            <Link href="/domain">Domains</Link>
+          </li>
+          <li>
+            <Link href="/events">Events</Link>
+          </li>
+          <li>
+            <Link href="/projects">Projects</Link>
+          </li>
+          <li>
+            <Link href="/team">Team</Link>
+          </li>
           {currentUser ? (
             <>
               <li>
-                <Link href={getDashboardHref(currentUser.role)}>
+                <Link href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}>
                   Dashboard ({currentUser.role.toUpperCase()})
                 </Link>
               </li>
@@ -152,15 +124,14 @@ export default function Navbar() {
           ) : (
             <>
               <li>
-                <Link href="/login" className={pathname === '/login' ? 'active-mobile-link' : ''}>
-                  Portal / Login
-                </Link>
+                <Link href="/login">Portal / Login</Link>
               </li>
               <li style={{ marginTop: '12px' }}>
                 <button
                   type="button"
                   onClick={() => {
-                    handleCloseMenu();
+                    setMobileMenuOpen(false);
+                    document.body.style.overflow = '';
                     openJoinModal();
                   }}
                   className="btn btn-primary"
@@ -176,4 +147,3 @@ export default function Navbar() {
     </>
   );
 }
-

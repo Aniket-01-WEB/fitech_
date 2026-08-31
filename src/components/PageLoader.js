@@ -5,41 +5,29 @@ import Image from 'next/image';
 
 export default function PageLoader() {
   const [progress, setProgress] = useState(0);
-  const [fading, setFading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let currentProgress = 0;
     const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 18) + 10;
+      currentProgress += Math.floor(Math.random() * 15) + 8;
       if (currentProgress >= 100) {
         currentProgress = 100;
         clearInterval(interval);
-        setFading(true);
         setTimeout(() => {
           setLoaded(true);
-        }, 400);
+        }, 300);
       }
       setProgress(currentProgress);
-    }, 30);
+    }, 40);
 
-    // Fallback safety cleanup
-    const safetyTimeout = setTimeout(() => {
-      setProgress(100);
-      setFading(true);
-      setTimeout(() => setLoaded(true), 400);
-    }, 1200);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(safetyTimeout);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   if (loaded) return null;
 
   return (
-    <div className={`page-loader ${fading ? 'loaded' : ''}`}>
+    <div className={`page-loader ${loaded ? 'loaded' : ''}`}>
       <div className="loader-content">
         <div className="loader-brand">
           <Image
@@ -63,4 +51,3 @@ export default function PageLoader() {
     </div>
   );
 }
-
