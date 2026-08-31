@@ -257,27 +257,37 @@ export function PortalProvider({ children }) {
   };
 
   const signUp = async (email, password, profileFields = {}) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    // Passed as signup metadata (not a follow-up PATCH) so the
+    // on_auth_user_created trigger can save the full profile row
+    // immediately — this must not depend on getting a session back,
+    // since email confirmation (when required) means signUp() returns
+    // no session at all.
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: profileFields.name,
+          reg_number: profileFields.regNumber,
+          roll_number: profileFields.rollNumber,
+          school: profileFields.school,
+          department: profileFields.department,
+          section: profileFields.section,
+          current_year: profileFields.currentYear,
+          contact_number: profileFields.contactNumber,
+          interested_domain: profileFields.interestedDomain
+        }
+      }
+    });
     if (error) throw new Error(error.message);
 
     if (!data.session) {
-      // Email confirmation is required before this account can sign in.
+      // Email confirmation is required before this account can sign in —
+      // the profile row (with all the fields above) is already saved,
+      // just not yet reachable since there's no session to fetch it with.
       return { needsConfirmation: true };
     }
 
-    // The on_auth_user_created trigger already inserted a bare profile
-    // row (id/email/name); fill in the rest of the join-form fields.
-    await api.patch('/api/profile', {
-      name: profileFields.name,
-      reg_number: profileFields.regNumber,
-      roll_number: profileFields.rollNumber,
-      school: profileFields.school,
-      department: profileFields.department,
-      section: profileFields.section,
-      current_year: profileFields.currentYear,
-      contact_number: profileFields.contactNumber,
-      interested_domain: profileFields.interestedDomain
-    });
     await loadProfile();
     return { needsConfirmation: false };
   };
