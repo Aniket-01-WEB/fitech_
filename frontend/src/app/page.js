@@ -6,21 +6,20 @@ import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
 
 const WORD_SEQUENCE = [
-  // 10 multilingual money words dropping rapidly at 0.2s (200ms) each
-  { word: 'MONEY', duration: 200 },
-  { word: 'पैसा (Paisa)', duration: 200 },
-  { word: 'টাকা (Taka)', duration: 200 },
-  { word: 'பணம் (Paṇam)', duration: 200 },
-  { word: 'డబ్బు (Dabbu)', duration: 200 },
-  { word: 'ಹಣ (Haṇa)', duration: 200 },
-  { word: 'पैसे (Paise)', duration: 200 },
-  { word: 'પૈસા (Paisa)', duration: 200 },
-  { word: 'Argent', duration: 200 },
-  { word: 'Dinero', duration: 200 },
-  { word: 'お金 (Okane)', duration: 200 },
-  // Followed by continuation words with longer 2s duration (2000ms)
+  { word: 'MONEY',   duration: 200 },
+  { word: 'पैसा',    duration: 200 },
+  { word: 'টাকা',    duration: 200 },
+  { word: 'பணம்',    duration: 200 },
+  { word: 'డబ్బు',   duration: 200 },
+  { word: 'ಹಣ',      duration: 200 },
+  { word: 'पैसे',    duration: 200 },
+  { word: 'પૈસા',    duration: 200 },
+  { word: 'Argent',  duration: 200 },
+  { word: 'Dinero',  duration: 200 },
+  { word: 'お金',     duration: 200 },
+  // Continuation words with longer 2s duration
   { word: 'CURRENCY', duration: 2000 },
-  { word: 'CAPITAL', duration: 2000 },
+  { word: 'CAPITAL',  duration: 2000 },
 ];
 
 const DOMAINS_DATA = [
