@@ -30,7 +30,10 @@ function mapProfile(p) {
     currentYear: p.current_year || '1st Year',
     contactNumber: p.contact_number || '',
     interestedDomain: p.interested_domain || DOMAIN_OPTIONS[0],
-    gmail: p.email
+    gmail: p.email,
+    membershipStatus: p.membership_status || 'approved',
+    membershipReviewedBy: p.membership_reviewed_by || null,
+    membershipReviewedAt: p.membership_reviewed_at || null
   };
 }
 
@@ -438,6 +441,22 @@ export function PortalProvider({ children }) {
     return members[email.toLowerCase().trim()] || null;
   };
 
+  // ---- membership approval (Super Admin) ----
+  const getPendingMembers = useCallback(
+    () => Object.values(members).filter(m => m.role === 'student' && m.membershipStatus === 'pending'),
+    [members]
+  );
+
+  const approveMember = async (memberId) => {
+    await api.post(`/api/members/${memberId}/approve`);
+    await refreshMembers();
+  };
+
+  const rejectMember = async (memberId) => {
+    await api.post(`/api/members/${memberId}/reject`);
+    await refreshMembers();
+  };
+
   // ---- recordings ----
   const saveRecording = async (recData) => {
     await api.post('/api/recordings', {
@@ -583,6 +602,9 @@ export function PortalProvider({ children }) {
         members,
         saveMember,
         getMemberByEmail,
+        getPendingMembers,
+        approveMember,
+        rejectMember,
         activity,
         updateStudentActivity,
         getStudentActivity,

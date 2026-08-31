@@ -18,7 +18,10 @@ export default function SuperAdminPortalPage() {
     rejectEvent,
     resubmitEvent,
     getPendingEvents,
-    members
+    members,
+    getPendingMembers,
+    approveMember,
+    rejectMember
   } = usePortal();
 
   const router = useRouter();
@@ -38,6 +41,7 @@ export default function SuperAdminPortalPage() {
   if (!currentUser || currentUser.role !== 'superadmin') return null;
 
   const pendingEvents = getPendingEvents();
+  const pendingMembers = getPendingMembers();
   const memberCount = Object.keys(members).length;
 
   return (
@@ -62,6 +66,10 @@ export default function SuperAdminPortalPage() {
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingEvents.length}</span>
                 <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Awaiting Review</span>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
+                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingMembers.length}</span>
+                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Pending Members</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{events.length}</span>
@@ -90,6 +98,13 @@ export default function SuperAdminPortalPage() {
             onClick={() => setActiveTab('all')}
           >
             ALL EVENTS ({events.length})
+          </button>
+          <button
+            type="button"
+            className={`portal-role-tab ${activeTab === 'members' ? 'active' : ''}`}
+            onClick={() => setActiveTab('members')}
+          >
+            MEMBER APPLICATIONS ({pendingMembers.length})
           </button>
         </div>
 
@@ -187,6 +202,57 @@ export default function SuperAdminPortalPage() {
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+
+        {/* TAB 3: MEMBER APPLICATIONS */}
+        {activeTab === 'members' && (
+          <div>
+            {pendingMembers.length === 0 ? (
+              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending membership applications. New sign-ups from the Join form will show up here for approval.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                {pendingMembers.map(member => (
+                  <div key={member.id} className="simple-event-card">
+                    <div className="simple-card-top">
+                      <span className="status-pill pending">⏳ PENDING REVIEW</span>
+                      <span className="simple-card-category" style={{ display: 'block', marginTop: '8px' }}>{member.interestedDomain}</span>
+                      <h3 className="simple-card-title">{member.name}</h3>
+                      <p className="simple-card-desc">
+                        {member.department} • {member.currentYear} • {member.school}
+                      </p>
+                    </div>
+                    <div className="simple-card-bottom">
+                      <div className="simple-card-meta">
+                        <span>🎓 Roll {member.rollNumber} / Reg {member.regNumber}</span>
+                        <span>📧 {member.email}</span>
+                        <span>📞 {member.contactNumber}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                        <button
+                          type="button"
+                          onClick={() => approveMember(member.id).catch(err => alert(err.message))}
+                          className="btn btn-primary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', background: '#15803d', border: '1px solid #15803d' }}
+                        >
+                          ✓ APPROVE
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => rejectMember(member.id).catch(err => alert(err.message))}
+                          className="btn btn-secondary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', color: '#ef4444' }}
+                        >
+                          ✕ REJECT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

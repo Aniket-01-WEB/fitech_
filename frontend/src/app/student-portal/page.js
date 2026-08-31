@@ -71,6 +71,38 @@ export default function StudentPortalPage() {
     return null;
   }
 
+  // A new member's application must be approved by a Super Admin before
+  // they can use the portal — mirrors the event approval workflow. RLS
+  // enforces this server-side too (recordings/notes reads and event
+  // registration all require is_member_approved()); this is just the UX.
+  if (currentUser.membershipStatus !== 'approved') {
+    return (
+      <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+        <div className="container">
+          <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center', padding: '48px 32px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
+            {currentUser.membershipStatus === 'rejected' ? (
+              <>
+                <div style={{ fontSize: '40px', marginBottom: '16px' }}>✕</div>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>MEMBERSHIP APPLICATION DECLINED</h2>
+                <p style={{ color: '#64748b', fontSize: '14px' }}>
+                  Your membership application wasn&apos;t approved by the Super Admin. If you believe this is a mistake, reach out to the club directly.
+                </p>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: '40px', marginBottom: '16px' }}>⏳</div>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>APPLICATION PENDING SUPER ADMIN APPROVAL</h2>
+                <p style={{ color: '#64748b', fontSize: '14px' }}>
+                  Thanks for applying to MATRIX FinTech Club{currentUser.name ? `, ${currentUser.name}` : ''}. A Super Admin needs to approve your membership before you can register for events or access recordings and notes. Check back soon.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Only Super-Admin-approved events are ever visible/joinable here.
   const approvedEvents = getApprovedEvents();
   const userActivity = getStudentActivity(currentUser.email);
