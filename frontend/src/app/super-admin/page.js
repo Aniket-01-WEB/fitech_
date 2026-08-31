@@ -42,7 +42,8 @@ export default function SuperAdminPortalPage() {
 
   const pendingEvents = getPendingEvents();
   const pendingMembers = getPendingMembers();
-  const memberCount = Object.keys(members).length;
+  const memberList = Object.values(members).sort((a, b) => a.name.localeCompare(b.name));
+  const memberCount = memberList.length;
 
   return (
     <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
@@ -105,6 +106,13 @@ export default function SuperAdminPortalPage() {
             onClick={() => setActiveTab('members')}
           >
             MEMBER APPLICATIONS ({pendingMembers.length})
+          </button>
+          <button
+            type="button"
+            className={`portal-role-tab ${activeTab === 'directory' ? 'active' : ''}`}
+            onClick={() => setActiveTab('directory')}
+          >
+            MEMBER DIRECTORY ({memberCount})
           </button>
         </div>
 
@@ -251,6 +259,55 @@ export default function SuperAdminPortalPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 4: MEMBER DIRECTORY */}
+        {activeTab === 'directory' && (
+          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px' }}>
+              CLUB MEMBER DIRECTORY
+            </h3>
+            {memberList.length === 0 ? (
+              <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No members yet.</p>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                      <th style={{ padding: '12px' }}>NAME</th>
+                      <th style={{ padding: '12px' }}>ROLL / REG NO.</th>
+                      <th style={{ padding: '12px' }}>DEPARTMENT / YEAR</th>
+                      <th style={{ padding: '12px' }}>TRACK INTEREST</th>
+                      <th style={{ padding: '12px' }}>ROLE</th>
+                      <th style={{ padding: '12px' }}>MEMBERSHIP</th>
+                      <th style={{ padding: '12px' }}>CONTACT / EMAIL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {memberList.map((m, idx) => (
+                      <tr key={m.id || idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '12px', fontWeight: '700' }}>{m.name}</td>
+                        <td style={{ padding: '12px' }}>{m.rollNumber || '—'} / {m.regNumber || '—'}</td>
+                        <td style={{ padding: '12px' }}>{m.department || '—'} {m.currentYear ? `(${m.currentYear})` : ''}</td>
+                        <td style={{ padding: '12px' }}>{m.interestedDomain || '—'}</td>
+                        <td style={{ padding: '12px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: m.role === 'superadmin' ? '#6d28d9' : m.role === 'admin' ? '#0f172a' : '#64748b' }}>
+                            {m.role}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          {m.role === 'student'
+                            ? <span className={`status-pill ${m.membershipStatus}`}>{m.membershipStatus?.toUpperCase()}</span>
+                            : <span style={{ color: '#94a3b8', fontSize: '12px' }}>N/A</span>}
+                        </td>
+                        <td style={{ padding: '12px' }}>{m.contactNumber || '—'} / {m.email}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
