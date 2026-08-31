@@ -29,7 +29,7 @@
 .section, .container, .event-card, .event-category, .project-card-scatter,
 .project-scatter-preview, .project-scatter-tags span,
 .benefit-card, .resource-card, .habito-card,
-.habito-showreel-box, .github-activity-card, .github-sq, .events-tabs, .tab-btn,
+.habito-showreel-box, .github-activity-card, .github-sq,
 .filter-btn, .search-input, .join-modal-container, .btn, .nav-cta, .tag-pill,
 .stat-item, .resource-category, .event-image, input, select, button {
   border-radius: 0 !important;
@@ -3779,4 +3779,94 @@ canvas{display:block}
   border: 1px solid #cbd5e1;
   color: #0f172a;
   border-radius: 4px;
+}
+
+.empty-events-box {
+  width: 100%;
+  min-height: 680px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 28px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 140px 24px;
+  margin: 16px 0 0 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.empty-events-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: -0.2px;
+  margin: 0;
+  text-align: center;
+}
+
+.events-tabs {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  padding: 4px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 100px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  width: max-content !important;
+}
+
+.events-tabs-indicator {
+  position: absolute !important;
+  top: 4px !important;
+  bottom: 4px !important;
+  left: 4px !important;
+  width: calc(50% - 6px) !important;
+  background: #0f172a !important;
+  border-radius: 100px !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22) !important;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.tab-btn {
+  position: relative !important;
+  z-index: 2 !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font-heading), var(--font-body), sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  color: #64748b !important;
+  padding: 10px 24px !important;
+  border-radius: 100px !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+  flex: 1 1 0% !important;
+  min-width: 140px !important;
+  text-align: center !important;
+}
+
+.tab-btn:hover {
+  color: #0f172a !important;
+}
+
+.tab-btn.active {
+  color: #ffffff !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }

@@ -230,9 +230,11 @@ export default function StudentPortalPage() {
         {activeTab === 'all-events' && (
           <div>
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>ALL CLUB EVENTS & WORKSHOPS</h2>
-            {approvedEvents.length === 0 && (
-              <p style={{ color: '#94a3b8', fontStyle: 'italic', marginBottom: '20px' }}>No approved events yet — check back once the Super Admin reviews pending requests.</p>
-            )}
+            {approvedEvents.length === 0 ? (
+              <div className="empty-events-box">
+                <p className="empty-events-text">No upcoming events.</p>
+              </div>
+            ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
               {approvedEvents.map(evt => {
                 const joined = isEventJoined(evt.id, currentUser.email);
@@ -271,6 +273,7 @@ export default function StudentPortalPage() {
                 );
               })}
             </div>
+            )}
           </div>
         )}
 

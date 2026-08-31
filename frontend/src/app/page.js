@@ -300,12 +300,18 @@ export default function HomePage() {
       </section>
 
       {/* 5. EVENTS MARQUEE SECTION */}
-      <section className="section" id="events" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+      <section className="section" id="events" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', padding: '48px 0 24px 0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
             <h2 className="section-title" style={{ margin: 0 }}>EVENTS & MASTERCLASSES</h2>
 
             <div className="events-tabs">
+              <div
+                className="events-tabs-indicator"
+                style={{
+                  transform: eventsTab === 'upcoming' ? 'translateX(0)' : 'translateX(calc(100% + 4px))'
+                }}
+              />
               <button
                 type="button"
                 className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
@@ -324,29 +330,37 @@ export default function HomePage() {
           </div>
 
           <div className="events-marquee-wrapper">
-            <div className="events-marquee-track">
-              {filteredEvents.map((evt, idx) => (
-                <div
-                  key={evt.id}
-                  className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
-                  onClick={() => openDetailModal(evt)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="event-image" style={{ background: evt.banner || 'linear-gradient(135deg, #0f172a, #1e293b)' }}>
-                    <span className="event-category">{evt.type || 'Event'}</span>
-                  </div>
-                  <div className="event-body">
-                    <h3 className="event-name">{evt.title}</h3>
-                    <div className="event-meta">
-                      <span>📅 {evt.time}</span>
-                      <span>📍 {evt.venue}</span>
+            {filteredEvents.length === 0 ? (
+              <div className="empty-events-box">
+                <p className="empty-events-text">
+                  {eventsTab === 'upcoming' ? 'No upcoming events.' : 'No past sessions.'}
+                </p>
+              </div>
+            ) : (
+              <div className="events-marquee-track">
+                {filteredEvents.map((evt, idx) => (
+                  <div
+                    key={evt.id}
+                    className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
+                    onClick={() => openDetailModal(evt)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="event-image" style={{ background: evt.banner || 'linear-gradient(135deg, #0f172a, #1e293b)' }}>
+                      <span className="event-category">{evt.type || 'Event'}</span>
                     </div>
-                    <p className="event-desc">{evt.description}</p>
-                    <span className="text-link">View Details & Register →</span>
+                    <div className="event-body">
+                      <h3 className="event-name">{evt.title}</h3>
+                      <div className="event-meta">
+                        <span>📅 {evt.time}</span>
+                        <span>📍 {evt.venue}</span>
+                      </div>
+                      <p className="event-desc">{evt.description}</p>
+                      <span className="text-link">View Details & Register →</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

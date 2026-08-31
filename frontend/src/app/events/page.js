@@ -33,31 +33,37 @@ export default function EventsPage() {
           <span className="simple-section-badge">SPRING / SUMMER 2026</span>
         </div>
 
-        <div className="simple-events-grid">
-          {upcomingEvents.map(evt => (
-            <div key={evt.id} className="simple-event-card">
-              <div className="simple-card-top">
-                <span className="simple-card-category">{evt.type || 'EVENT'}</span>
-                <h3 className="simple-card-title">{evt.title}</h3>
-                <p className="simple-card-desc">{evt.description}</p>
-              </div>
-
-              <div className="simple-card-bottom">
-                <div className="simple-card-meta">
-                  <span className="simple-meta-date">📅 {evt.time}</span>
-                  <span className="simple-meta-venue">📍 {evt.venue}</span>
+        {upcomingEvents.length === 0 ? (
+          <div className="empty-events-box">
+            <p className="empty-events-text">No upcoming events.</p>
+          </div>
+        ) : (
+          <div className="simple-events-grid">
+            {upcomingEvents.map(evt => (
+              <div key={evt.id} className="simple-event-card">
+                <div className="simple-card-top">
+                  <span className="simple-card-category">{evt.type || 'EVENT'}</span>
+                  <h3 className="simple-card-title">{evt.title}</h3>
+                  <p className="simple-card-desc">{evt.description}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => openDetailModal(evt)}
-                  className="simple-action-btn"
-                >
-                  VIEW DETAILS →
-                </button>
+
+                <div className="simple-card-bottom">
+                  <div className="simple-card-meta">
+                    <span className="simple-meta-date">📅 {evt.time}</span>
+                    <span className="simple-meta-venue">📍 {evt.venue}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openDetailModal(evt)}
+                    className="simple-action-btn"
+                  >
+                    VIEW DETAILS →
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* PAST SESSIONS SECTION */}
