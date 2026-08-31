@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { usePortal } from '@/context/PortalContext';
 
 const ROLE_HOME = {
@@ -11,10 +10,20 @@ const ROLE_HOME = {
   student: '/student-portal'
 };
 
+const ROLE_LABEL = {
+  student: 'Student Portal',
+  admin: 'Admin Console',
+  superadmin: 'Super Admin'
+};
+
+// Demo accounts seeded directly in Supabase Auth for quick testing.
+const DEMO_PASSWORD = 'MatrixDemo-2026!';
+
 export default function LoginPage() {
   const [role, setRole] = useState('student'); // 'student' | 'admin' | 'superadmin'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const { login, currentUser, openJoinModal } = usePortal();
   const router = useRouter();
@@ -25,37 +34,42 @@ export default function LoginPage() {
     }
   }, [currentUser, router]);
 
+  const attemptLogin = async (loginEmail, loginPassword, expectedRole) => {
+    setErrorMsg('');
+    setIsSubmitting(true);
+    try {
+      const profile = await login(loginEmail, loginPassword);
+      if (profile.role !== expectedRole) {
+        setErrorMsg(`This account isn't registered as ${ROLE_LABEL[expectedRole]}. It's a ${ROLE_LABEL[profile.role] || profile.role} account — try that tab instead.`);
+        setIsSubmitting(false);
+        return;
+      }
+      router.push(ROLE_HOME[profile.role] || '/student-portal');
+    } catch (err) {
+      setErrorMsg(err.message || 'Sign in failed. Check your email and password.');
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg('');
-
     const trimmedEmail = email.trim().toLowerCase();
-    if (!trimmedEmail) {
-      setErrorMsg('Please enter a valid email address.');
+    if (!trimmedEmail || !password) {
+      setErrorMsg('Please enter your email and password.');
       return;
     }
-
-    if (role === 'admin') {
-      if (password !== 'admin123' && password !== 'matrix2026' && password !== 'admin') {
-        setErrorMsg('Invalid admin credentials. (Demo pass: admin123 or matrix2026)');
-        return;
-      }
-    }
-
-    if (role === 'superadmin') {
-      if (password !== 'super2026' && password !== 'superadmin123') {
-        setErrorMsg('Invalid super admin credentials. (Demo pass: super2026 or superadmin123)');
-        return;
-      }
-    }
-
-    login(role, trimmedEmail);
-    router.push(ROLE_HOME[role] || '/student-portal');
+    attemptLogin(trimmedEmail, password, role);
   };
 
   const handleQuickDemo = (demoRole, demoEmail) => {
-    login(demoRole, demoEmail);
-    router.push(ROLE_HOME[demoRole] || '/student-portal');
+    setRole(demoRole);
+    setEmail(demoEmail);
+    attemptLogin(demoEmail, DEMO_PASSWORD, demoRole);
+  };
+
+  const handleRoleSwitch = (newRole) => {
+    setRole(newRole);
+    setErrorMsg('');
   };
 
   return (
@@ -71,21 +85,21 @@ export default function LoginPage() {
           <button
             type="button"
             className={`portal-role-tab ${role === 'student' ? 'active' : ''}`}
-            onClick={() => { setRole('student'); setErrorMsg(''); }}
+            onClick={() => handleRoleSwitch('student')}
           >
             STUDENT PORTAL
           </button>
           <button
             type="button"
             className={`portal-role-tab ${role === 'admin' ? 'active' : ''}`}
-            onClick={() => { setRole('admin'); setErrorMsg(''); }}
+            onClick={() => handleRoleSwitch('admin')}
           >
             ADMIN CONSOLE
           </button>
           <button
             type="button"
             className={`portal-role-tab ${role === 'superadmin' ? 'active' : ''}`}
-            onClick={() => { setRole('superadmin'); setErrorMsg(''); }}
+            onClick={() => handleRoleSwitch('superadmin')}
           >
             SUPER ADMIN
           </button>
@@ -95,30 +109,31 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="portal-form">
           <div className="form-group">
-            <label htmlFor="login-email">{role === 'superadmin' ? 'Super Admin Gmail / Username' : role === 'admin' ? 'Admin Gmail / Username' : 'Student Registered Email'}</label>
+            <label htmlFor="login-email">Registered Email</label>
             <input
               type="email"
               id="login-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'superadmin' ? 'superadmin@matrix.club' : role === 'admin' ? 'admin@matrix.club' : 'student@matrix.club'}
+              placeholder="you@example.com"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="login-pass">{role === 'superadmin' ? 'Super Admin Security Password' : role === 'admin' ? 'Admin Security Password' : 'Password (Optional)'}</label>
+            <label htmlFor="login-pass">Password</label>
             <input
               type="password"
               id="login-pass"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={role !== 'student' ? 'Enter password' : '••••••••'}
+              placeholder="••••••••"
+              required
             />
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
-            AUTHENTICATE & LOG IN →
+          <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
+            {isSubmitting ? 'AUTHENTICATING...' : 'AUTHENTICATE & LOG IN →'}
           </button>
         </form>
 
@@ -131,6 +146,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleQuickDemo('student', 'student@matrix.club')}
               className="btn btn-secondary"
+              disabled={isSubmitting}
               style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
             >
               ⚡ Student Demo
@@ -139,6 +155,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleQuickDemo('admin', 'admin@matrix.club')}
               className="btn btn-secondary"
+              disabled={isSubmitting}
               style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
             >
               ⚡ Admin Demo
@@ -147,6 +164,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleQuickDemo('superadmin', 'superadmin@matrix.club')}
               className="btn btn-secondary"
+              disabled={isSubmitting}
               style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
             >
               ⚡ Super Admin Demo

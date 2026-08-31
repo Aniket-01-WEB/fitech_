@@ -44,5 +44,6 @@ All routes expect `Authorization: Bearer <supabase access token>` except the pub
 | `/api/recordings`, `/api/notes` | GET (any signed-in member) / POST (admin/superadmin) | |
 | `/api/recordings/:id`, `/api/notes/:id` | PATCH / DELETE | admin/superadmin |
 | `/api/activity` | GET / PATCH (increment) | self |
+| `/api/members` | GET (full directory) | admin/superadmin (RLS narrows a student's call to just their own row) |
 
 See the [root README](../README.md) for the full data model and the security model.

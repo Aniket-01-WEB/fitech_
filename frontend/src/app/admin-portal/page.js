@@ -56,7 +56,7 @@ export default function AdminPortalPage() {
     topicsStr: 'Quant Models, Market Microstructure',
     link: '',
     fileName: '',
-    fileData: ''
+    file: null
   });
 
   // Inspector state
@@ -86,12 +86,17 @@ export default function AdminPortalPage() {
 
   if (!currentUser || currentUser.role !== 'admin') return null;
 
-  const handleSaveEvent = (e) => {
+  const handleSaveEvent = async (e) => {
     e.preventDefault();
-    if (editingEventId) {
-      updateEvent(editingEventId, eventForm);
-    } else {
-      createEvent(eventForm);
+    try {
+      if (editingEventId) {
+        await updateEvent(editingEventId, eventForm);
+      } else {
+        await createEvent(eventForm);
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to save event.');
+      return;
     }
     setShowEventForm(false);
     setEditingEventId(null);
@@ -114,16 +119,12 @@ export default function AdminPortalPage() {
   const handleNoteFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      setNoteForm(prev => ({ ...prev, fileName: file.name, fileData: reader.result }));
-    };
-    reader.readAsDataURL(file);
+    setNoteForm(prev => ({ ...prev, fileName: file.name, file }));
   };
 
-  const handleSaveNoteSubmit = (e) => {
+  const handleSaveNoteSubmit = async (e) => {
     e.preventDefault();
-    if (!noteForm.fileData && !noteForm.link.trim()) {
+    if (!noteForm.file && !noteForm.link.trim()) {
       alert('Attach a file or provide a link before uploading a note.');
       return;
     }
@@ -131,17 +132,21 @@ export default function AdminPortalPage() {
       ? noteForm.topicsStr.split(',').map(t => t.trim()).filter(Boolean)
       : ['General Notes'];
 
-    saveNote({
-      title: noteForm.title,
-      domain: noteForm.domain,
-      author: noteForm.author || (currentUser ? currentUser.email : 'Admin'),
-      fileType: noteForm.fileType,
-      description: noteForm.description,
-      topics: topics,
-      link: noteForm.link,
-      fileName: noteForm.fileName,
-      fileData: noteForm.fileData
-    });
+    try {
+      await saveNote({
+        title: noteForm.title,
+        domain: noteForm.domain,
+        author: noteForm.author || (currentUser ? currentUser.email : 'Admin'),
+        fileType: noteForm.fileType,
+        description: noteForm.description,
+        topics: topics,
+        link: noteForm.link,
+        file: noteForm.file
+      });
+    } catch (err) {
+      alert(err.message || 'Failed to upload note.');
+      return;
+    }
 
     setShowNoteModal(false);
     setNoteForm({
@@ -153,13 +158,18 @@ export default function AdminPortalPage() {
       topicsStr: 'Quant Models, Market Microstructure',
       link: '',
       fileName: '',
-      fileData: ''
+      file: null
     });
   };
 
-  const handleSaveRec = (e) => {
+  const handleSaveRec = async (e) => {
     e.preventDefault();
-    saveRecording(recForm);
+    try {
+      await saveRecording(recForm);
+    } catch (err) {
+      alert(err.message || 'Failed to save recording.');
+      return;
+    }
     setShowRecForm(false);
     setRecForm({ title: '', type: 'Algo Workshop', date: '', duration: '', speaker: '', description: '' });
   };
@@ -225,7 +235,7 @@ export default function AdminPortalPage() {
                     topicsStr: 'Quant Models, Market Microstructure',
                     link: '',
                     fileName: '',
-                    fileData: ''
+                    file: null
                   });
                   setShowNoteModal(true);
                 }}
@@ -476,7 +486,7 @@ export default function AdminPortalPage() {
                       {evt.status === 'rejected' && (
                         <button
                           type="button"
-                          onClick={() => resubmitEvent(evt.id)}
+                          onClick={() => resubmitEvent(evt.id).catch(err => alert(err.message))}
                           className="admin-btn admin-btn-edit"
                         >
                           RESUBMIT
@@ -484,7 +494,7 @@ export default function AdminPortalPage() {
                       )}
                       <button
                         type="button"
-                        onClick={() => deleteEvent(evt.id)}
+                        onClick={() => { if (confirm('Delete this event?')) deleteEvent(evt.id).catch(err => alert(err.message)); }}
                         className="admin-btn admin-btn-delete"
                       >
                         DELETE
@@ -522,7 +532,7 @@ export default function AdminPortalPage() {
                     topicsStr: 'Quant Models, Market Microstructure',
                     link: '',
                     fileName: '',
-                    fileData: ''
+                    file: null
                   });
                   setShowNoteModal(true);
                 }}
@@ -582,7 +592,7 @@ export default function AdminPortalPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => deleteNote(note.id)}
+                      onClick={() => { if (confirm('Delete this note?')) deleteNote(note.id).catch(err => alert(err.message)); }}
                       className="admin-btn admin-btn-delete"
                     >
                       DELETE
@@ -750,7 +760,7 @@ export default function AdminPortalPage() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => deleteRecording(rec.id)}
+                      onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(err => alert(err.message)); }}
                       className="admin-btn admin-btn-delete"
                       style={{ width: '100%' }}
                     >

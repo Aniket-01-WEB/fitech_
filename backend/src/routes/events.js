@@ -10,7 +10,10 @@ const EDITABLE_FIELDS = ['title', 'type', 'banner', 'event_time', 'event_time_la
 // anonymous/student caller only ever sees status='approved' rows; an
 // admin/superadmin sees every event, including pending and rejected ones.
 router.get('/', attachSupabase, async (req, res) => {
-  const { data, error } = await req.supabase.from('events').select('*').order('created_at', { ascending: false });
+  const { data, error } = await req.supabase
+    .from('events')
+    .select('*, created_by_profile:profiles!events_created_by_fkey(email), reviewed_by_profile:profiles!events_reviewed_by_fkey(email)')
+    .order('created_at', { ascending: false });
   if (error) return sendError(res, error);
   res.json({ events: data });
 });

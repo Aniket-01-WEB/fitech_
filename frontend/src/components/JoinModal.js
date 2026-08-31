@@ -6,8 +6,9 @@ import { usePortal } from '@/context/PortalContext';
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyd1SmdJymqZ1B0Z-d5K0J5N28h-M4jJq1rF-vX1Q1s9J4x2m/exec';
 
 export default function JoinModal() {
-  const { isJoinModalOpen, closeJoinModal, saveMember, login } = usePortal();
+  const { isJoinModalOpen, closeJoinModal, signUp } = usePortal();
   const [submitted, setSubmitted] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -21,6 +22,7 @@ export default function JoinModal() {
     currentYear: '1st Year',
     contactNumber: '',
     gmail: '',
+    password: '',
     interestedDomain: 'Quantitative Finance & Algo'
   });
 
@@ -33,18 +35,22 @@ export default function JoinModal() {
     e.preventDefault();
     setErrorMsg('');
 
-    const requiredFields = ['name', 'regNumber', 'rollNumber', 'school', 'department', 'section', 'contactNumber', 'gmail'];
+    const requiredFields = ['name', 'regNumber', 'rollNumber', 'school', 'department', 'section', 'contactNumber', 'gmail', 'password'];
     for (const field of requiredFields) {
       if (!formData[field].trim()) {
         setErrorMsg('Please fill in all required fields.');
         return;
       }
     }
+    if (formData.password.length < 8) {
+      setErrorMsg('Password must be at least 8 characters.');
+      return;
+    }
 
     setSubmitting(true);
 
     try {
-      // 1. Post to Webhook (fire and forget fallback)
+      // Fire-and-forget backup log — unrelated to real account creation.
       fetch(WEBHOOK_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -52,13 +58,10 @@ export default function JoinModal() {
         body: JSON.stringify(formData)
       }).catch(err => console.error('Webhook error:', err));
 
-      // 2. Save member to local store
-      saveMember(formData);
-
-      // 3. Auto-login user as student
-      login('student', formData.gmail);
+      const result = await signUp(formData.gmail, formData.password, formData);
 
       setSubmitting(false);
+      setNeedsConfirmation(Boolean(result.needsConfirmation));
       setSubmitted(true);
     } catch (err) {
       setSubmitting(false);
@@ -165,6 +168,11 @@ export default function JoinModal() {
                 </div>
 
                 <div className="form-group form-group-full">
+                  <label htmlFor="modal-password">Choose a Password <span className="req">*</span></label>
+                  <input type="password" id="modal-password" name="password" value={formData.password} onChange={handleChange} placeholder="At least 8 characters" minLength={8} required />
+                </div>
+
+                <div className="form-group form-group-full">
                   <label htmlFor="modal-domain">Primary Track of Interest</label>
                   <select id="modal-domain" name="interestedDomain" value={formData.interestedDomain} onChange={handleChange}>
                     <option value="Quantitative Finance & Algo">Quantitative Finance & Algo Trading</option>
@@ -186,8 +194,12 @@ export default function JoinModal() {
         ) : (
           <div className="join-success-state">
             <div className="success-icon-circle">✓</div>
-            <h3>Application Received!</h3>
-            <p>Welcome to MATRIX FinTech Club. Your profile has been logged and you are now authenticated as a student member.</p>
+            <h3>{needsConfirmation ? 'Almost there!' : 'Application Received!'}</h3>
+            <p>
+              {needsConfirmation
+                ? `We've sent a confirmation link to ${formData.gmail}. Confirm your email, then log in from the Student Portal tab.`
+                : 'Welcome to MATRIX FinTech Club. Your profile has been logged and you are now authenticated as a student member.'}
+            </p>
             <button type="button" className="join-done-btn" onClick={handleClose}>
               DONE & CONTINUE →
             </button>

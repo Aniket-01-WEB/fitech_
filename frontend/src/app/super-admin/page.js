@@ -119,7 +119,7 @@ export default function SuperAdminPortalPage() {
                       <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                         <button
                           type="button"
-                          onClick={() => approveEvent(evt.id)}
+                          onClick={() => approveEvent(evt.id).catch(err => alert(err.message))}
                           className="btn btn-primary"
                           style={{ flex: 1, justifyContent: 'center', fontSize: '12px', background: '#15803d', border: '1px solid #15803d' }}
                         >
@@ -127,7 +127,7 @@ export default function SuperAdminPortalPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => rejectEvent(evt.id)}
+                          onClick={() => rejectEvent(evt.id).catch(err => alert(err.message))}
                           className="btn btn-secondary"
                           style={{ flex: 1, justifyContent: 'center', fontSize: '12px', color: '#ef4444' }}
                         >
@@ -172,13 +172,13 @@ export default function SuperAdminPortalPage() {
                       <td style={{ padding: '12px' }}>
                         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                           {evt.status !== 'approved' && (
-                            <button type="button" onClick={() => approveEvent(evt.id)} className="btn btn-secondary" style={{ fontSize: '11px', color: '#15803d' }}>APPROVE</button>
+                            <button type="button" onClick={() => approveEvent(evt.id).catch(err => alert(err.message))} className="btn btn-secondary" style={{ fontSize: '11px', color: '#15803d' }}>APPROVE</button>
                           )}
                           {evt.status !== 'rejected' && (
-                            <button type="button" onClick={() => rejectEvent(evt.id)} className="btn btn-secondary" style={{ fontSize: '11px', color: '#ef4444' }}>REJECT</button>
+                            <button type="button" onClick={() => rejectEvent(evt.id).catch(err => alert(err.message))} className="btn btn-secondary" style={{ fontSize: '11px', color: '#ef4444' }}>REJECT</button>
                           )}
                           {evt.status !== 'pending' && (
-                            <button type="button" onClick={() => resubmitEvent(evt.id)} className="btn btn-secondary" style={{ fontSize: '11px' }}>RESET TO PENDING</button>
+                            <button type="button" onClick={() => resubmitEvent(evt.id).catch(err => alert(err.message))} className="btn btn-secondary" style={{ fontSize: '11px' }}>RESET TO PENDING</button>
                           )}
                         </div>
                       </td>

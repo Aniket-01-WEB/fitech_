@@ -18,7 +18,7 @@ export default function EventDetailModal() {
       openJoinModal();
       return;
     }
-    toggleJoinEvent(activeDetailEvent.id, currentUser.email);
+    toggleJoinEvent(activeDetailEvent.id).catch(err => alert(err.message));
   };
 
   return (

@@ -10,9 +10,20 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({
+    ok: true,
+    service: 'matrix-backend',
+    status: 'online',
+    health: '/health',
+    api: '/api'
+  });
+});
+
 app.get('/health', (req, res) => res.json({ ok: true, service: 'matrix-backend' }));
 
 app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

@@ -29,7 +29,6 @@ export default function StudentPortalPage() {
     toggleJoinEvent,
     openDetailModal,
     openRecordingPlayer,
-    getMemberByEmail,
     saveMember,
     getStudentActivity,
     updateStudentActivity
@@ -41,9 +40,10 @@ export default function StudentPortalPage() {
 
   // memberProfile is derived every render so it's always safe to call as a hook
   // initializer below, regardless of whether currentUser has hydrated yet.
-  const memberProfile = currentUser
-    ? (getMemberByEmail(currentUser.email) || { ...DEFAULT_PROFILE_TEMPLATE, name: currentUser.email.split('@')[0], gmail: currentUser.email })
-    : DEFAULT_PROFILE_TEMPLATE;
+  // currentUser (from the /api/profile fetch) already carries every field —
+  // there's no separate per-student lookup needed (getMemberByEmail only
+  // ever resolves for staff, since the member directory is staff-only).
+  const memberProfile = currentUser || DEFAULT_PROFILE_TEMPLATE;
 
   const [profileForm, setProfileForm] = useState(memberProfile);
 
@@ -76,9 +76,14 @@ export default function StudentPortalPage() {
   const userActivity = getStudentActivity(currentUser.email);
   const myEvents = getJoinedEventsForUser(currentUser.email);
 
-  const handleProfileSave = (e) => {
+  const handleProfileSave = async (e) => {
     e.preventDefault();
-    saveMember(profileForm);
+    try {
+      await saveMember(profileForm);
+    } catch (err) {
+      alert(err.message || 'Failed to save profile.');
+      return;
+    }
     setEditingProfile(false);
   };
 
@@ -207,7 +212,7 @@ export default function StudentPortalPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => toggleJoinEvent(evt.id, currentUser.email)}
+                        onClick={() => toggleJoinEvent(evt.id).catch(err => alert(err.message))}
                         className="btn portal-btn-joined"
                         style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}
                       >
@@ -254,7 +259,7 @@ export default function StudentPortalPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => toggleJoinEvent(evt.id, currentUser.email)}
+                          onClick={() => toggleJoinEvent(evt.id).catch(err => alert(err.message))}
                           className={`btn ${joined ? 'portal-btn-joined' : 'btn-primary'}`}
                           style={{ flex: 1.5, fontSize: '12px', justifyContent: 'center' }}
                         >
@@ -384,7 +389,7 @@ export default function StudentPortalPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 className="section-title" style={{ fontSize: '22px', margin: 0 }}>STUDENT PROFILE DETAILS</h2>
               {!editingProfile && (
-                <button type="button" onClick={() => setEditingProfile(true)} className="btn btn-secondary">
+                <button type="button" onClick={() => { setProfileForm(memberProfile); setEditingProfile(true); }} className="btn btn-secondary">
                   ✏ EDIT PROFILE
                 </button>
               )}

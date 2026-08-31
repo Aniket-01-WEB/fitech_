@@ -1,16 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-
-const KEYS = {
-  EVENTS: 'matrix_events',
-  CURRENT_USER: 'matrix_current_user',
-  REGISTRATIONS: 'matrix_student_registrations',
-  MEMBERS: 'matrix_members',
-  RECORDINGS: 'matrix_recordings',
-  NOTES: 'matrix_notes',
-  ACTIVITY: 'matrix_student_activity'
-};
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/lib/supabase';
+import { api } from '@/lib/api';
 
 // Shared domain/track options — used by the Join form, the Notes uploader, and profile editing.
 export const DOMAIN_OPTIONS = [
@@ -21,498 +13,388 @@ export const DOMAIN_OPTIONS = [
   'High-Frequency Trading & Systems'
 ];
 
-const SEED_NOTES = [
-  {
-    id: 'note-1',
-    title: 'Quantitative Portfolio Optimization & Mean-Variance Matrix Guide',
-    domain: 'Quantitative Finance & Algo Trading',
-    fileType: 'PDF / Mathematical Guide',
-    description: 'Comprehensive derivation of Markowitz efficient frontier, Lagrange multipliers, Sharpe ratio maximization, and shrinkage covariance estimators in Python.',
-    topics: ['Mean-Variance Frontier', 'Covariance Shrinkage', 'Sharpe Optimization', 'Python Scipy Implementation'],
-    fileName: '',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1770000000000
-  },
-  {
-    id: 'note-2',
-    title: 'Stochastic Calculus & Black-Scholes Volatility Formulations',
-    domain: 'Risk Analytics & Economic Modeling',
-    fileType: 'Formula Sheet / Lecture Notes',
-    description: "Itô's Lemma derivations, risk-neutral valuation formulas, Greeks sensitivity matrix, and Monte Carlo path simulation algorithms.",
-    topics: ["Itô's Lemma", 'Black-Scholes PDE', 'The Greeks (Delta, Gamma, Vega)', 'Monte Carlo Simulation'],
-    fileName: '',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1771000000000
-  },
-  {
-    id: 'note-3',
-    title: 'High-Frequency Order Book Simulation & C++ Architecture',
-    domain: 'High-Frequency Trading & Systems',
-    fileType: 'Technical Architecture Doc',
-    description: 'Lock-free ring buffers, cache line alignment, CPU pinning (isolcpus), and Level 2 order book reconstructor patterns in C++20.',
-    topics: ['L2 Order Book Rebuilding', 'Lock-free Ring Buffers', 'Cache Locality', 'C++20 Memory Model'],
-    fileName: '',
-    fileData: '',
-    link: '',
-    uploadedBy: 'admin@matrix.club',
-    uploadedAt: 1772000000000
-  }
-];
+// ---- snake_case (Postgres) <-> camelCase (this app's existing UI) mapping ----
 
-const SEED_RECORDINGS = [
-  {
-    id: 'rec-1',
-    title: 'High-Frequency Order Book Dynamics & L2 Data',
-    type: 'Algo Workshop',
-    date: 'Feb 10, 2026',
-    duration: '54m',
-    durationSec: 3240,
-    speaker: 'Dr. Vikram Sethi • Quant Research Lead',
-    banner: 'linear-gradient(135deg, #090d16, #1e293b)',
-    description: 'An in-depth technical analysis of Level 2 market data, matching engines, order queue positioning, and execution slippage reduction.',
-    takeaways: [
-      'Level 2 limit order book matching mechanics and queue priority models.',
-      'Python order execution simulation codebase and slippage backtesting framework.',
-      'Market impact cost analysis for algorithmic high-frequency strategies.'
-    ]
-  },
-  {
-    id: 'rec-2',
-    title: 'Automated Market Maker (AMM) Invariant Mechanics',
-    type: 'DeFi Engineering',
-    date: 'Jan 28, 2026',
-    duration: '1h 12m',
-    durationSec: 4320,
-    speaker: 'Elena Rostova • Protocol Architect',
-    banner: 'linear-gradient(135deg, #0f172a, #334155)',
-    description: 'Mathematical derivation of constant product formulas, concentrated liquidity curves, impermanent loss hedging, and arbitrage loops.',
-    takeaways: [
-      'Derivation of xy=k invariant curve mechanics and concentrated liquidity ticks.',
-      'Impermanent loss hedging strategies using perpetual futures.',
-      'MEV arbitrage sandwich attack simulation and private RPC routing.'
-    ]
-  },
-  {
-    id: 'rec-3',
-    title: 'Machine Learning for Volatility Surface Forecasting',
-    type: 'Quant Research',
-    date: 'Jan 15, 2026',
-    duration: '48m',
-    durationSec: 2880,
-    speaker: 'Arjun Nambiar • Senior Quantitative Strategist',
-    banner: 'linear-gradient(135deg, #1e293b, #475569)',
-    description: 'Applying transformer architectures and stochastic volatility models to reconstruct implied volatility smiles across multi-asset option chains.',
-    takeaways: [
-      'SVI and Heston stochastic volatility parameter calibration.',
-      'Temporal convolutional networks for cross-asset volatility skew prediction.',
-      'Real-time delta and vega risk hedging in high-kurtosis market regimes.'
-    ]
-  },
-  {
-    id: 'rec-4',
-    title: 'Decentralized Credit Risk & Zero-Knowledge Proofs',
-    type: 'Web3 & Security',
-    date: 'Dec 18, 2025',
-    duration: '1h 05m',
-    durationSec: 3900,
-    speaker: 'Sarah Lin • Cryptography Fellow',
-    banner: 'linear-gradient(135deg, #0a0a0a, #1e293b)',
-    description: 'Exploring non-collateralized on-chain lending protocols through zk-SNARK private identity verification and cryptographic solvency attestation.',
-    takeaways: [
-      'zk-SNARK circuit construction using Circom and snarkjs.',
-      'Private credit scoring algorithms utilizing verified off-chain cash flows.',
-      'Smart contract risk mitigation and liquidation cascade safeguards.'
-    ]
-  }
-];
+function mapProfile(p) {
+  if (!p) return null;
+  return {
+    id: p.id,
+    email: p.email,
+    role: p.role,
+    name: p.name || (p.email ? p.email.split('@')[0] : ''),
+    regNumber: p.reg_number || '',
+    rollNumber: p.roll_number || '',
+    school: p.school || '',
+    department: p.department || '',
+    section: p.section || '',
+    currentYear: p.current_year || '1st Year',
+    contactNumber: p.contact_number || '',
+    interestedDomain: p.interested_domain || DOMAIN_OPTIONS[0],
+    gmail: p.email
+  };
+}
 
-const SEED_EVENTS = [
-  {
-    id: 'evt-1',
-    title: 'MATRIX FinTech Summit 2026',
-    type: 'Summit',
-    banner: 'linear-gradient(135deg, #0f172a, #1e293b)',
-    time: 'Mar 15, 2026 • 10:00 AM',
-    venue: 'Main Auditorium',
-    description: 'Flagship summit uniting global industry founders, investors, and student innovators exploring the future of global finance.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1773550800000
-  },
-  {
-    id: 'evt-2',
-    title: 'Quantitative Trading Masterclass',
-    type: 'Workshop',
-    banner: 'linear-gradient(135deg, #1e293b, #334155)',
-    time: 'Feb 22, 2026 • 2:00 PM',
-    venue: 'Lab 301',
-    description: 'Deep dive into systematic market analysis, high-frequency execution, and algorithmic trading strategies.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1771768800000
-  },
-  {
-    id: 'evt-3',
-    title: 'AI × Finance National Hackathon',
-    type: 'Hackathon',
-    banner: 'linear-gradient(135deg, #334155, #475569)',
-    time: 'Apr 5, 2026 • 9:00 AM',
-    venue: 'Tech Center',
-    description: '48-hour national hackathon challenging student developers to build AI-powered credit, risk, and trading bots.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1775360400000
-  },
-  {
-    id: 'evt-4',
-    title: 'Algorithmic Market Making Lab',
-    type: 'Lab',
-    banner: 'linear-gradient(135deg, #475569, #64748b)',
-    time: 'Apr 20, 2026 • 4:00 PM',
-    venue: 'Innovation Hub',
-    description: 'Hands-on session building order book simulation engines and liquidity management protocols.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1776657600000
-  },
-  {
-    id: 'evt-5',
-    title: 'DeFi & Tokenomics Symposium',
-    type: 'Symposium',
-    banner: 'linear-gradient(135deg, #0f172a, #334155)',
-    time: 'May 2, 2026 • 11:00 AM',
-    venue: 'Auditorium B',
-    description: 'Panel discussion featuring blockchain architects on automated market makers, ZK proofs, and liquidity pools.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1777694400000
-  },
-  {
-    id: 'evt-6',
-    title: 'Venture Pitching & Angel Sandbox',
-    type: 'Session',
-    banner: 'linear-gradient(135deg, #1e293b, #475569)',
-    time: 'May 18, 2026 • 3:00 PM',
-    venue: 'Venture Hub',
-    description: 'Pitch session where student fintech startups present MVPs directly to institutional angel investors.',
-    status: 'approved',
-    createdBy: 'admin@matrix.club',
-    createdAt: 1779078000000
-  }
-];
+function mapEvent(e) {
+  return {
+    id: e.id,
+    title: e.title,
+    type: e.type,
+    banner: e.banner,
+    time: e.event_time_label || (e.event_time ? new Date(e.event_time).toLocaleString() : ''),
+    venue: e.venue,
+    description: e.description,
+    status: e.status,
+    createdBy: e.created_by_profile?.email || e.created_by || '',
+    reviewedBy: e.reviewed_by_profile?.email || e.reviewed_by || null,
+    reviewedAt: e.reviewed_at,
+    createdAt: e.created_at ? new Date(e.created_at).getTime() : Date.now()
+  };
+}
 
-const SEED_MEMBERS = {
-  'student@matrix.club': {
-    name: 'Rahul Sharma',
-    regNumber: '2024REG1092',
-    rollNumber: '24CS084',
-    school: 'School of Computer Science & Engineering',
-    department: 'Computer Science & Engineering',
-    section: 'CSE-B',
-    currentYear: '2nd Year',
-    contactNumber: '+91 98765 43210',
-    interestedDomain: 'Quantitative Finance & Algo',
-    gmail: 'student@matrix.club'
-  },
-  'alice@matrix.club': {
-    name: 'Alice Vance',
-    regNumber: '2024REG4401',
-    rollNumber: '24EC019',
-    school: 'School of Electronics & Communication',
-    department: 'Electronics Engineering',
-    section: 'ECE-A',
-    currentYear: '3rd Year',
-    contactNumber: '+91 98123 45678',
-    interestedDomain: 'DeFi & Blockchain Infrastructure',
-    gmail: 'alice@matrix.club'
-  },
-  'priya.patel@gmail.com': {
-    name: 'Priya Patel',
-    regNumber: '2024REG7812',
-    rollNumber: '24DS012',
-    school: 'School of Computer Science & Engineering',
-    department: 'Data Science & AI',
-    section: 'DS-A',
-    currentYear: '1st Year',
-    contactNumber: '+91 97654 32109',
-    interestedDomain: 'AI & Machine Learning in Finance',
-    gmail: 'priya.patel@gmail.com'
-  },
-  'aditya.verma@gmail.com': {
-    name: 'Aditya Verma',
-    regNumber: '2023REG5542',
-    rollNumber: '23CS140',
-    school: 'School of Computer Science & Engineering',
-    department: 'Computer Science & Engineering',
-    section: 'CSE-C',
-    currentYear: '3rd Year',
-    contactNumber: '+91 99887 76655',
-    interestedDomain: 'High-Frequency Trading & Systems',
-    gmail: 'aditya.verma@gmail.com'
-  }
-};
+function mapRecording(r) {
+  return {
+    id: r.id,
+    title: r.title,
+    type: r.type,
+    date: r.recording_date || '',
+    duration: r.duration_label || '',
+    durationSec: r.duration_seconds || 0,
+    videoUrl: r.video_url || '',
+    speaker: r.speaker || '',
+    banner: r.banner,
+    description: r.description || '',
+    takeaways: r.takeaways || []
+  };
+}
 
-const SEED_REGISTRATIONS = [
-  { id: 'reg-1', eventId: 'evt-1', userEmail: 'student@matrix.club', timestamp: Date.now() },
-  { id: 'reg-2', eventId: 'evt-2', userEmail: 'student@matrix.club', timestamp: Date.now() },
-  { id: 'reg-3', eventId: 'evt-1', userEmail: 'alice@matrix.club', timestamp: Date.now() },
-  { id: 'reg-4', eventId: 'evt-3', userEmail: 'priya.patel@gmail.com', timestamp: Date.now() },
-  { id: 'reg-5', eventId: 'evt-2', userEmail: 'aditya.verma@gmail.com', timestamp: Date.now() }
-];
+function mapNote(n) {
+  return {
+    id: n.id,
+    title: n.title,
+    domain: n.domain,
+    description: n.description || '',
+    fileType: n.file_type || '',
+    topics: n.topics || [],
+    fileData: n.file_url || '', // reused as "the downloadable URL" by existing UI
+    link: n.external_link || '',
+    fileName: n.title,
+    uploadedBy: n.uploaded_by_profile?.email || n.uploaded_by || '',
+    uploadedAt: n.created_at ? new Date(n.created_at).getTime() : Date.now()
+  };
+}
 
-const SEED_ACTIVITY = {
-  'student@matrix.club': {
-    totalSeconds: 16320,
-    websiteSeconds: 9960,
-    recordingSeconds: 6360,
-    sessionsWatched: 2,
-    lastActive: Date.now()
-  },
-  'alice@matrix.club': {
-    totalSeconds: 9480,
-    websiteSeconds: 6240,
-    recordingSeconds: 3240,
-    sessionsWatched: 1,
-    lastActive: Date.now()
-  },
-  'priya.patel@gmail.com': {
-    totalSeconds: 5400,
-    websiteSeconds: 5400,
-    recordingSeconds: 0,
-    sessionsWatched: 0,
-    lastActive: Date.now()
-  },
-  'aditya.verma@gmail.com': {
-    totalSeconds: 12600,
-    websiteSeconds: 8280,
-    recordingSeconds: 4320,
-    sessionsWatched: 1,
-    lastActive: Date.now()
-  }
-};
+function mapRegistration(r) {
+  const p = r.profiles || {};
+  return {
+    id: r.id,
+    eventId: r.event_id,
+    userEmail: p.email || '',
+    timestamp: r.registered_at ? new Date(r.registered_at).getTime() : Date.now(),
+    profile: p
+  };
+}
 
 const PortalContext = createContext();
 
 export function PortalProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [events, setEvents] = useState(SEED_EVENTS);
-  const [recordings, setRecordings] = useState(SEED_RECORDINGS);
-  const [notes, setNotes] = useState(SEED_NOTES);
-  const [members, setMembers] = useState(SEED_MEMBERS);
-  const [registrations, setRegistrations] = useState(SEED_REGISTRATIONS);
-  const [activity, setActivity] = useState(SEED_ACTIVITY);
+  const [currentUser, setCurrentUser] = useState(null); // mapped profile, or null
   const [isHydrated, setIsHydrated] = useState(false);
+
+  const [events, setEvents] = useState([]);
+  const [recordings, setRecordings] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [members, setMembers] = useState({}); // email -> mapped profile, staff-only
+  const [activity, setActivity] = useState({}); // own email -> activity row
 
   // Modals state
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [activeDetailEvent, setActiveDetailEvent] = useState(null);
   const [activeRecordingPlayer, setActiveRecordingPlayer] = useState(null);
 
-  // Load state from localStorage on mount
-  useEffect(() => {
+  const currentUserRef = useRef(currentUser);
+  currentUserRef.current = currentUser;
+
+  // ---- session bootstrap + profile loading ----
+  const loadProfile = useCallback(async () => {
     try {
-      const storedUser = localStorage.getItem(KEYS.CURRENT_USER);
-      if (storedUser) setCurrentUser(JSON.parse(storedUser));
-
-      const storedEvents = localStorage.getItem(KEYS.EVENTS);
-      if (storedEvents) setEvents(JSON.parse(storedEvents));
-
-      const storedRecordings = localStorage.getItem(KEYS.RECORDINGS);
-      if (storedRecordings) setRecordings(JSON.parse(storedRecordings));
-
-      const storedNotes = localStorage.getItem(KEYS.NOTES);
-      if (storedNotes) setNotes(JSON.parse(storedNotes));
-
-      const storedMembers = localStorage.getItem(KEYS.MEMBERS);
-      if (storedMembers) setMembers(JSON.parse(storedMembers));
-
-      const storedRegs = localStorage.getItem(KEYS.REGISTRATIONS);
-      if (storedRegs) setRegistrations(JSON.parse(storedRegs));
-
-      const storedAct = localStorage.getItem(KEYS.ACTIVITY);
-      if (storedAct) setActivity(JSON.parse(storedAct));
+      const { profile } = await api.get('/api/profile');
+      setCurrentUser(mapProfile(profile));
     } catch (err) {
-      console.error('Failed to load from localStorage:', err);
-    } finally {
-      setIsHydrated(true);
+      console.error('Failed to load profile:', err);
+      setCurrentUser(null);
     }
   }, []);
 
-  // Sync state helpers to localStorage
-  const saveStorage = (key, data) => {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.setItem(key, JSON.stringify(data));
-    } catch (e) {
-      console.error('Storage write error:', e);
-    }
-  };
+  useEffect(() => {
+    let active = true;
 
-  // User auth actions
-  const login = (role, email) => {
-    const userObj = { role, email: email.toLowerCase().trim() };
-    setCurrentUser(userObj);
-    saveStorage(KEYS.CURRENT_USER, userObj);
-  };
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!active) return;
+      if (data.session) {
+        await loadProfile();
+      }
+      if (active) setIsHydrated(true);
+    });
 
-  const logout = () => {
-    setCurrentUser(null);
-    try {
-      localStorage.removeItem(KEYS.CURRENT_USER);
-    } catch (e) {}
-  };
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session) {
+        await loadProfile();
+      } else {
+        setCurrentUser(null);
+      }
+    });
 
-  // New events always start as a pending request — a Super Admin must approve
-  // them before they appear as an "upcoming event" in the student portal.
-  const createEvent = (eventData) => {
-    const newEvent = {
-      id: 'evt-' + Date.now(),
-      title: eventData.title,
-      type: eventData.type || 'Event',
-      banner: eventData.banner || 'linear-gradient(135deg, #0f172a, #1e293b)',
-      time: eventData.time,
-      venue: eventData.venue,
-      description: eventData.description,
-      status: 'pending',
-      createdBy: currentUser ? currentUser.email : 'admin@matrix.club',
-      createdAt: Date.now(),
-      reviewedBy: null,
-      reviewedAt: null
+    return () => {
+      active = false;
+      sub?.subscription?.unsubscribe();
     };
-    const updated = [newEvent, ...events];
-    setEvents(updated);
-    saveStorage(KEYS.EVENTS, updated);
-    return newEvent;
+  }, [loadProfile]);
+
+  // ---- data refreshers ----
+  const refreshEvents = useCallback(async () => {
+    try {
+      const { events } = await api.get('/api/events');
+      setEvents(events.map(mapEvent));
+    } catch (err) {
+      console.error('Failed to load events:', err);
+    }
+  }, []);
+
+  const refreshRecordings = useCallback(async () => {
+    if (!currentUserRef.current) return;
+    try {
+      const { recordings } = await api.get('/api/recordings');
+      setRecordings(recordings.map(mapRecording));
+    } catch (err) {
+      console.error('Failed to load recordings:', err);
+    }
+  }, []);
+
+  const refreshNotes = useCallback(async () => {
+    if (!currentUserRef.current) return;
+    try {
+      const { notes } = await api.get('/api/notes');
+      setNotes(notes.map(mapNote));
+    } catch (err) {
+      console.error('Failed to load notes:', err);
+    }
+  }, []);
+
+  const refreshRegistrations = useCallback(async () => {
+    if (!currentUserRef.current) return;
+    try {
+      const { registrations } = await api.get('/api/registrations');
+      setRegistrations(registrations.map(mapRegistration));
+    } catch (err) {
+      console.error('Failed to load registrations:', err);
+    }
+  }, []);
+
+  const refreshMembers = useCallback(async () => {
+    if (!currentUserRef.current || !['admin', 'superadmin'].includes(currentUserRef.current.role)) return;
+    try {
+      const { members } = await api.get('/api/members');
+      const map = {};
+      members.forEach(m => { map[m.email] = mapProfile(m); });
+      setMembers(map);
+    } catch (err) {
+      console.error('Failed to load members:', err);
+    }
+  }, []);
+
+  const refreshActivity = useCallback(async () => {
+    if (!currentUserRef.current) return;
+    try {
+      const { activity: row } = await api.get('/api/activity');
+      setActivity(prev => ({ ...prev, [currentUserRef.current.email]: mapActivity(row) }));
+    } catch (err) {
+      console.error('Failed to load activity:', err);
+    }
+  }, []);
+
+  function mapActivity(a) {
+    return {
+      totalSeconds: a.total_seconds || 0,
+      websiteSeconds: a.website_seconds || 0,
+      recordingSeconds: a.recording_seconds || 0,
+      sessionsWatched: a.sessions_watched || 0,
+      lastActive: a.last_active
+    };
+  }
+
+  // Events are public (approved ones, at least) — load once on mount.
+  useEffect(() => { refreshEvents(); }, [refreshEvents]);
+
+  // Everything else needs a signed-in user; (re)load whenever auth settles.
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (currentUser) {
+      refreshEvents();
+      refreshRecordings();
+      refreshNotes();
+      refreshRegistrations();
+      refreshMembers();
+      refreshActivity();
+    } else {
+      setRecordings([]);
+      setNotes([]);
+      setRegistrations([]);
+      setMembers({});
+      setActivity({});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.id, isHydrated]);
+
+  // ---- auth actions ----
+  const login = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw new Error(error.message);
+    const { profile } = await api.get('/api/profile');
+    const mapped = mapProfile(profile);
+    setCurrentUser(mapped);
+    return mapped;
   };
 
-  const updateEvent = (eventId, eventData) => {
-    const updated = events.map(evt => {
-      if (evt.id === eventId) {
-        return {
-          ...evt,
-          title: eventData.title || evt.title,
-          type: eventData.type || evt.type,
-          time: eventData.time || evt.time,
-          venue: eventData.venue || evt.venue,
-          banner: eventData.banner || evt.banner,
-          description: eventData.description || evt.description
-        };
-      }
-      return evt;
+  const signUp = async (email, password, profileFields = {}) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw new Error(error.message);
+
+    if (!data.session) {
+      // Email confirmation is required before this account can sign in.
+      return { needsConfirmation: true };
+    }
+
+    // The on_auth_user_created trigger already inserted a bare profile
+    // row (id/email/name); fill in the rest of the join-form fields.
+    await api.patch('/api/profile', {
+      name: profileFields.name,
+      reg_number: profileFields.regNumber,
+      roll_number: profileFields.rollNumber,
+      school: profileFields.school,
+      department: profileFields.department,
+      section: profileFields.section,
+      current_year: profileFields.currentYear,
+      contact_number: profileFields.contactNumber,
+      interested_domain: profileFields.interestedDomain
     });
-    setEvents(updated);
-    saveStorage(KEYS.EVENTS, updated);
+    await loadProfile();
+    return { needsConfirmation: false };
   };
 
-  const deleteEvent = (eventId) => {
-    const updated = events.filter(e => e.id !== eventId);
-    setEvents(updated);
-    saveStorage(KEYS.EVENTS, updated);
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setCurrentUser(null);
   };
 
-  // Super Admin event-approval workflow
-  const setEventStatus = (eventId, status) => {
-    const updated = events.map(evt => {
-      if (evt.id === eventId) {
-        return {
-          ...evt,
-          status,
-          reviewedBy: currentUser ? currentUser.email : evt.reviewedBy,
-          reviewedAt: Date.now()
-        };
-      }
-      return evt;
+  // ---- events ----
+  const createEvent = async (eventData) => {
+    await api.post('/api/events', {
+      title: eventData.title,
+      type: eventData.type,
+      banner: eventData.banner,
+      event_time_label: eventData.time,
+      venue: eventData.venue,
+      description: eventData.description
     });
-    setEvents(updated);
-    saveStorage(KEYS.EVENTS, updated);
+    await refreshEvents();
   };
 
-  const approveEvent = (eventId) => setEventStatus(eventId, 'approved');
-  const rejectEvent = (eventId) => setEventStatus(eventId, 'rejected');
-  const resubmitEvent = (eventId) => setEventStatus(eventId, 'pending');
+  const updateEvent = async (eventId, eventData) => {
+    await api.patch(`/api/events/${eventId}`, {
+      title: eventData.title,
+      type: eventData.type,
+      banner: eventData.banner,
+      event_time_label: eventData.time,
+      venue: eventData.venue,
+      description: eventData.description
+    });
+    await refreshEvents();
+  };
+
+  const deleteEvent = async (eventId) => {
+    await api.delete(`/api/events/${eventId}`);
+    await refreshEvents();
+  };
+
+  const approveEvent = async (eventId) => {
+    await api.post(`/api/events/${eventId}/approve`);
+    await refreshEvents();
+  };
+
+  const rejectEvent = async (eventId) => {
+    await api.post(`/api/events/${eventId}/reject`);
+    await refreshEvents();
+  };
+
+  const resubmitEvent = async (eventId) => {
+    await api.post(`/api/events/${eventId}/resubmit`);
+    await refreshEvents();
+  };
 
   const getApprovedEvents = useCallback(() => events.filter(e => e.status === 'approved'), [events]);
   const getPendingEvents = useCallback(() => events.filter(e => e.status === 'pending'), [events]);
 
-  // Event registration toggling
+  // ---- registrations ----
   const isEventJoined = useCallback((eventId, email) => {
-    const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
+    const targetEmail = (email || currentUser?.email || '').toLowerCase();
     if (!targetEmail) return false;
-    return registrations.some(r => r.eventId === eventId && r.userEmail.toLowerCase() === targetEmail);
+    return registrations.some(r => String(r.eventId) === String(eventId) && r.userEmail.toLowerCase() === targetEmail);
   }, [registrations, currentUser]);
 
-  const toggleJoinEvent = (eventId, email) => {
-    const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
-    if (!targetEmail) return false;
-
-    const joined = isEventJoined(eventId, targetEmail);
-    let updated;
+  const toggleJoinEvent = async (eventId) => {
+    const joined = isEventJoined(eventId);
     if (joined) {
-      updated = registrations.filter(r => !(r.eventId === eventId && r.userEmail.toLowerCase() === targetEmail));
+      await api.delete(`/api/registrations/${eventId}`);
     } else {
-      updated = [...registrations, { id: 'reg-' + Date.now(), eventId, userEmail: targetEmail, timestamp: Date.now() }];
+      await api.post('/api/registrations', { event_id: eventId });
     }
-    setRegistrations(updated);
-    saveStorage(KEYS.REGISTRATIONS, updated);
+    await refreshRegistrations();
     return !joined;
   };
 
   const getJoinedEventsForUser = (email) => {
-    const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
+    const targetEmail = (email || currentUser?.email || '').toLowerCase();
     if (!targetEmail) return [];
-    const joinedIds = registrations.filter(r => r.userEmail.toLowerCase() === targetEmail).map(r => r.eventId);
-    return events.filter(evt => joinedIds.includes(evt.id));
+    const joinedIds = registrations.filter(r => r.userEmail.toLowerCase() === targetEmail).map(r => String(r.eventId));
+    return events.filter(evt => joinedIds.includes(String(evt.id)));
   };
 
   const getRegisteredStudentsForEvent = (eventId) => {
-    const regs = registrations.filter(r => r.eventId === eventId);
-    return regs.map(r => {
-      const email = r.userEmail.toLowerCase();
-      const profile = members[email] || {};
-      return {
-        email: email,
-        gmail: profile.gmail || email,
-        name: profile.name || email.split('@')[0],
-        regNumber: profile.regNumber || 'N/A',
-        rollNumber: profile.rollNumber || 'N/A',
-        school: profile.school || 'N/A',
-        department: profile.department || 'N/A',
-        section: profile.section || 'N/A',
-        currentYear: profile.currentYear || '1st Year',
-        contactNumber: profile.contactNumber || 'N/A',
-        interestedDomain: profile.interestedDomain || 'Quantitative Finance & Algo'
-      };
-    });
+    return registrations
+      .filter(r => String(r.eventId) === String(eventId))
+      .map(r => {
+        const p = r.profile || {};
+        return {
+          email: p.email || r.userEmail,
+          gmail: p.email || r.userEmail,
+          name: p.name || (p.email ? p.email.split('@')[0] : 'Unknown'),
+          regNumber: p.reg_number || 'N/A',
+          rollNumber: p.roll_number || 'N/A',
+          school: p.school || 'N/A',
+          department: p.department || 'N/A',
+          section: p.section || 'N/A',
+          currentYear: p.current_year || '1st Year',
+          contactNumber: p.contact_number || 'N/A',
+          interestedDomain: p.interested_domain || DOMAIN_OPTIONS[0]
+        };
+      });
   };
 
-  // Member profiles
-  const saveMember = (memberData) => {
-    const email = (memberData.gmail || memberData.email || '').toLowerCase().trim();
-    if (!email) return;
-
-    const existing = members[email] || {};
-    const updatedMembers = {
-      ...members,
-      [email]: {
-        ...existing,
-        name: memberData.name || existing.name || '',
-        regNumber: memberData.regNumber || existing.regNumber || '',
-        rollNumber: memberData.rollNumber || existing.rollNumber || '',
-        school: memberData.school || existing.school || '',
-        department: memberData.department || existing.department || '',
-        section: memberData.section || existing.section || '',
-        currentYear: memberData.currentYear || existing.currentYear || '1st Year',
-        contactNumber: memberData.contactNumber || existing.contactNumber || '',
-        interestedDomain: memberData.interestedDomain || existing.interestedDomain || 'Quantitative Finance & Algo',
-        gmail: email
-      }
-    };
-    setMembers(updatedMembers);
-    saveStorage(KEYS.MEMBERS, updatedMembers);
+  // ---- member profiles ----
+  const saveMember = async (memberData) => {
+    await api.patch('/api/profile', {
+      name: memberData.name,
+      reg_number: memberData.regNumber,
+      roll_number: memberData.rollNumber,
+      school: memberData.school,
+      department: memberData.department,
+      section: memberData.section,
+      current_year: memberData.currentYear,
+      contact_number: memberData.contactNumber,
+      interested_domain: memberData.interestedDomain
+    });
+    await loadProfile();
   };
 
   const getMemberByEmail = (email) => {
@@ -520,125 +402,108 @@ export function PortalProvider({ children }) {
     return members[email.toLowerCase().trim()] || null;
   };
 
-  // Recording management
-  const saveRecording = (recData) => {
-    const newRec = {
-      id: 'rec-' + Date.now(),
+  // ---- recordings ----
+  const saveRecording = async (recData) => {
+    await api.post('/api/recordings', {
       title: recData.title,
-      type: recData.type || 'Algo Workshop',
-      date: recData.date,
-      duration: recData.duration,
-      durationSec: recData.durationSec || 3240,
+      type: recData.type,
       speaker: recData.speaker,
-      banner: recData.banner || 'linear-gradient(135deg, #090d16, #1e293b)',
+      banner: recData.banner,
+      recording_date: recData.date,
+      duration_label: recData.duration,
+      duration_seconds: recData.durationSec,
+      video_url: recData.videoUrl,
       description: recData.description,
       takeaways: recData.takeaways || []
-    };
-    const updated = [newRec, ...recordings];
-    setRecordings(updated);
-    saveStorage(KEYS.RECORDINGS, updated);
-  };
-
-  const updateRecording = (recId, recData) => {
-    const updated = recordings.map(r => {
-      if (r.id === recId) {
-        return {
-          ...r,
-          title: recData.title || r.title,
-          type: recData.type || r.type,
-          date: recData.date || r.date,
-          duration: recData.duration || r.duration,
-          speaker: recData.speaker || r.speaker,
-          banner: recData.banner || r.banner,
-          description: recData.description || r.description,
-          takeaways: recData.takeaways || r.takeaways
-        };
-      }
-      return r;
     });
-    setRecordings(updated);
-    saveStorage(KEYS.RECORDINGS, updated);
+    await refreshRecordings();
   };
 
-  const deleteRecording = (recId) => {
-    const updated = recordings.filter(r => r.id !== recId);
-    setRecordings(updated);
-    saveStorage(KEYS.RECORDINGS, updated);
+  const updateRecording = async (recId, recData) => {
+    await api.patch(`/api/recordings/${recId}`, {
+      title: recData.title,
+      type: recData.type,
+      speaker: recData.speaker,
+      banner: recData.banner,
+      recording_date: recData.date,
+      duration_label: recData.duration,
+      description: recData.description,
+      takeaways: recData.takeaways
+    });
+    await refreshRecordings();
   };
 
-  // Notes management (admin uploads, students read/download). Merges the
-  // richer catalog fields (fileType label, topics tags) with an actual
-  // attachable file (fileData, a base64 data URL) or external link.
-  const saveNote = (noteData) => {
-    const newNote = {
-      id: 'note-' + Date.now(),
+  const deleteRecording = async (recId) => {
+    await api.delete(`/api/recordings/${recId}`);
+    await refreshRecordings();
+  };
+
+  // ---- notes ----
+  // Uploads the file straight to Supabase Storage (RLS-gated to staff)
+  // under the caller's own session, then hands the backend the resulting
+  // public URL to store alongside the note's metadata.
+  const saveNote = async (noteData) => {
+    let fileUrl = noteData.link ? '' : '';
+    let externalLink = noteData.link || '';
+
+    if (noteData.file) {
+      const file = noteData.file;
+      const path = `${currentUser?.id || 'anon'}/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage.from('notes').upload(path, file);
+      if (uploadError) throw new Error(uploadError.message);
+      const { data: pub } = supabase.storage.from('notes').getPublicUrl(path);
+      fileUrl = pub.publicUrl;
+    }
+
+    const topics = Array.isArray(noteData.topics) ? noteData.topics : [];
+
+    await api.post('/api/notes', {
       title: noteData.title,
-      domain: noteData.domain || DOMAIN_OPTIONS[0],
-      fileType: noteData.fileType || 'PDF / Notes',
-      description: noteData.description || '',
-      topics: noteData.topics && noteData.topics.length ? noteData.topics : ['Study Material'],
-      fileName: noteData.fileName || '',
-      fileData: noteData.fileData || '',
-      link: noteData.link || '',
-      uploadedBy: noteData.author || (currentUser ? currentUser.email : 'admin@matrix.club'),
-      uploadedAt: Date.now()
-    };
-    const updated = [newNote, ...notes];
-    setNotes(updated);
-    saveStorage(KEYS.NOTES, updated);
-    return newNote;
+      domain: noteData.domain,
+      description: noteData.description,
+      file_type: noteData.fileType,
+      topics,
+      file_url: fileUrl || undefined,
+      external_link: externalLink || undefined
+    });
+    await refreshNotes();
   };
 
-  const deleteNote = (noteId) => {
-    const updated = notes.filter(n => n.id !== noteId);
-    setNotes(updated);
-    saveStorage(KEYS.NOTES, updated);
+  const deleteNote = async (noteId) => {
+    await api.delete(`/api/notes/${noteId}`);
+    await refreshNotes();
   };
 
-  // Activity tracking
-  const updateStudentActivity = (email, deltaWebSec = 0, deltaRecSec = 0, watchedSessionIncrement = false) => {
-    const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
-    if (!targetEmail) return null;
-
-    const curr = activity[targetEmail] || {
-      totalSeconds: 0,
-      websiteSeconds: 0,
-      recordingSeconds: 0,
-      sessionsWatched: 0,
-      lastActive: Date.now()
-    };
-
-    const newWeb = curr.websiteSeconds + deltaWebSec;
-    const newRec = curr.recordingSeconds + deltaRecSec;
-    const newTotal = newWeb + newRec;
-    const newSessions = curr.sessionsWatched + (watchedSessionIncrement ? 1 : 0);
-
-    const updatedObj = {
-      totalSeconds: newTotal,
-      websiteSeconds: newWeb,
-      recordingSeconds: newRec,
-      sessionsWatched: newSessions,
-      lastActive: Date.now()
-    };
-
-    const updatedActivityMap = { ...activity, [targetEmail]: updatedObj };
-    setActivity(updatedActivityMap);
-    saveStorage(KEYS.ACTIVITY, updatedActivityMap);
-    return updatedObj;
+  // ---- activity tracking ----
+  const updateStudentActivity = async (email, deltaWebSec = 0, deltaRecSec = 0, watchedSessionIncrement = false) => {
+    if (!currentUserRef.current) return null;
+    try {
+      const { activity: row } = await api.patch('/api/activity', {
+        deltaWebSec,
+        deltaRecSec,
+        watchedSessionIncrement
+      });
+      const mapped = mapActivity(row);
+      setActivity(prev => ({ ...prev, [currentUserRef.current.email]: mapped }));
+      return mapped;
+    } catch (err) {
+      console.error('Failed to update activity:', err);
+      return null;
+    }
   };
 
   const getStudentActivity = (email) => {
-    const targetEmail = (email || (currentUser ? currentUser.email : '')).toLowerCase();
+    const targetEmail = (email || currentUser?.email || '').toLowerCase();
     return activity[targetEmail] || {
       totalSeconds: 0,
       websiteSeconds: 0,
       recordingSeconds: 0,
       sessionsWatched: 0,
-      lastActive: Date.now()
+      lastActive: null
     };
   };
 
-  // Modal helpers
+  // ---- modal helpers ----
   const openJoinModal = () => setIsJoinModalOpen(true);
   const closeJoinModal = () => setIsJoinModalOpen(false);
 
@@ -654,6 +519,7 @@ export function PortalProvider({ children }) {
         isHydrated,
         currentUser,
         login,
+        signUp,
         logout,
         events,
         createEvent,
