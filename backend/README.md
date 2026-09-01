@@ -26,9 +26,19 @@ src/
     requireStaff.js        403-gates a route RLS can't protect (e.g. minting an R2 upload URL); attaches req.profile
   routes/
     profile.js, events.js, registrations.js, recordings.js, notes.js, activity.js, members.js, adminRequests.js
+scripts/
+  keepalive.js            one real Supabase read, so a free-tier project never auto-pauses (see below)
 supabase/
   migrations/              the SQL that defines the schema, RLS policies, and triggers this API relies on
 ```
+
+## Keeping Supabase awake
+
+A free-tier Supabase project pauses itself after 7 days with no activity. `npm run keepalive` (`scripts/keepalive.js`) does one trivial, RLS-respecting read — same anon client every other route uses, no service-role key — which counts as activity.
+
+This deliberately does **not** run as a timer inside the long-running Express process: nothing guarantees this server stays up continuously for 5 days straight (it doesn't, in local dev), so a `setInterval`/`node-cron` in here wouldn't reliably fire. Instead, [`.github/workflows/supabase-keepalive.yml`](../.github/workflows/supabase-keepalive.yml) runs it on a schedule (every 5 days) via GitHub Actions — that fires regardless of whether anyone's server or machine is running.
+
+**One-time setup**: add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as repo secrets (GitHub → Settings → Secrets and variables → Actions) — same values as `backend/.env`. Without them the scheduled run fails (visible in the Actions tab, doesn't affect anything else). You can also trigger it manually from the Actions tab (`workflow_dispatch`) to test it right away.
 
 ## API routes
 
