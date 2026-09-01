@@ -56,7 +56,7 @@ export default function JoinModal() {
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
-      }).catch(err => console.error('Webhook error:', err));
+      }).catch(err => console.error('Webhook error:', err.message));
 
       const result = await signUp(formData.gmail, formData.password, formData);
 
