@@ -1,51 +1,54 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 export default function PageLoader() {
   const [progress, setProgress] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [shouldRender, setShouldRender] = useState(true);
 
   useEffect(() => {
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 15) + 8;
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        clearInterval(interval);
-        setTimeout(() => {
-          setLoaded(true);
-        }, 300);
-      }
-      setProgress(currentProgress);
-    }, 40);
+    const startTime = performance.now();
+    const duration = 1150; // fills 0-100% in 1.15s, remaining 0.35s for smooth exit transition = 1.5s total
 
-    return () => clearInterval(interval);
+    let animationFrameId;
+
+    const updateProgress = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progressPercent = Math.min(100, Math.round((elapsed / duration) * 100));
+      setProgress(progressPercent);
+
+      if (elapsed < duration) {
+        animationFrameId = requestAnimationFrame(updateProgress);
+      } else {
+        setProgress(100);
+        setIsDone(true);
+        setTimeout(() => {
+          setShouldRender(false);
+        }, 350);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(updateProgress);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, []);
 
-  if (loaded) return null;
+  if (!shouldRender) return null;
 
   return (
-    <div className={`page-loader ${loaded ? 'loaded' : ''}`}>
-      <div className="loader-content">
-        <div className="loader-brand">
-          <Image
-            src="/real_logo_org.png"
-            alt="MATRIX Logo"
-            width={52}
-            height={52}
-            className="loader-logo"
-            priority
+    <div className={`fitech-page-loader ${isDone ? 'fitech-loader-fade' : ''}`}>
+      <div className="fitech-loader-container">
+        <h1 className="fitech-loader-text">FITECH</h1>
+        <div className="fitech-loader-bar-wrap">
+          <div
+            className="fitech-loader-bar-fill"
+            style={{ width: `${progress}%` }}
           />
-          <span className="loader-title">MATRIX</span>
-        </div>
-        <div className="loader-progress-wrap">
-          <div className="loader-progress-bar" style={{ width: `${progress}%` }}></div>
-        </div>
-        <div className="loader-meta">
-          <span>Initializing Engine</span>
-          <span>{progress}%</span>
         </div>
       </div>
     </div>
