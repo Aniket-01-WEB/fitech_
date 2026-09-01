@@ -140,14 +140,6 @@ const TEAM_DATA = [
     theme: 'theme-black'
   },
   {
-    name: 'NORCHEN GOLAY',
-    role: 'ASST. MEDIA',
-    avatar: 'N',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    theme: 'theme-black'
-  },
-  {
     name: 'ANIKET DUTTA',
     role: 'TECH LEAD',
     avatar: 'A',
