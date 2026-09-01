@@ -21,7 +21,15 @@ export default function SuperAdminPortalPage() {
     members,
     getPendingAdminRequests,
     approveAdminRequest,
-    rejectAdminRequest
+    rejectAdminRequest,
+    notes,
+    getPendingNotes,
+    approveNote,
+    rejectNote,
+    recordings,
+    getPendingRecordings,
+    approveRecording,
+    rejectRecording
   } = usePortal();
 
   const router = useRouter();
@@ -42,6 +50,8 @@ export default function SuperAdminPortalPage() {
 
   const pendingEvents = getPendingEvents();
   const pendingAdminRequests = getPendingAdminRequests();
+  const pendingNotes = getPendingNotes();
+  const pendingRecordings = getPendingRecordings();
   const memberList = Object.values(members).sort((a, b) => a.name.localeCompare(b.name));
   const memberCount = memberList.length;
 
@@ -75,6 +85,10 @@ export default function SuperAdminPortalPage() {
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{events.length}</span>
                 <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Total Events</span>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
+                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingNotes.length + pendingRecordings.length}</span>
+                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Pending Content</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{memberCount}</span>
@@ -113,6 +127,20 @@ export default function SuperAdminPortalPage() {
             onClick={() => setActiveTab('directory')}
           >
             MEMBER DIRECTORY ({memberCount})
+          </button>
+          <button
+            type="button"
+            className={`portal-role-tab ${activeTab === 'notes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notes')}
+          >
+            NOTES ({pendingNotes.length})
+          </button>
+          <button
+            type="button"
+            className={`portal-role-tab ${activeTab === 'recordings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('recordings')}
+          >
+            RECORDINGS ({pendingRecordings.length})
           </button>
         </div>
 
@@ -300,6 +328,113 @@ export default function SuperAdminPortalPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 5: NOTES REVIEW */}
+        {activeTab === 'notes' && (
+          <div>
+            {pendingNotes.length === 0 ? (
+              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending notes. Notes an Admin uploads will show up here for approval.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                {pendingNotes.map(note => (
+                  <div key={note.id} className="simple-event-card">
+                    <div className="simple-card-top">
+                      <span className="status-pill pending">⏳ PENDING REVIEW</span>
+                      <span className="simple-card-category" style={{ display: 'block', marginTop: '8px' }}>{note.domain}</span>
+                      <h3 className="simple-card-title">{note.title}</h3>
+                      <p className="simple-card-desc">{note.description}</p>
+                    </div>
+                    <div className="simple-card-bottom">
+                      <div className="simple-card-meta">
+                        <span>👤 {note.uploadedBy}</span>
+                        <span>📎 {note.fileType || (note.hasUpload ? 'Uploaded file' : 'External link')}</span>
+                      </div>
+                      {(note.fileData || note.link) && (
+                        <a href={note.fileData || note.link} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px', fontSize: '12px' }}>
+                          PREVIEW ↗
+                        </a>
+                      )}
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                        <button
+                          type="button"
+                          onClick={() => approveNote(note.id).catch(err => alert(err.message))}
+                          className="btn btn-primary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', background: '#15803d', border: '1px solid #15803d' }}
+                        >
+                          ✓ APPROVE
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => rejectNote(note.id).catch(err => alert(err.message))}
+                          className="btn btn-secondary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', color: '#ef4444' }}
+                        >
+                          ✕ REJECT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 6: RECORDINGS REVIEW */}
+        {activeTab === 'recordings' && (
+          <div>
+            {pendingRecordings.length === 0 ? (
+              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending recordings. Masterclasses an Admin uploads will show up here for approval.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                {pendingRecordings.map(rec => (
+                  <div key={rec.id} className="simple-event-card">
+                    <div className="simple-card-top">
+                      <span className="status-pill pending">⏳ PENDING REVIEW</span>
+                      <span className="simple-card-category" style={{ display: 'block', marginTop: '8px' }}>{rec.type}</span>
+                      <h3 className="simple-card-title">{rec.title}</h3>
+                      <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
+                      <p className="simple-card-desc">{rec.description}</p>
+                    </div>
+                    <div className="simple-card-bottom">
+                      <div className="simple-card-meta">
+                        <span>📅 {rec.date}</span>
+                        <span>📎 {rec.hasUpload ? 'Uploaded video' : 'External link'}</span>
+                      </div>
+                      {rec.videoUrl && (
+                        <a href={rec.videoUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', marginTop: '12px', fontSize: '12px' }}>
+                          PREVIEW ↗
+                        </a>
+                      )}
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                        <button
+                          type="button"
+                          onClick={() => approveRecording(rec.id).catch(err => alert(err.message))}
+                          className="btn btn-primary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', background: '#15803d', border: '1px solid #15803d' }}
+                        >
+                          ✓ APPROVE
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => rejectRecording(rec.id).catch(err => alert(err.message))}
+                          className="btn btn-secondary"
+                          style={{ flex: 1, justifyContent: 'center', fontSize: '12px', color: '#ef4444' }}
+                        >
+                          ✕ REJECT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

@@ -78,7 +78,11 @@ function mapRecording(r) {
     speaker: r.speaker || '',
     banner: r.banner,
     description: r.description || '',
-    takeaways: r.takeaways || []
+    takeaways: r.takeaways || [],
+    status: r.status || 'approved',
+    hasUpload: Boolean(r.r2_key),
+    createdBy: r.created_by || '',
+    reviewedAt: r.reviewed_at || null
   };
 }
 
@@ -94,7 +98,9 @@ function mapNote(n) {
     link: n.external_link || '',
     fileName: n.title,
     uploadedBy: n.uploaded_by_profile?.email || n.uploaded_by || '',
-    uploadedAt: n.created_at ? new Date(n.created_at).getTime() : Date.now()
+    uploadedAt: n.created_at ? new Date(n.created_at).getTime() : Date.now(),
+    status: n.status || 'approved',
+    hasUpload: Boolean(n.r2_key)
   };
 }
 
@@ -501,8 +507,28 @@ export function PortalProvider({ children }) {
     await refreshAdminRequests();
   };
 
+  // ---- Cloudflare R2 uploads (notes files, recording videos) ----
+  // The backend mints a short-lived presigned PUT URL (it holds the R2
+  // credentials, never this app); the browser then uploads the file
+  // bytes straight to R2, bypassing the backend entirely. Returns the R2
+  // object key to save alongside the note/recording row.
+  const uploadToR2 = async (kind, file) => {
+    const { uploadUrl, key } = await api.post(`/api/${kind}/upload-url`, {
+      fileName: file.name,
+      contentType: file.type || 'application/octet-stream'
+    });
+    const res = await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type || 'application/octet-stream' } });
+    if (!res.ok) throw new Error('Upload to storage failed. Try again.');
+    return key;
+  };
+
   // ---- recordings ----
+  // A masterclass can be an external link (video_url), an uploaded file
+  // (goes to R2), or both. Every new recording starts 'pending' — a
+  // Super Admin has to approve it before students see it.
   const saveRecording = async (recData) => {
+    const r2_key = recData.file ? await uploadToR2('recordings', recData.file) : undefined;
+
     await api.post('/api/recordings', {
       title: recData.title,
       type: recData.type,
@@ -513,7 +539,8 @@ export function PortalProvider({ children }) {
       duration_seconds: recData.durationSec,
       video_url: recData.videoUrl,
       description: recData.description,
-      takeaways: recData.takeaways || []
+      takeaways: recData.takeaways || [],
+      r2_key
     });
     await refreshRecordings();
   };
@@ -537,23 +564,31 @@ export function PortalProvider({ children }) {
     await refreshRecordings();
   };
 
+  const approveRecording = async (recId) => {
+    await api.post(`/api/recordings/${recId}/approve`);
+    await refreshRecordings();
+  };
+
+  const rejectRecording = async (recId) => {
+    await api.post(`/api/recordings/${recId}/reject`);
+    await refreshRecordings();
+  };
+
+  const resubmitRecording = async (recId) => {
+    await api.post(`/api/recordings/${recId}/resubmit`);
+    await refreshRecordings();
+  };
+
+  const getPendingRecordings = useCallback(() => recordings.filter(r => r.status === 'pending'), [recordings]);
+
   // ---- notes ----
-  // Uploads the file straight to Supabase Storage (RLS-gated to staff)
-  // under the caller's own session, then hands the backend the resulting
-  // public URL to store alongside the note's metadata.
+  // Uploads the file straight to R2 (via a presigned URL, see uploadToR2
+  // above), then hands the backend the resulting object key to store
+  // alongside the note's metadata. Every new note starts 'pending' — a
+  // Super Admin has to approve it before students see it.
   const saveNote = async (noteData) => {
-    let fileUrl = noteData.link ? '' : '';
-    let externalLink = noteData.link || '';
-
-    if (noteData.file) {
-      const file = noteData.file;
-      const path = `${currentUser?.id || 'anon'}/${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage.from('notes').upload(path, file);
-      if (uploadError) throw new Error(uploadError.message);
-      const { data: pub } = supabase.storage.from('notes').getPublicUrl(path);
-      fileUrl = pub.publicUrl;
-    }
-
+    const r2_key = noteData.file ? await uploadToR2('notes', noteData.file) : undefined;
+    const externalLink = noteData.link || '';
     const topics = Array.isArray(noteData.topics) ? noteData.topics : [];
 
     await api.post('/api/notes', {
@@ -562,8 +597,8 @@ export function PortalProvider({ children }) {
       description: noteData.description,
       file_type: noteData.fileType,
       topics,
-      file_url: fileUrl || undefined,
-      external_link: externalLink || undefined
+      external_link: externalLink || undefined,
+      r2_key
     });
     await refreshNotes();
   };
@@ -572,6 +607,23 @@ export function PortalProvider({ children }) {
     await api.delete(`/api/notes/${noteId}`);
     await refreshNotes();
   };
+
+  const approveNote = async (noteId) => {
+    await api.post(`/api/notes/${noteId}/approve`);
+    await refreshNotes();
+  };
+
+  const rejectNote = async (noteId) => {
+    await api.post(`/api/notes/${noteId}/reject`);
+    await refreshNotes();
+  };
+
+  const resubmitNote = async (noteId) => {
+    await api.post(`/api/notes/${noteId}/resubmit`);
+    await refreshNotes();
+  };
+
+  const getPendingNotes = useCallback(() => notes.filter(n => n.status === 'pending'), [notes]);
 
   // ---- activity tracking ----
   const updateStudentActivity = async (email, deltaWebSec = 0, deltaRecSec = 0, watchedSessionIncrement = false) => {
@@ -640,9 +692,17 @@ export function PortalProvider({ children }) {
         saveRecording,
         updateRecording,
         deleteRecording,
+        approveRecording,
+        rejectRecording,
+        resubmitRecording,
+        getPendingRecordings,
         notes,
         saveNote,
         deleteNote,
+        approveNote,
+        rejectNote,
+        resubmitNote,
+        getPendingNotes,
         members,
         saveMember,
         getMemberByEmail,

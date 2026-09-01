@@ -52,8 +52,9 @@ Supabase Postgres, project id `cpainkjljrjjwzdgdewz`. Schema, RLS policies, and 
 | `profiles` | One row per Supabase Auth user. `role` is `student` / `admin` / `superadmin`, plus academic details (name, reg/roll number, school, department, section, year, contact, interested domain). Auto-created by a trigger on signup, always starting as `student`. |
 | `events` | Club events. `status` is `pending` / `approved` / `rejected`. New events are always forced to `pending` server-side (a trigger overwrites whatever the client sends), and only a `superadmin` can flip the status — the event's own creator (`admin`) may additionally resubmit a `rejected` event back to `pending`. |
 | `event_registrations` | A student joining an event. RLS only allows registering for an already-`approved` event, and only as yourself. |
-| `recordings` | Masterclass recording library — readable by any signed-in member, writable by `admin`/`superadmin`. |
-| `notes` | Study material. Same read/write split as recordings; each note needs a `file_url` (e.g. a Supabase Storage link) or an `external_link`. |
+| `recordings` | Masterclass recording library. Writable by `admin`/`superadmin`; a student only ever sees `approved` rows. Same forced-`pending`-on-insert + superadmin-only-approval pattern as events. A recording's video is either an `external_link`-style `video_url`, a file uploaded to R2 (`r2_key`), or both. |
+| `notes` | Study material. Same read/write split, approval workflow, and R2 upload option as recordings; each note needs a `file_url`, an `external_link`, or an `r2_key`. |
+| `admin_requests` | Self-service "make me an admin" applications, filed by any signed-in member from their Student Portal profile. Same `pending`/`approved`/`rejected` shape; approving one actually grants `role = 'admin'` on the applicant's profile (a trigger, not just app code). |
 | `student_activity` | Per-student time tracking, updated via the `increment_activity()` RPC (atomic upsert, avoids races from a client polling once a second). |
 
 ### Security model
@@ -67,3 +68,14 @@ update public.profiles set role = 'admin' where email = 'someone@example.com';
 ```
 
 Full API route table is in [backend/README.md](backend/README.md).
+
+### File storage (Cloudflare R2)
+
+Uploaded notes and recording videos live in a private Cloudflare R2 bucket, not Supabase Storage. The backend is the only thing that ever holds R2 credentials — the same trust boundary this project already keeps around Supabase's service key, just applied to a second external store:
+
+1. An admin picks a file → the backend (staff-only, checked explicitly since there's no Postgres row yet for RLS to gate) mints a short-lived **presigned PUT URL** and hands it back.
+2. The browser uploads the file bytes straight to R2 with that URL — the backend never proxies or buffers them.
+3. The browser then creates the note/recording row with the resulting object key (`r2_key`); it starts `pending` like every other upload here.
+4. Once a Super Admin approves it, any request that lists notes/recordings and finds an `r2_key` gets a freshly-minted, short-lived **presigned GET URL** in its place — minted only for a caller RLS already cleared to see that row, never stored, never public.
+
+Requires four vars in `backend/.env` (see `backend/.env.example`): `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Get an access key/secret from the Cloudflare dashboard → R2 → Manage API Tokens, scoped to just this bucket.

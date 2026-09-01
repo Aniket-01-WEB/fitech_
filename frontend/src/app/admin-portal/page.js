@@ -22,9 +22,11 @@ export default function AdminPortalPage() {
     saveRecording,
     updateRecording,
     deleteRecording,
+    resubmitRecording,
     notes,
     saveNote,
     deleteNote,
+    resubmitNote,
     members,
     saveMember,
     getRegisteredStudentsForEvent
@@ -70,8 +72,19 @@ export default function AdminPortalPage() {
     date: '',
     duration: '',
     speaker: '',
-    description: ''
+    description: '',
+    videoUrl: '',
+    fileName: '',
+    file: null
   });
+  const [uploadingRec, setUploadingRec] = useState(false);
+  const [uploadingNote, setUploadingNote] = useState(false);
+
+  const handleRecFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setRecForm(prev => ({ ...prev, fileName: file.name, file }));
+  };
 
   // Sync redirect for non-admin
   useEffect(() => {
@@ -132,6 +145,7 @@ export default function AdminPortalPage() {
       ? noteForm.topicsStr.split(',').map(t => t.trim()).filter(Boolean)
       : ['General Notes'];
 
+    setUploadingNote(true);
     try {
       await saveNote({
         title: noteForm.title,
@@ -145,8 +159,10 @@ export default function AdminPortalPage() {
       });
     } catch (err) {
       alert(err.message || 'Failed to upload note.');
+      setUploadingNote(false);
       return;
     }
+    setUploadingNote(false);
 
     setShowNoteModal(false);
     setNoteForm({
@@ -164,14 +180,21 @@ export default function AdminPortalPage() {
 
   const handleSaveRec = async (e) => {
     e.preventDefault();
+    if (!recForm.file && !recForm.videoUrl.trim()) {
+      alert('Attach a video file or provide a video link before saving.');
+      return;
+    }
+    setUploadingRec(true);
     try {
       await saveRecording(recForm);
     } catch (err) {
       alert(err.message || 'Failed to save recording.');
+      setUploadingRec(false);
       return;
     }
+    setUploadingRec(false);
     setShowRecForm(false);
-    setRecForm({ title: '', type: 'Algo Workshop', date: '', duration: '', speaker: '', description: '' });
+    setRecForm({ title: '', type: 'Algo Workshop', date: '', duration: '', speaker: '', description: '', videoUrl: '', fileName: '', file: null });
   };
 
   const registeredStudentsForSelectedEvent = inspectEventId ? getRegisteredStudentsForEvent(inspectEventId) : [];
@@ -437,8 +460,8 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '16px' }}>
-                  <button type="submit" className="admin-btn admin-btn-inspect" style={{ width: '100%', padding: '14px', fontSize: '13px' }}>
-                    PUBLISH & UPLOAD NOTES NOW →
+                  <button type="submit" className="admin-btn admin-btn-inspect" style={{ width: '100%', padding: '14px', fontSize: '13px' }} disabled={uploadingNote}>
+                    {uploadingNote ? 'UPLOADING…' : 'SUBMIT FOR SUPER ADMIN APPROVAL →'}
                   </button>
                 </div>
               </form>
@@ -549,6 +572,9 @@ export default function AdminPortalPage() {
                 <div key={note.id} className="admin-note-card">
                   <div>
                     <div className="admin-note-header">
+                      <span className={`status-pill ${note.status || 'approved'}`}>{STATUS_LABEL[note.status || 'approved']}</span>
+                    </div>
+                    <div className="admin-note-header" style={{ marginTop: '6px' }}>
                       <span className="admin-badge-type">{note.domain}</span>
                       <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b' }}>{note.fileType}</span>
                     </div>
@@ -591,6 +617,15 @@ export default function AdminPortalPage() {
                     >
                       VIEW / DOWNLOAD NOTE ↗
                     </button>
+                    {note.status === 'rejected' && (
+                      <button
+                        type="button"
+                        onClick={() => resubmitNote(note.id).catch(err => alert(err.message))}
+                        className="admin-btn admin-btn-edit"
+                      >
+                        RESUBMIT
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => { if (confirm('Delete this note?')) deleteNote(note.id).catch(err => alert(err.message)); }}
@@ -738,8 +773,19 @@ export default function AdminPortalPage() {
                   <label style={{ fontWeight: '700', color: '#000000' }}>Description</label>
                   <textarea rows={3} value={recForm.description} onChange={(e) => setRecForm({ ...recForm, description: e.target.value })} required />
                 </div>
+                <div className="form-group">
+                  <label style={{ fontWeight: '700', color: '#000000' }}>Upload Video File</label>
+                  <input type="file" accept="video/*" onChange={handleRecFileChange} />
+                  {recForm.fileName && <span style={{ fontSize: '12px', color: '#0f172a', marginTop: '4px', display: 'block' }}>Attached: {recForm.fileName}</span>}
+                </div>
+                <div className="form-group">
+                  <label style={{ fontWeight: '700', color: '#000000' }}>Or External Video Link (YouTube / Drive — optional if a file is attached)</label>
+                  <input type="url" value={recForm.videoUrl} onChange={(e) => setRecForm({ ...recForm, videoUrl: e.target.value })} placeholder="https://youtube.com/..." />
+                </div>
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '8px' }}>
-                  <button type="submit" className="admin-btn admin-btn-inspect">SAVE RECORDING</button>
+                  <button type="submit" className="admin-btn admin-btn-inspect" disabled={uploadingRec}>
+                    {uploadingRec ? 'UPLOADING…' : 'SUBMIT FOR SUPER ADMIN APPROVAL'}
+                  </button>
                   <button type="button" onClick={() => setShowRecForm(false)} className="admin-btn admin-btn-edit">CANCEL</button>
                 </div>
               </form>
@@ -749,7 +795,8 @@ export default function AdminPortalPage() {
               {recordings.map(rec => (
                 <div key={rec.id} className="admin-event-card">
                   <div className="admin-card-top-content">
-                    <span className="admin-badge-type">{rec.type}</span>
+                    <span className={`status-pill ${rec.status || 'approved'}`}>{STATUS_LABEL[rec.status || 'approved']}</span>
+                    <span className="admin-badge-type" style={{ display: 'block', marginTop: '8px' }}>{rec.type}</span>
                     <h3 className="admin-event-title">{rec.title}</h3>
                     <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '13px', margin: '4px 0' }}>🎙 {rec.speaker}</p>
                     <p className="admin-event-desc">{rec.description}</p>
@@ -759,14 +806,24 @@ export default function AdminPortalPage() {
                       <span>📅 {rec.date}</span>
                       <span>⏱ {rec.duration}</span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(err => alert(err.message)); }}
-                      className="admin-btn admin-btn-delete"
-                      style={{ width: '100%' }}
-                    >
-                      DELETE RECORDING
-                    </button>
+                    <div className="admin-card-btn-grid">
+                      {rec.status === 'rejected' && (
+                        <button
+                          type="button"
+                          onClick={() => resubmitRecording(rec.id).catch(err => alert(err.message))}
+                          className="admin-btn admin-btn-edit"
+                        >
+                          RESUBMIT
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(err => alert(err.message)); }}
+                        className="admin-btn admin-btn-delete"
+                      >
+                        DELETE RECORDING
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
