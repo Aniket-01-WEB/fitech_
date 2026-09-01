@@ -5,23 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
 
-const WORD_SEQUENCE = [
-  { word: 'MONEY',   duration: 200 },
-  { word: 'पैसा',    duration: 200 },
-  { word: 'টাকা',    duration: 200 },
-  { word: 'பணம்',    duration: 200 },
-  { word: 'డబ్బు',   duration: 200 },
-  { word: 'ಹಣ',      duration: 200 },
-  { word: 'पैसे',    duration: 200 },
-  { word: 'પૈસા',    duration: 200 },
-  { word: 'Argent',  duration: 200 },
-  { word: 'Dinero',  duration: 200 },
-  { word: 'お金',     duration: 200 },
-  // Continuation words with longer 2s duration
-  { word: 'CURRENCY', duration: 2000 },
-  { word: 'CAPITAL',  duration: 2000 },
-];
-
 const DOMAINS_DATA = [
   {
     num: '01',
@@ -233,10 +216,8 @@ const TEAM_DATA = [
 const ORBIT_TAGS = ['QUANT', 'ALGO', 'DEFI', 'AI', 'RISK', 'HFT'];
 
 export default function HomePage() {
-  const [currentWord, setCurrentWord] = useState(WORD_SEQUENCE[0].word);
   const [eventsTab, setEventsTab] = useState('upcoming');
   const [flippedCards, setFlippedCards] = useState({});
-  const sequenceIndexRef = useRef(0);
   const { events, openDetailModal, openJoinModal } = usePortal();
 
   const teamWrapperRef = useRef(null);
@@ -245,25 +226,6 @@ export default function HomePage() {
   const scrollLeftRef = useRef(0);
   const isDraggingRef = useRef(false);
   const [isGrabbing, setIsGrabbing] = useState(false);
-
-  // Hero Money Ticker dynamic duration sequence
-  useEffect(() => {
-    let timeoutId;
-
-    const runSequence = () => {
-      const currentItem = WORD_SEQUENCE[sequenceIndexRef.current];
-      setCurrentWord(currentItem.word);
-
-      timeoutId = setTimeout(() => {
-        sequenceIndexRef.current = (sequenceIndexRef.current + 1) % WORD_SEQUENCE.length;
-        runSequence();
-      }, currentItem.duration);
-    };
-
-    runSequence();
-
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // Team Slider drag setup
   useEffect(() => {
@@ -362,7 +324,7 @@ export default function HomePage() {
               <h1 className="habito-main-title">
                 WE MAKE
                 <br />
-                <span className="hero-money-ticker">{currentWord}</span>
+                MONEY
                 <br />
                 WORK FOR YOU
               </h1>
@@ -380,8 +342,7 @@ export default function HomePage() {
                 <span className="habito-feat-tag">✦ Machine Learning Risk</span>
               </div>
             </div>
-
-            <div className="habito-actions-col">
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               <button type="button" onClick={openJoinModal} className="habito-action-link">
                 JOIN US <span className="arrow">→</span>
               </button>
@@ -426,9 +387,11 @@ export default function HomePage() {
       </section>
 
       {/* 4. SIX DIMENSIONS OF INNOVATION SECTION */}
-      <section className="domains-habito-grid-section" id="domains">
-        <div className="container" style={{ marginBottom: '40px' }}>
-          <h2 className="section-title">SIX DIMENSIONS OF INNOVATION</h2>
+      <section className="domains-habito-grid-section" id="domains" style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <div className="habito-container" style={{ marginBottom: '40px' }}>
+          <h2 className="section-title" style={{ fontSize: 'clamp(44px, 6.8vw, 84px)', margin: 0 }}>
+            SIX DIMENSIONS OF INNOVATION
+          </h2>
         </div>
 
         <div className="domains-habito-container">
@@ -472,6 +435,7 @@ export default function HomePage() {
                 type="button"
                 className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
                 onClick={() => setEventsTab('upcoming')}
+                style={{ fontSize: '14px', fontWeight: '700', padding: '10px 22px' }}
               >
                 UPCOMING
               </button>
@@ -479,6 +443,7 @@ export default function HomePage() {
                 type="button"
                 className={`tab-btn ${eventsTab === 'past' ? 'active' : ''}`}
                 onClick={() => setEventsTab('past')}
+                style={{ fontSize: '14px', fontWeight: '700', padding: '10px 22px' }}
               >
                 PAST
               </button>
@@ -521,9 +486,9 @@ export default function HomePage() {
 
       {/* 6. FEATURED PROJECTS SECTION */}
       <section className="section" id="projects">
-        <div className="container">
-          <h2 className="section-title">FEATURED LAB BUILDS</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+        <div className="container" style={{ maxWidth: '100%', padding: '0 clamp(24px, 5vw, 64px)' }}>
+          <h2 className="section-title" style={{ margin: '0 0 48px 0', textAlign: 'left', maxWidth: 'none' }}>FEATURED LAB BUILDS</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {PROJECTS_DATA.map((proj, idx) => (
               <div key={idx} className="simple-event-card">
                 <div className="simple-card-top">
@@ -606,41 +571,33 @@ export default function HomePage() {
       </section>
 
       {/* 8. BENEFITS TICKER SECTION */}
-      <section className="benefits section">
-        <div className="benefits-bg-ticker">
-          <div className="benefits-ticker-track">
-            <span>MATRIX FINTECH CLUB</span>
-            <span>QUANT RESEARCH SOCIETY</span>
-            <span>BUILD THE FUTURE</span>
-          </div>
-        </div>
-
-        <div className="container">
-          <h2 className="section-title" style={{ color: '#0f172a' }}>MORE THAN A CLUB</h2>
+      <section className="benefits section" style={{ padding: '80px 0 100px 0' }}>
+        <div className="container" style={{ maxWidth: '100%', padding: '0 clamp(24px, 5vw, 64px)' }}>
+          <h2 className="more-than-club-title">MORE THAN A COMMUNITY</h2>
 
           <div className="benefits-grid">
             <div className="benefit-card">
               <h3 className="benefit-title">Institutional Quant Codebases</h3>
               <p className="benefit-desc">
-                Access production-ready C++ matching engine templates, Python backtesting frameworks, and Solidity smart contract audit toolkits.
+                Access production-ready C++ matching engine templates, Python backtesting frameworks, and Solidity smart contract audit toolkits. Build, test, and experiment with quantitative strategies using industry-inspired development workflows.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">Industry Research Grants</h3>
               <p className="benefit-desc">
-                Receive compute credits, dataset access (Level 2 order books, tick data), and research stipends for published technical whitepapers.
+                Receive compute credits, dataset access (Level 2 order books, tick data), and research stipends for published technical whitepapers. Explore emerging financial technologies and turn your ideas into structured research with practical industry applications.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">Direct Hedge Fund Placement</h3>
               <p className="benefit-desc">
-                Fast-track interview referrals to leading quantitative hedge funds, algorithmic trading desks, and DeFi protocols.
+                Fast-track interview referrals to leading quantitative hedge funds, algorithmic trading desks, and DeFi protocols. Gain exposure to real-world opportunities while connecting with professionals working across quantitative finance and financial technology.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">National Hackathon Incubator</h3>
               <p className="benefit-desc">
-                Form high-caliber teams for national hackathons with mentorship from senior fintech founders and quantitative strategists.
+                Form high-caliber teams for national hackathons with mentorship from senior fintech founders and quantitative strategists. Get guidance from idea development to deployment while building solutions around real financial and technological challenges.
               </p>
             </div>
           </div>
@@ -652,13 +609,15 @@ export default function HomePage() {
         <div className="cta-overlay"></div>
 
         <div className="cta-content container">
-          <h2 className="cta-title">READY TO SHAPE FINANCIAL TECH?</h2>
-          <p className="cta-desc">
-            Join hundreds of student quants, developers, and researchers building institutional fintech infrastructure.
+          <h2 className="cta-title" style={{ fontSize: 'clamp(44px, 7vw, 86px)', marginBottom: '24px', letterSpacing: '0.5px', lineHeight: '1.1' }}>
+            READY TO SHAPE FINANCIAL TECH?
+          </h2>
+          <p className="cta-desc" style={{ maxWidth: '860px', marginBottom: '32px', fontSize: 'clamp(17px, 2vw, 21px)', lineHeight: '1.6' }}>
+            Learn, build, and explore the intersection of finance and technology through real-world projects, research, and innovation. Discover new ideas, develop practical skills, and shape the future of fintech
           </p>
-          <div className="cta-buttons" style={{ marginTop: '24px' }}>
+          <div className="cta-buttons" style={{ marginTop: '16px' }}>
             <button type="button" onClick={openJoinModal} className="cta-join-btn">
-              APPLY FOR MEMBERSHIP →
+              JOIN OUR COMMUNITY →
             </button>
           </div>
         </div>

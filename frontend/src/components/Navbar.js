@@ -54,41 +54,75 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          <Link href="/" className="nav-brand" aria-label="MATRIX Home">
+      <header className={`curved-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+        <nav className="curved-navbar">
+          {/* Left Brand */}
+          <Link href="/" className="curved-nav-brand" aria-label="FITECH Home">
             <Image
-              src="/real_logo_org.png"
-              alt="MATRIX FinTech Club Logo"
-              width={64}
-              height={64}
-              className="nav-club-logo"
+              src="/logo_club-removebg-preview.png"
+              alt="FITECH Club Logo"
+              width={34}
+              height={34}
+              className="curved-nav-logo"
               priority
             />
+            <span className="curved-nav-title">FITECH</span>
           </Link>
 
-          <Link href="/" className="nav-center-title">
-            FITECH
-          </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {currentUser && (
-              <div className="nav-user-indicator" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Desktop Nav Links (shifted to right) */}
+          <ul className="curved-nav-links">
+            <li>
+              <Link href="/#about" className={pathname === '/' ? 'active' : ''}>About</Link>
+            </li>
+            <li>
+              <Link href="/domain" className={pathname === '/domain' ? 'active' : ''}>Domains</Link>
+            </li>
+            <li>
+              <Link href="/events" className={pathname === '/events' ? 'active' : ''}>Events</Link>
+            </li>
+            <li>
+              <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>Projects</Link>
+            </li>
+            <li>
+              <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>Gallery</Link>
+            </li>
+            <li>
+              <Link href="/team" className={pathname === '/team' ? 'active' : ''}>Team</Link>
+            </li>
+            {currentUser ? (
+              <li>
                 <Link
                   href={getDashboardHref(currentUser.role)}
-                  className="nav-dashboard-link"
+                  className={pathname.includes('portal') ? 'active' : ''}
                 >
-                  Dashboard →
+                  Dashboard
                 </Link>
-                <button type="button" onClick={handleSignOut} className="nav-signout-btn">
-                  Sign Out ↵
-                </button>
-              </div>
+              </li>
+            ) : (
+              <li>
+                <Link href="/login" className={pathname === '/login' ? 'active' : ''}>
+                  Portal / Login
+                </Link>
+              </li>
+            )}
+          </ul>
+
+          {/* Right Actions for logged-in user or mobile hamburger */}
+          <div className="curved-nav-actions">
+            {currentUser ? (
+              <button type="button" onClick={handleSignOut} className="curved-nav-signout">
+                Sign Out
+              </button>
+            ) : (
+              <Link href="/login" className="curved-nav-login-btn">
+                Login ↵
+              </Link>
             )}
 
+            {/* Mobile Hamburger */}
             <button
               type="button"
-              className={`nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
+              className={`curved-nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
               onClick={toggleMobileMenu}
               aria-label="Toggle Navigation Menu"
             >
@@ -97,8 +131,8 @@ export default function Navbar() {
               <span></span>
             </button>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Fullscreen Mobile Drawer */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
@@ -114,6 +148,9 @@ export default function Navbar() {
           </li>
           <li>
             <Link href="/projects">Projects</Link>
+          </li>
+          <li>
+            <Link href="/gallery">Gallery</Link>
           </li>
           <li>
             <Link href="/team">Team</Link>
