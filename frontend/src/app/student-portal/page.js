@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { usePortal } from '@/context/PortalContext';
+import { usePortal, DOMAIN_OPTIONS } from '@/context/PortalContext';
 
 const DEFAULT_PROFILE_TEMPLATE = {
   name: '',
@@ -454,6 +454,10 @@ export default function StudentPortalPage() {
                     <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.department}</strong>
                   </div>
                   <div>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>SCHOOL / COLLEGE</span>
+                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.school}</strong>
+                  </div>
+                  <div>
                     <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>CONTACT NUMBER</span>
                     <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.contactNumber}</strong>
                   </div>
@@ -483,6 +487,14 @@ export default function StudentPortalPage() {
                     <input type="text" value={profileForm.rollNumber} onChange={(e) => setProfileForm({ ...profileForm, rollNumber: e.target.value })} required />
                   </div>
                   <div className="form-group">
+                    <label>School / College</label>
+                    <input type="text" value={profileForm.school} onChange={(e) => setProfileForm({ ...profileForm, school: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Department</label>
+                    <input type="text" value={profileForm.department} onChange={(e) => setProfileForm({ ...profileForm, department: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
                     <label>Section</label>
                     <input type="text" value={profileForm.section} onChange={(e) => setProfileForm({ ...profileForm, section: e.target.value })} required />
                   </div>
@@ -493,6 +505,12 @@ export default function StudentPortalPage() {
                   <div className="form-group">
                     <label>Current Year</label>
                     <input type="text" value={profileForm.currentYear} onChange={(e) => setProfileForm({ ...profileForm, currentYear: e.target.value })} required />
+                  </div>
+                  <div className="form-group form-group-full">
+                    <label>Primary Track of Interest</label>
+                    <select value={profileForm.interestedDomain} onChange={(e) => setProfileForm({ ...profileForm, interestedDomain: e.target.value })}>
+                      {DOMAIN_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                    </select>
                   </div>
                 </div>
 
