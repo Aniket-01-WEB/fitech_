@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -4376,4 +4376,142 @@ canvas{display:block}
     width: 100%;
     text-align: center;
   }
+}
+
+/* ============================================================
+   INTRO ANIMATION - the crumpled $100 unfolds as ASCII on a dark
+   ground, then the camera pushes through it and the ground lifts
+   to white, landing on the page. Overlay only; nothing above this
+   comment is affected.
+   ============================================================ */
+
+/* Pure neutral greyscale - no hue at all. The site's --accent and --gray-* are
+   slate, which reads blue, so the intro does not borrow them. The ground is just
+   white turned down: same channel on R, G and B as the page it hands off to, so
+   the push is a straight luminance ramp with no colour shift anywhere in it. */
+:root {
+  --intro-ground: #181818;  /* a darkened white, not black */
+  --intro-dim: #8b8b8b;     /* engraving and shadow */
+  --intro-bright: #ffffff;  /* paper, = the page's own white */
+}
+
+/* Applied by the boot script in layout.js BEFORE first paint, so the very
+   first thing painted is the dark ground - never the MATRIX PageLoader, and
+   never a white flash. visibility is inherited and overridable, so the body
+   stays hidden while the intro alone is allowed to show. */
+html.money-intro-active,
+html.money-intro-active body {
+  background: var(--intro-ground) !important;
+}
+
+html.money-intro-active body {
+  visibility: hidden;
+}
+
+html.money-intro-active body .money-intro {
+  visibility: visible;
+}
+
+.money-intro {
+  position: fixed;
+  inset: 0;
+  height: 100dvh; /* mobile browsers: 100vh ignores the collapsing URL bar */
+  z-index: 1000000; /* above .page-loader (999999) */
+  background: var(--intro-ground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+}
+
+/* Both layers occupy the same grid cell, so they overlay exactly: identical
+   glyphs at identical positions, split by tone into green and white. */
+.money-intro-stack {
+  display: grid;
+  transform: scale(1);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.money-intro-art {
+  grid-area: 1 / 1;
+  margin: 0;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 10px; /* both replaced inline once measured against the viewport */
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  contain: layout paint;
+  text-rendering: optimizeSpeed;
+}
+
+/* Two tone bands over nine density levels: bright paper, dimmer engraving. */
+.money-intro-dim    { color: var(--intro-dim); }
+.money-intro-bright { color: var(--intro-bright); }
+
+/* The push: the note rushes at the viewer and dissolves while the dark ground
+   lifts to white, so the hand-off onto the page reads as one motion. */
+.money-intro.is-zooming .money-intro-stack {
+  transform: scale(14);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.5, 0, 0.9, 0.35),
+              opacity 560ms ease-in 240ms;
+}
+
+.money-intro.is-zooming {
+  background-color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color 540ms ease-out 60ms,
+              opacity 220ms ease 580ms;
+}
+
+/* Sits in the empty band below the note: even at its widest frame the bill's
+   ink only spans ~22-78% of viewport height, so the lower third is clear.
+   Anchored rather than scaled, so the note rushes past it during the push and
+   the wordmark reads as the fixed thing the camera moves through. */
+.money-intro-wordmark {
+  position: absolute;
+  left: 50%;
+  top: 0; /* replaced inline: hung off the note's ink, not the viewport edge */
+  z-index: 2;
+  transform: translateX(-50%);
+  opacity: 1;
+  pointer-events: none;
+  animation: moneyIntroWordmark 800ms cubic-bezier(0.2, 0, 0.2, 1) 420ms both;
+}
+
+.money-intro.is-zooming .money-intro-wordmark {
+  opacity: 0;
+  transition: opacity 300ms ease;
+  animation: none;
+}
+
+/* The word is characters now, not type: sizing and line-height are set inline
+   once the grid has been measured, exactly as for the note itself. */
+.money-intro-wordmark .money-intro-art {
+  contain: none; /* width is content-driven here, unlike the fixed note grid */
+}
+
+@keyframes moneyIntroWordmark {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+body.money-intro-lock {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+/* Belt and braces alongside the visibility rule above: MoneyIntro sets
+   .money-intro-ran on <html> as soon as its chunk evaluates, so the existing
+   MATRIX PageLoader stays out of the way for the one load the intro owns.
+   PageLoader.js itself is untouched - it still runs and unmounts normally,
+   just invisibly, and is unaffected on every other page and every later visit. */
+html.money-intro-ran .page-loader {
+  display: none !important;
 }
