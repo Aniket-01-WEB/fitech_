@@ -74,6 +74,9 @@ export default function Navbar() {
               <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>Projects</Link>
             </li>
             <li>
+              <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>Gallery</Link>
+            </li>
+            <li>
               <Link href="/team" className={pathname === '/team' ? 'active' : ''}>Team</Link>
             </li>
             {currentUser ? (
@@ -135,6 +138,9 @@ export default function Navbar() {
           </li>
           <li>
             <Link href="/projects">Projects</Link>
+          </li>
+          <li>
+            <Link href="/gallery">Gallery</Link>
           </li>
           <li>
             <Link href="/team">Team</Link>

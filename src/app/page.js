@@ -1,26 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
-
-const WORD_SEQUENCE = [
-  { word: 'MONEY',   duration: 200 },
-  { word: 'पैसा',    duration: 200 },
-  { word: 'টাকা',    duration: 200 },
-  { word: 'பணம்',    duration: 200 },
-  { word: 'డబ్బు',   duration: 200 },
-  { word: 'ಹಣ',      duration: 200 },
-  { word: 'पैसे',    duration: 200 },
-  { word: 'પૈસા',    duration: 200 },
-  { word: 'Argent',  duration: 200 },
-  { word: 'Dinero',  duration: 200 },
-  { word: 'お金',     duration: 200 },
-  // Continuation words with longer 2s duration
-  { word: 'CURRENCY', duration: 2000 },
-  { word: 'CAPITAL',  duration: 2000 },
-];
 
 const DOMAINS_DATA = [
   {
@@ -88,13 +71,6 @@ const PROJECTS_DATA = [
     category: 'QUANT RESEARCH',
     desc: 'Deep learning pipeline predicting implied volatility surfaces across multi-asset option chains.',
     tags: ['PyTorch', 'Options', 'SVI', 'ML']
-  },
-  {
-    num: '04',
-    name: 'MEV Sandwich Protection RPC',
-    category: 'WEB3 INFRASTRUCTURE',
-    desc: 'Private transaction routing RPC node shielding retail Swaps from front-running and sandwich attacks.',
-    tags: ['Rust', 'Geth', 'MEV', 'Ethereum']
   }
 ];
 
@@ -144,30 +120,9 @@ const TEAM_DATA = [
 const ORBIT_TAGS = ['QUANT', 'ALGO', 'DEFI', 'AI', 'RISK', 'HFT'];
 
 export default function HomePage() {
-  const [currentWord, setCurrentWord] = useState(WORD_SEQUENCE[0].word);
   const [eventsTab, setEventsTab] = useState('upcoming');
   const [flippedCards, setFlippedCards] = useState({});
-  const sequenceIndexRef = useRef(0);
   const { events, openDetailModal, openJoinModal } = usePortal();
-
-  // Hero Money Ticker dynamic duration sequence
-  useEffect(() => {
-    let timeoutId;
-
-    const runSequence = () => {
-      const currentItem = WORD_SEQUENCE[sequenceIndexRef.current];
-      setCurrentWord(currentItem.word);
-
-      timeoutId = setTimeout(() => {
-        sequenceIndexRef.current = (sequenceIndexRef.current + 1) % WORD_SEQUENCE.length;
-        runSequence();
-      }, currentItem.duration);
-    };
-
-    runSequence();
-
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   const handleCardFlip = (index) => {
     setFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
@@ -204,7 +159,7 @@ export default function HomePage() {
               <h1 className="habito-main-title">
                 WE MAKE
                 <br />
-                <span className="hero-money-ticker">{currentWord}</span>
+                MONEY
                 <br />
                 WORK FOR YOU
               </h1>
@@ -356,9 +311,9 @@ export default function HomePage() {
 
       {/* 6. FEATURED PROJECTS SECTION */}
       <section className="section" id="projects">
-        <div className="container">
-          <h2 className="section-title">FEATURED LAB BUILDS</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+        <div className="container" style={{ maxWidth: '100%', padding: '0 clamp(24px, 5vw, 64px)' }}>
+          <h2 className="section-title" style={{ margin: '0 0 48px 0', textAlign: 'left', maxWidth: 'none' }}>FEATURED LAB BUILDS</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {PROJECTS_DATA.map((proj, idx) => (
               <div key={idx} className="simple-event-card">
                 <div className="simple-card-top">
@@ -426,7 +381,7 @@ export default function HomePage() {
       {/* 8. BENEFITS TICKER SECTION */}
       <section className="benefits section" style={{ padding: '80px 0 100px 0' }}>
         <div className="container" style={{ maxWidth: '100%', padding: '0 clamp(24px, 5vw, 64px)' }}>
-          <h2 className="more-than-club-title">MORE THAN A CLUB</h2>
+          <h2 className="more-than-club-title">MORE THAN A COMMUNITY</h2>
 
           <div className="benefits-grid">
             <div className="benefit-card">
@@ -470,7 +425,7 @@ export default function HomePage() {
           </p>
           <div className="cta-buttons" style={{ marginTop: '16px' }}>
             <button type="button" onClick={openJoinModal} className="cta-join-btn">
-              APPLY FOR MEMBERSHIP →
+              JOIN OUR COMMUNITY →
             </button>
           </div>
         </div>

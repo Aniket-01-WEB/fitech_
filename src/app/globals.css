@@ -500,7 +500,7 @@ canvas{display:block}
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   padding-bottom: 0;
 }
 
@@ -513,12 +513,7 @@ canvas{display:block}
   text-transform: uppercase;
   color: #0a0a0a;
   margin: 0;
-  text-align: right;
-}
-
-.hero-money-ticker {
-  display: inline-block;
-  color: #0a0a0a;
+  text-align: left;
 }
 
 /* Bottom row: left text + right action, aligned below the two columns */
