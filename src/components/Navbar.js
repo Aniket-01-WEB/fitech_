@@ -76,22 +76,34 @@ export default function Navbar() {
             <li>
               <Link href="/team" className={pathname === '/team' ? 'active' : ''}>Team</Link>
             </li>
+            {currentUser ? (
+              <li>
+                <Link
+                  href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}
+                  className={pathname.includes('portal') ? 'active' : ''}
+                >
+                  Dashboard
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link href="/login" className={pathname === '/login' ? 'active' : ''}>
+                  Portal / Login
+                </Link>
+              </li>
+            )}
           </ul>
 
           {/* Right Actions for logged-in user or mobile hamburger */}
           <div className="curved-nav-actions">
-            {currentUser && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Link
-                  href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}
-                  className="curved-nav-dash-link"
-                >
-                  Dashboard
-                </Link>
-                <button type="button" onClick={handleSignOut} className="curved-nav-signout">
-                  Sign Out
-                </button>
-              </div>
+            {currentUser ? (
+              <button type="button" onClick={handleSignOut} className="curved-nav-signout">
+                Sign Out
+              </button>
+            ) : (
+              <Link href="/login" className="curved-nav-login-btn">
+                Login ↵
+              </Link>
             )}
 
             {/* Mobile Hamburger */}
