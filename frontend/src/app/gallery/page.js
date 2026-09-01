@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function GalleryPage() {
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>
+    <div style={{ background: '#ffffff', minHeight: '120vh', paddingTop: '140px', paddingBottom: '100px' }}>
       <div style={{ width: '100%', maxWidth: '1680px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 64px)' }}>
         {/* Header Row */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '24px' }}>
@@ -25,13 +25,14 @@ export default function GalleryPage() {
               padding: '10px 24px',
               borderRadius: '9999px',
               border: '1px solid #cbd5e1',
-              background: '#f8fafc',
+              background: '#ffffff',
               color: '#0f172a',
               fontWeight: '600',
               fontSize: '14px',
               textDecoration: 'none',
               transition: 'all 0.2s ease',
-              marginTop: '12px'
+              marginTop: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
             Back to Home
@@ -52,14 +53,14 @@ export default function GalleryPage() {
         </div>
 
         {/* Photo Grid Placeholder */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
-          <div style={{ height: '320px', background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '700' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '32px' }}>
+          <div style={{ height: '500px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0a0a0a', fontWeight: '700', fontSize: '20px', boxShadow: '0 12px 32px rgba(0,0,0,0.06)' }}>
             FinTech Hackathon 2026
           </div>
-          <div style={{ height: '320px', background: 'linear-gradient(135deg, #1e293b, #334155)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '700' }}>
+          <div style={{ height: '500px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0a0a0a', fontWeight: '700', fontSize: '20px', boxShadow: '0 12px 32px rgba(0,0,0,0.06)' }}>
             Quant Masterclass
           </div>
-          <div style={{ height: '320px', background: 'linear-gradient(135deg, #334155, #0f172a)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '700' }}>
+          <div style={{ height: '500px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0a0a0a', fontWeight: '700', fontSize: '20px', boxShadow: '0 12px 32px rgba(0,0,0,0.06)' }}>
             Community Meetup
           </div>
         </div>
