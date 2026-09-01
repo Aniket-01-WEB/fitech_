@@ -118,20 +118,20 @@ canvas{display:block}
   max-width: 1680px;
   height: 58px;
   padding: 6px 24px;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.45);
   color: #0a0a0a;
   border-radius: 9999px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .curved-navbar-wrapper.scrolled .curved-navbar {
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
-  border-color: rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .curved-nav-brand {
@@ -514,6 +514,7 @@ canvas{display:block}
   color: #0a0a0a;
   margin: 0;
   text-align: right;
+  padding-right: 28px;
 }
 
 /* Bottom row: left text + right action, aligned below the two columns */

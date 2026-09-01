@@ -110,9 +110,9 @@ export default function Navbar() {
           {/* Right Actions for logged-in user or mobile hamburger */}
           <div className="curved-nav-actions">
             {currentUser ? (
-              <button type="button" onClick={handleSignOut} className="curved-nav-signout">
-                Sign Out
-              </button>
+              <Link href={getDashboardHref(currentUser.role)} className="curved-nav-login-btn">
+                Dashboard ↵
+              </Link>
             ) : (
               <Link href="/login" className="curved-nav-login-btn">
                 Login ↵
@@ -156,18 +156,11 @@ export default function Navbar() {
             <Link href="/team">Team</Link>
           </li>
           {currentUser ? (
-            <>
-              <li>
-                <Link href={getDashboardHref(currentUser.role)}>
-                  Dashboard ({currentUser.role.toUpperCase()})
-                </Link>
-              </li>
-              <li>
-                <button type="button" onClick={handleSignOut} className="nav-signout-btn">
-                  SIGN OUT ({currentUser.email})
-                </button>
-              </li>
-            </>
+            <li>
+              <Link href={getDashboardHref(currentUser.role)}>
+                Dashboard ({currentUser.role.toUpperCase()})
+              </Link>
+            </li>
           ) : (
             <>
               <li>
