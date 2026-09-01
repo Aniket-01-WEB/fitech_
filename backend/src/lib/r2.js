@@ -23,9 +23,21 @@ const r2 = new S3Client({
 const UPLOAD_TTL_SECONDS = 15 * 60; // time an admin has to finish the PUT
 const DOWNLOAD_TTL_SECONDS = 10 * 60; // minted fresh per request, never stored
 
-/** A short-lived URL the browser can PUT a file straight to R2 with. */
-export async function getUploadUrl(key, contentType) {
-  const cmd = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType || 'application/octet-stream' });
+/**
+ * A short-lived URL the browser can PUT a file straight to R2 with. When
+ * contentLength is given, it's baked into the signed request — the
+ * browser's PUT must send exactly that many bytes (SigV4 binds
+ * Content-Length into the signature) or R2 rejects it, so the declared
+ * size limit checked before minting this URL can't be silently bypassed
+ * by uploading more bytes than declared.
+ */
+export async function getUploadUrl(key, contentType, contentLength) {
+  const cmd = new PutObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    ContentType: contentType || 'application/octet-stream',
+    ...(contentLength ? { ContentLength: contentLength } : {}),
+  });
   return getSignedUrl(r2, cmd, { expiresIn: UPLOAD_TTL_SECONDS });
 }
 

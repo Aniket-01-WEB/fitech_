@@ -1,8 +1,21 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import { requireUser } from '../middleware/requireUser.js';
 import { sendError } from '../lib/errorResponse.js';
+import { validateBody } from '../lib/validation.js';
 
 const router = Router();
+
+// The real bound lives in the increment_activity() Postgres function
+// (clamped to 120s per call regardless of what's sent — the database is
+// the actual enforcement point, not this schema). This just rejects
+// non-numeric junk early with a clean 400 instead of a confusing
+// downstream error.
+const heartbeatSchema = z.object({
+  deltaWebSec: z.number().finite().optional(),
+  deltaRecSec: z.number().finite().optional(),
+  watchedSessionIncrement: z.boolean().optional(),
+}).strict();
 
 // GET /api/activity — the caller's own tracked time. Returns zeros if no
 // row exists yet (a student who has never triggered a PATCH).
@@ -31,9 +44,9 @@ router.get('/', requireUser, async (req, res) => {
 // via the increment_activity() RPC (avoids read-then-write races from a
 // client polling this once a second).
 // Body: { deltaWebSec?: number, deltaRecSec?: number, watchedSessionIncrement?: boolean }
-router.patch('/', requireUser, async (req, res) => {
-  const deltaWebSec = Number(req.body.deltaWebSec) || 0;
-  const deltaRecSec = Number(req.body.deltaRecSec) || 0;
+router.patch('/', requireUser, validateBody(heartbeatSchema), async (req, res) => {
+  const deltaWebSec = req.body.deltaWebSec || 0;
+  const deltaRecSec = req.body.deltaRecSec || 0;
   const watchedSessionIncrement = Boolean(req.body.watchedSessionIncrement);
 
   const { data, error } = await req.supabase.rpc('increment_activity', {

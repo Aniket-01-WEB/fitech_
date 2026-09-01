@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { requireUser } from '../middleware/requireUser.js';
 import { sendError } from '../lib/errorResponse.js';
+import { validateBody, validateIdParam, adminRequestCreateSchema } from '../lib/validation.js';
+import { sensitiveActionLimiter } from '../lib/rateLimit.js';
 
 const router = Router();
 
@@ -16,13 +18,16 @@ router.get('/', requireUser, async (req, res) => {
   res.json({ adminRequests: data });
 });
 
-// POST /api/admin-requests — apply for admin access. One row per user
-// (unique constraint); resubmitting after rejection uses PATCH below.
-router.post('/', requireUser, async (req, res) => {
-  const { reason } = req.body ?? {};
+// POST /api/admin-requests — apply for admin access. Only `reason` is
+// ever accepted (the schema rejects anything else, e.g. a client-supplied
+// status/role/reviewed_by) — the row always starts 'pending' and
+// user_id always comes from the verified session, never the body. One
+// row per user (unique constraint); resubmitting after rejection uses
+// the /resubmit route below.
+router.post('/', requireUser, sensitiveActionLimiter, validateBody(adminRequestCreateSchema), async (req, res) => {
   const { data, error } = await req.supabase
     .from('admin_requests')
-    .insert({ user_id: req.user.id, reason: reason || null })
+    .insert({ user_id: req.user.id, reason: req.body.reason || null })
     .select()
     .single();
 
@@ -33,7 +38,7 @@ router.post('/', requireUser, async (req, res) => {
 // POST /api/admin-requests/:id/approve — the admin_requests_guard_status
 // trigger rejects this unless the caller is a superadmin, and grants the
 // admin role on the target profile as part of the same transaction.
-router.post('/:id/approve', requireUser, async (req, res) => {
+router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('admin_requests')
     .update({ status: 'approved' })
@@ -46,7 +51,7 @@ router.post('/:id/approve', requireUser, async (req, res) => {
 });
 
 // POST /api/admin-requests/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, async (req, res) => {
+router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('admin_requests')
     .update({ status: 'rejected' })
@@ -60,7 +65,7 @@ router.post('/:id/reject', requireUser, async (req, res) => {
 
 // POST /api/admin-requests/:id/resubmit — the request's own owner can move
 // a rejected request back to pending (guarded by the same trigger).
-router.post('/:id/resubmit', requireUser, async (req, res) => {
+router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('admin_requests')
     .update({ status: 'pending' })

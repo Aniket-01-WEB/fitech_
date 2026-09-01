@@ -16,11 +16,13 @@ npm run dev            # http://localhost:4000, auto-restarts on file changes
 
 ```
 src/
-  server.js              Express app entry — CORS, JSON body parsing, error handler
+  server.js              Express app entry — helmet, CORS allowlist, JSON body parsing, rate limiting, error handler
   lib/
     supabaseClient.js     builds a request-scoped Supabase client from the caller's Bearer token
-    errorResponse.js      maps Postgres/RLS errors to HTTP responses
+    errorResponse.js      maps Postgres/RLS errors to HTTP responses (only pre-approved error codes are ever forwarded verbatim)
     r2.js                  Cloudflare R2 client — mints presigned PUT/GET URLs, never proxies file bytes
+    validation.js          Zod schemas + validateBody/validateQuery/validateIdParam middleware, upload MIME/size allowlists
+    rateLimit.js            general (120/min) and sensitive-action (10/min: R2 upload-url, admin-requests) limiters
   middleware/
     requireUser.js        401-gates a route; attaches req.supabase / req.user
     requireStaff.js        403-gates a route RLS can't protect (e.g. minting an R2 upload URL); attaches req.profile
@@ -31,6 +33,8 @@ scripts/
 supabase/
   migrations/              the SQL that defines the schema, RLS policies, and triggers this API relies on
 ```
+
+See [`SECURITY_AUDIT.md`](../SECURITY_AUDIT.md) at the repo root for the full security posture — what's enforced where, what was tested live, and the honestly-disclosed remaining trade-offs.
 
 ## Keeping Supabase awake
 

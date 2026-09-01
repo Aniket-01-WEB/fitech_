@@ -1,14 +1,35 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import apiRouter from './routes/index.js';
+import { generalLimiter } from './lib/rateLimit.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
+// Comma-separated for prod + local dev at once, e.g.
+// "https://fitech.club,http://localhost:3000". Never a wildcard — this API
+// is credentialed (Authorization header), so the allowed origin list must
+// be explicit.
+const ALLOWED_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 
-app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
+app.use(helmet());
+app.use(cors({
+  origin(origin, callback) {
+    // No Origin header (curl, server-to-server, same-origin) — allow.
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
+// Default 100kb is deliberately kept small — every real payload here is
+// short JSON (titles, descriptions, ids); actual file bytes never pass
+// through this body parser, they go straight to R2 via presigned URL.
 app.use(express.json());
+app.use(generalLimiter);
 
 app.get('/', (req, res) => {
   res.json({

@@ -3,21 +3,18 @@ import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
 import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
+import { sensitiveActionLimiter } from '../lib/rateLimit.js';
+import {
+  validateBody,
+  validateIdParam,
+  recordingCreateSchema,
+  recordingUpdateSchema,
+  uploadUrlSchema,
+  ALLOWED_RECORDING_MIME_TYPES,
+  MAX_RECORDING_BYTES,
+} from '../lib/validation.js';
 
 const router = Router();
-
-const EDITABLE_FIELDS = [
-  'title',
-  'type',
-  'speaker',
-  'banner',
-  'recording_date',
-  'duration_label',
-  'duration_seconds',
-  'video_url',
-  'description',
-  'takeaways',
-];
 
 // GET /api/recordings — RLS narrows this to approved recordings for a
 // student, everything for staff. Same R2 overlay as notes: a row backed
@@ -41,14 +38,21 @@ router.get('/', requireUser, async (req, res) => {
 });
 
 // POST /api/recordings/upload-url — staff-only. Same presigned-PUT
-// pattern as notes; the browser uploads the video bytes straight to R2.
-router.post('/upload-url', requireUser, requireStaff, async (req, res) => {
-  const { fileName, contentType } = req.body ?? {};
-  if (!fileName) return res.status(400).json({ error: 'fileName is required.' });
+// pattern as notes (allowlisted MIME type, size cap bound into the
+// signature); the browser uploads the video bytes straight to R2.
+router.post('/upload-url', requireUser, requireStaff, sensitiveActionLimiter, validateBody(uploadUrlSchema), async (req, res) => {
+  const { fileName, contentType, fileSize } = req.body;
+
+  if (contentType && !ALLOWED_RECORDING_MIME_TYPES.has(contentType)) {
+    return res.status(400).json({ error: `File type "${contentType}" isn't allowed for recordings.` });
+  }
+  if (fileSize && fileSize > MAX_RECORDING_BYTES) {
+    return res.status(400).json({ error: 'File is too large (750MB max for recordings).' });
+  }
 
   const key = buildKey('recordings', req.user.id, fileName);
   try {
-    const uploadUrl = await getUploadUrl(key, contentType);
+    const uploadUrl = await getUploadUrl(key, contentType, fileSize);
     res.json({ uploadUrl, key });
   } catch (err) {
     console.error('Failed to mint R2 upload URL', err);
@@ -57,42 +61,29 @@ router.post('/upload-url', requireUser, requireStaff, async (req, res) => {
 });
 
 // POST /api/recordings — staff-only via RLS. video_url (an external
-// link) and r2_key (an uploaded file) are both optional and independent
-// — either, both, or neither may be set. New recordings always start
-// 'pending' (recordings_force_pending trigger).
-router.post('/', requireUser, async (req, res) => {
-  const { title, type, speaker, banner, recording_date, duration_label, duration_seconds, video_url, description, takeaways, r2_key } = req.body;
-  if (!title) return res.status(400).json({ error: 'title is required.' });
-
-  const { data, error } = await req.supabase
-    .from('recordings')
-    .insert({ title, type, speaker, banner, recording_date, duration_label, duration_seconds, video_url, description, takeaways, r2_key })
-    .select()
-    .single();
-
+// link, https only) and r2_key (an uploaded file) are both optional and
+// independent — either, both, or neither may be set. New recordings
+// always start 'pending' (recordings_force_pending trigger).
+router.post('/', requireUser, validateBody(recordingCreateSchema), async (req, res) => {
+  const { data, error } = await req.supabase.from('recordings').insert(req.body).select().single();
   if (error) return sendError(res, error, 403);
   res.status(201).json({ recording: data });
 });
 
 // PATCH /api/recordings/:id — staff-only via RLS.
-router.patch('/:id', requireUser, async (req, res) => {
-  const updates = {};
-  for (const field of EDITABLE_FIELDS) {
-    if (field in req.body) updates[field] = req.body[field];
-  }
-
-  if (Object.keys(updates).length === 0) {
+router.patch('/:id', requireUser, validateIdParam, validateBody(recordingUpdateSchema), async (req, res) => {
+  if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ error: 'No editable fields supplied.' });
   }
 
-  const { data, error } = await req.supabase.from('recordings').update(updates).eq('id', req.params.id).select().single();
+  const { data, error } = await req.supabase.from('recordings').update(req.body).eq('id', req.params.id).select().single();
   if (error) return sendError(res, error, 403);
   res.json({ recording: data });
 });
 
 // POST /api/recordings/:id/approve — the recordings_guard_status trigger
 // rejects this unless the caller is a superadmin.
-router.post('/:id/approve', requireUser, async (req, res) => {
+router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('recordings')
     .update({ status: 'approved' })
@@ -104,7 +95,7 @@ router.post('/:id/approve', requireUser, async (req, res) => {
 });
 
 // POST /api/recordings/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, async (req, res) => {
+router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('recordings')
     .update({ status: 'rejected' })
@@ -117,7 +108,7 @@ router.post('/:id/reject', requireUser, async (req, res) => {
 
 // POST /api/recordings/:id/resubmit — the uploader can move a rejected
 // recording back to pending for another review.
-router.post('/:id/resubmit', requireUser, async (req, res) => {
+router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('recordings')
     .update({ status: 'pending' })
@@ -130,7 +121,7 @@ router.post('/:id/resubmit', requireUser, async (req, res) => {
 
 // DELETE /api/recordings/:id — staff-only via RLS. Best-effort cleanup of
 // the R2 object; a failed R2 delete never blocks removing the row.
-router.delete('/:id', requireUser, async (req, res) => {
+router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
   const { data: existing } = await req.supabase.from('recordings').select('r2_key').eq('id', req.params.id).single();
 
   const { error } = await req.supabase.from('recordings').delete().eq('id', req.params.id);

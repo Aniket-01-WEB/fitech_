@@ -1,20 +1,9 @@
 import { Router } from 'express';
 import { requireUser } from '../middleware/requireUser.js';
 import { sendError } from '../lib/errorResponse.js';
+import { validateBody, profileUpdateSchema } from '../lib/validation.js';
 
 const router = Router();
-
-const EDITABLE_FIELDS = [
-  'name',
-  'reg_number',
-  'roll_number',
-  'school',
-  'department',
-  'section',
-  'current_year',
-  'contact_number',
-  'interested_domain',
-];
 
 // GET /api/profile — the caller's own profile row.
 router.get('/', requireUser, async (req, res) => {
@@ -24,13 +13,11 @@ router.get('/', requireUser, async (req, res) => {
 });
 
 // PATCH /api/profile — update the caller's own academic details.
-// `role` is intentionally never accepted here — it's blocked by the
+// `role` is intentionally never accepted here — the request schema
+// rejects any field outside the allowlist, and it's also blocked by the
 // prevent_self_role_escalation trigger at the database level regardless.
-router.patch('/', requireUser, async (req, res) => {
-  const updates = {};
-  for (const field of EDITABLE_FIELDS) {
-    if (field in req.body) updates[field] = req.body[field];
-  }
+router.patch('/', requireUser, validateBody(profileUpdateSchema), async (req, res) => {
+  const updates = req.body;
 
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({ error: 'No editable fields supplied.' });

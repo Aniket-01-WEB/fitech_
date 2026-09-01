@@ -595,11 +595,19 @@ export function PortalProvider({ children }) {
   // bytes straight to R2, bypassing the backend entirely. Returns the R2
   // object key to save alongside the note/recording row.
   const uploadToR2 = async (kind, file) => {
+    const contentType = file.type || 'application/octet-stream';
     const { uploadUrl, key } = await api.post(`/api/${kind}/upload-url`, {
       fileName: file.name,
-      contentType: file.type || 'application/octet-stream'
+      contentType,
+      fileSize: file.size
     });
-    const res = await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type || 'application/octet-stream' } });
+    // The backend bound file.size into the presigned URL's signature, so
+    // this PUT must send exactly that many bytes or R2 rejects it — the
+    // size check isn't just a promise the client could ignore. (The
+    // browser sets Content-Length itself from the Blob's real size —
+    // fetch() doesn't allow scripts to override that header — which is
+    // exactly what needs to match the signed value.)
+    const res = await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': contentType } });
     if (!res.ok) throw new Error('Upload to storage failed. Try again.');
     return key;
   };

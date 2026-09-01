@@ -3,6 +3,15 @@ import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
 import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
+import { sensitiveActionLimiter } from '../lib/rateLimit.js';
+import {
+  validateBody,
+  validateIdParam,
+  noteCreateSchema,
+  uploadUrlSchema,
+  ALLOWED_NOTE_MIME_TYPES,
+  MAX_NOTE_BYTES,
+} from '../lib/validation.js';
 
 const router = Router();
 
@@ -31,17 +40,28 @@ router.get('/', requireUser, async (req, res) => {
   res.json({ notes });
 });
 
-// POST /api/notes/upload-url — staff-only. Mints a presigned PUT URL the
-// browser uploads the file bytes to directly; the backend never proxies
-// them. RLS can't protect this (there's no row yet), so requireStaff
-// checks the caller's role explicitly.
-router.post('/upload-url', requireUser, requireStaff, async (req, res) => {
-  const { fileName, contentType } = req.body ?? {};
-  if (!fileName) return res.status(400).json({ error: 'fileName is required.' });
+// POST /api/notes/upload-url — staff-only. Validates the declared file
+// type against an allowlist and the declared size against a cap before
+// minting anything (a client can lie about either, but this at least
+// blocks the common/careless cases; R2's own signature binds the upload
+// to the declared Content-Length, so a mismatched real upload fails).
+// Mints a presigned PUT URL the browser uploads the file bytes to
+// directly; the backend never proxies them. RLS can't protect this
+// (there's no row yet), so requireStaff checks the caller's role
+// explicitly.
+router.post('/upload-url', requireUser, requireStaff, sensitiveActionLimiter, validateBody(uploadUrlSchema), async (req, res) => {
+  const { fileName, contentType, fileSize } = req.body;
+
+  if (contentType && !ALLOWED_NOTE_MIME_TYPES.has(contentType)) {
+    return res.status(400).json({ error: `File type "${contentType}" isn't allowed for notes.` });
+  }
+  if (fileSize && fileSize > MAX_NOTE_BYTES) {
+    return res.status(400).json({ error: 'File is too large (25MB max for notes).' });
+  }
 
   const key = buildKey('notes', req.user.id, fileName);
   try {
-    const uploadUrl = await getUploadUrl(key, contentType);
+    const uploadUrl = await getUploadUrl(key, contentType, fileSize);
     res.json({ uploadUrl, key });
   } catch (err) {
     console.error('Failed to mint R2 upload URL', err);
@@ -51,32 +71,22 @@ router.post('/upload-url', requireUser, requireStaff, async (req, res) => {
 
 // POST /api/notes — staff-only via RLS. Requires an external_link or an
 // r2_key (an object already PUT to R2 via the presigned URL above) — the
-// notes_has_source check constraint enforces this. There's deliberately
-// no way to hand this route a raw file_url: a note's file either lives
-// in this app's own R2 bucket, or it's a link to somewhere the admin
-// pointed at, never an arbitrary client-supplied "here's a URL" blob.
-// New notes always start 'pending' (notes_force_pending trigger).
-router.post('/', requireUser, async (req, res) => {
-  const { title, domain, description, external_link, file_type, topics, r2_key } = req.body;
-
-  if (!title) return res.status(400).json({ error: 'title is required.' });
-  if (!external_link && !r2_key) {
-    return res.status(400).json({ error: 'Provide an external_link, or upload a file first.' });
-  }
-
-  const { data, error } = await req.supabase
-    .from('notes')
-    .insert({ title, domain, description, external_link, file_type, topics, r2_key })
-    .select()
-    .single();
-
+// schema and the notes_has_source check constraint both enforce this.
+// There's deliberately no way to hand this route a raw file_url: a
+// note's file either lives in this app's own R2 bucket, or it's a link
+// to somewhere the admin pointed at (https only — enforced by the
+// schema and, independently, a database CHECK constraint), never an
+// arbitrary client-supplied "here's a URL" blob. New notes always start
+// 'pending' (notes_force_pending trigger).
+router.post('/', requireUser, validateBody(noteCreateSchema), async (req, res) => {
+  const { data, error } = await req.supabase.from('notes').insert(req.body).select().single();
   if (error) return sendError(res, error, 403);
   res.status(201).json({ note: data });
 });
 
 // POST /api/notes/:id/approve — the notes_guard_status trigger rejects
 // this unless the caller is a superadmin.
-router.post('/:id/approve', requireUser, async (req, res) => {
+router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('notes')
     .update({ status: 'approved' })
@@ -88,7 +98,7 @@ router.post('/:id/approve', requireUser, async (req, res) => {
 });
 
 // POST /api/notes/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, async (req, res) => {
+router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('notes')
     .update({ status: 'rejected' })
@@ -101,7 +111,7 @@ router.post('/:id/reject', requireUser, async (req, res) => {
 
 // POST /api/notes/:id/resubmit — the uploader can move a rejected note
 // back to pending for another review.
-router.post('/:id/resubmit', requireUser, async (req, res) => {
+router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
   const { data, error } = await req.supabase
     .from('notes')
     .update({ status: 'pending' })
@@ -115,7 +125,7 @@ router.post('/:id/resubmit', requireUser, async (req, res) => {
 // DELETE /api/notes/:id — staff-only via RLS. Best-effort cleanup of the
 // R2 object; the row is the source of truth, so a failed R2 delete never
 // blocks removing the row.
-router.delete('/:id', requireUser, async (req, res) => {
+router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
   const { data: existing } = await req.supabase.from('notes').select('r2_key').eq('id', req.params.id).single();
 
   const { error } = await req.supabase.from('notes').delete().eq('id', req.params.id);
