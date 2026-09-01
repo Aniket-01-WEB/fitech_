@@ -18,6 +18,14 @@ cd backend && npm install && npm run dev    # http://localhost:4000
 cd frontend && npm install && npm run dev   # http://localhost:3000
 ```
 
+## Deployment
+
+**Backend**: live on Render at **https://fitech-02.onrender.com** — verified working end-to-end (Supabase connectivity, R2 presigned uploads, CORS, security headers all live-tested against the deployed instance, not just assumed from config). Render's `FRONTEND_ORIGIN` env var is currently `http://localhost:3000`; update it to the real frontend origin the moment the frontend is deployed anywhere, or every browser request from that origin will be rejected by CORS.
+
+**Frontend**: not deployed yet. When it is, set `NEXT_PUBLIC_API_URL=https://fitech-02.onrender.com` in that platform's environment variables (local dev keeps pointing at `http://localhost:4000` — see `frontend/.env.example`; both talk to the same Supabase project regardless, so there's no functional difference for local testing, and it avoids Render's free-tier cold-start delay on every first request after idle).
+
+Render's free tier spins the backend down after 15 minutes of inactivity — the first request after that takes noticeably longer while it wakes up. The scheduled Supabase keepalive job (see [backend/README.md](backend/README.md)) doesn't prevent this — it only pings Supabase itself, on a very different (5-day) cadence, unrelated to Render's own sleep behavior.
+
 `PortalContext.js` is wired to the real stack end-to-end: it holds a Supabase Auth session, calls the backend for everything else (with the session's access token attached), and the backend enforces RLS — no more browser `localStorage`. Auth is real too: the login page's Student/Admin/Super Admin tabs sign in with a real email+password via Supabase Auth, then verify the account's actual role (from `profiles.role`) matches the tab picked. The Join form creates a real account (`supabase.auth.signUp`) and, with email confirmations turned off in the project's Auth settings, hands back a session immediately — the new student lands straight in the Student Portal with their full profile (name, department, school, etc.) already saved, no inbox step involved. A Super Admin can grant `admin` access separately (see "Admin access requests" below) — student signup itself is never gated. Admin note uploads go straight to a public `notes` Storage bucket (RLS-gated to staff for writes), and the resulting URL is what students read/download.
 
 ### Admin access requests
