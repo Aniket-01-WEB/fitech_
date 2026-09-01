@@ -44,41 +44,64 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          <Link href="/" className="nav-brand" aria-label="MATRIX Home">
+      <header className={`curved-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+        <nav className="curved-navbar">
+          {/* Left Brand */}
+          <Link href="/" className="curved-nav-brand" aria-label="FITECH Home">
             <Image
-              src="/real_logo_org.png"
-              alt="MATRIX FinTech Club Logo"
-              width={64}
-              height={64}
-              className="nav-club-logo"
+              src="/logo_club-removebg-preview.png"
+              alt="FITECH Club Logo"
+              width={34}
+              height={34}
+              className="curved-nav-logo"
               priority
             />
+            <span className="curved-nav-title">FITECH</span>
           </Link>
 
-          <Link href="/" className="nav-center-title">
-            FITECH
-          </Link>
+          {/* Desktop Nav Links */}
+          <ul className="curved-nav-links">
+            <li>
+              <Link href="/#about" className={pathname === '/' ? 'active' : ''}>About</Link>
+            </li>
+            <li>
+              <Link href="/domain" className={pathname === '/domain' ? 'active' : ''}>Domains</Link>
+            </li>
+            <li>
+              <Link href="/events" className={pathname === '/events' ? 'active' : ''}>Events</Link>
+            </li>
+            <li>
+              <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>Projects</Link>
+            </li>
+            <li>
+              <Link href="/team" className={pathname === '/team' ? 'active' : ''}>Team</Link>
+            </li>
+          </ul>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {currentUser && (
-              <div className="nav-user-indicator" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Right Actions */}
+          <div className="curved-nav-actions">
+            {currentUser ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Link
                   href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}
-                  className="nav-dashboard-link"
+                  className="curved-nav-dash-link"
                 >
-                  Dashboard →
+                  Dashboard
                 </Link>
-                <button type="button" onClick={handleSignOut} className="nav-signout-btn">
-                  Sign Out ↵
+                <button type="button" onClick={handleSignOut} className="curved-nav-signout">
+                  Sign Out
                 </button>
               </div>
+            ) : (
+              <button type="button" onClick={openJoinModal} className="curved-nav-cta">
+                JOIN US
+              </button>
             )}
 
+            {/* Mobile Hamburger */}
             <button
               type="button"
-              className={`nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
+              className={`curved-nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
               onClick={toggleMobileMenu}
               aria-label="Toggle Navigation Menu"
             >
@@ -87,8 +110,8 @@ export default function Navbar() {
               <span></span>
             </button>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Fullscreen Mobile Drawer */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>

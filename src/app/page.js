@@ -222,8 +222,7 @@ export default function HomePage() {
                 <span className="habito-feat-tag">✦ Machine Learning Risk</span>
               </div>
             </div>
-
-            <div className="habito-actions-col">
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               <button type="button" onClick={openJoinModal} className="habito-action-link">
                 JOIN US <span className="arrow">→</span>
               </button>
@@ -268,9 +267,11 @@ export default function HomePage() {
       </section>
 
       {/* 4. SIX DIMENSIONS OF INNOVATION SECTION */}
-      <section className="domains-habito-grid-section" id="domains">
-        <div className="container" style={{ marginBottom: '40px' }}>
-          <h2 className="section-title">SIX DIMENSIONS OF INNOVATION</h2>
+      <section className="domains-habito-grid-section" id="domains" style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <div className="habito-container" style={{ marginBottom: '40px' }}>
+          <h2 className="section-title" style={{ fontSize: 'clamp(44px, 6.8vw, 84px)', margin: 0 }}>
+            SIX DIMENSIONS OF INNOVATION
+          </h2>
         </div>
 
         <div className="domains-habito-container">
@@ -300,14 +301,17 @@ export default function HomePage() {
       {/* 5. EVENTS MARQUEE SECTION */}
       <section className="section" id="events" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
-            <h2 className="section-title" style={{ margin: 0 }}>EVENTS & MASTERCLASSES</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '36px', width: '100%' }}>
+            <h2 className="section-title" style={{ margin: 0, fontSize: 'clamp(28px, 4.5vw, 40px)', fontWeight: '800', letterSpacing: '-0.5px' }}>
+              EVENTS & MASTERCLASSES
+            </h2>
 
-            <div className="events-tabs">
+            <div className="events-tabs" style={{ marginBottom: 0, marginLeft: 'auto' }}>
               <button
                 type="button"
                 className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
                 onClick={() => setEventsTab('upcoming')}
+                style={{ fontSize: '14px', fontWeight: '700', padding: '10px 22px' }}
               >
                 UPCOMING
               </button>
@@ -315,6 +319,7 @@ export default function HomePage() {
                 type="button"
                 className={`tab-btn ${eventsTab === 'past' ? 'active' : ''}`}
                 onClick={() => setEventsTab('past')}
+                style={{ fontSize: '14px', fontWeight: '700', padding: '10px 22px' }}
               >
                 PAST SESSIONS
               </button>
@@ -419,41 +424,33 @@ export default function HomePage() {
       </section>
 
       {/* 8. BENEFITS TICKER SECTION */}
-      <section className="benefits section">
-        <div className="benefits-bg-ticker">
-          <div className="benefits-ticker-track">
-            <span>MATRIX FINTECH CLUB</span>
-            <span>QUANT RESEARCH SOCIETY</span>
-            <span>BUILD THE FUTURE</span>
-          </div>
-        </div>
-
-        <div className="container">
-          <h2 className="section-title" style={{ color: '#0f172a' }}>MORE THAN A CLUB</h2>
+      <section className="benefits section" style={{ padding: '80px 0 100px 0' }}>
+        <div className="container" style={{ maxWidth: '100%', padding: '0 clamp(24px, 5vw, 64px)' }}>
+          <h2 className="more-than-club-title">MORE THAN A CLUB</h2>
 
           <div className="benefits-grid">
             <div className="benefit-card">
               <h3 className="benefit-title">Institutional Quant Codebases</h3>
               <p className="benefit-desc">
-                Access production-ready C++ matching engine templates, Python backtesting frameworks, and Solidity smart contract audit toolkits.
+                Access production-ready C++ matching engine templates, Python backtesting frameworks, and Solidity smart contract audit toolkits. Build, test, and experiment with quantitative strategies using industry-inspired development workflows.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">Industry Research Grants</h3>
               <p className="benefit-desc">
-                Receive compute credits, dataset access (Level 2 order books, tick data), and research stipends for published technical whitepapers.
+                Receive compute credits, dataset access (Level 2 order books, tick data), and research stipends for published technical whitepapers. Explore emerging financial technologies and turn your ideas into structured research with practical industry applications.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">Direct Hedge Fund Placement</h3>
               <p className="benefit-desc">
-                Fast-track interview referrals to leading quantitative hedge funds, algorithmic trading desks, and DeFi protocols.
+                Fast-track interview referrals to leading quantitative hedge funds, algorithmic trading desks, and DeFi protocols. Gain exposure to real-world opportunities while connecting with professionals working across quantitative finance and financial technology.
               </p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title">National Hackathon Incubator</h3>
               <p className="benefit-desc">
-                Form high-caliber teams for national hackathons with mentorship from senior fintech founders and quantitative strategists.
+                Form high-caliber teams for national hackathons with mentorship from senior fintech founders and quantitative strategists. Get guidance from idea development to deployment while building solutions around real financial and technological challenges.
               </p>
             </div>
           </div>
@@ -465,11 +462,13 @@ export default function HomePage() {
         <div className="cta-overlay"></div>
 
         <div className="cta-content container">
-          <h2 className="cta-title">READY TO SHAPE FINANCIAL TECH?</h2>
-          <p className="cta-desc">
-            Join hundreds of student quants, developers, and researchers building institutional fintech infrastructure.
+          <h2 className="cta-title" style={{ fontSize: 'clamp(44px, 7vw, 86px)', marginBottom: '24px', letterSpacing: '0.5px', lineHeight: '1.1' }}>
+            READY TO SHAPE FINANCIAL TECH?
+          </h2>
+          <p className="cta-desc" style={{ maxWidth: '860px', marginBottom: '32px', fontSize: 'clamp(17px, 2vw, 21px)', lineHeight: '1.6' }}>
+            Learn, build, and explore the intersection of finance and technology through real-world projects, research, and innovation. Discover new ideas, develop practical skills, and shape the future of fintech
           </p>
-          <div className="cta-buttons" style={{ marginTop: '24px' }}>
+          <div className="cta-buttons" style={{ marginTop: '16px' }}>
             <button type="button" onClick={openJoinModal} className="cta-join-btn">
               APPLY FOR MEMBERSHIP →
             </button>
