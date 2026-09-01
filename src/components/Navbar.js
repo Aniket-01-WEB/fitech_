@@ -59,7 +59,7 @@ export default function Navbar() {
             <span className="curved-nav-title">FITECH</span>
           </Link>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav Links (shifted to right) */}
           <ul className="curved-nav-links">
             <li>
               <Link href="/#about" className={pathname === '/' ? 'active' : ''}>About</Link>
@@ -78,9 +78,9 @@ export default function Navbar() {
             </li>
           </ul>
 
-          {/* Right Actions */}
+          {/* Right Actions for logged-in user or mobile hamburger */}
           <div className="curved-nav-actions">
-            {currentUser ? (
+            {currentUser && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Link
                   href={currentUser.role === 'admin' ? '/admin-portal' : '/student-portal'}
@@ -92,10 +92,6 @@ export default function Navbar() {
                   Sign Out
                 </button>
               </div>
-            ) : (
-              <button type="button" onClick={openJoinModal} className="curved-nav-cta">
-                JOIN US
-              </button>
             )}
 
             {/* Mobile Hamburger */}
