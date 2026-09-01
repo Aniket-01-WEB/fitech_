@@ -182,19 +182,38 @@ export default function TeamPage() {
         {TEAM_DATA.map((member, idx) => (
           <div
             key={idx}
-            className="team-card theme-black"
+            className="team-card"
             style={{ width: '100%', height: '380px' }}
           >
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <div className="team-image-frame">
-                  {member.image && (
-                    <img src={member.image} alt={member.name} className="team-img" />
-                  )}
+            {member.image ? (
+              <img src={member.image} alt={member.name} className="team-card-image" />
+            ) : (
+              <div className="team-card-fallback">
+                <div className="team-card-fallback-avatar">
+                  {member.avatar || member.name.charAt(0)}
                 </div>
-                <h3 className="team-name">{member.name}</h3>
-                <span className="team-role-pill">{member.role}</span>
               </div>
+            )}
+            <div className="team-card-gradient-overlay" />
+            <div className="team-card-info">
+              <div className="team-card-text">
+                <h3 className="team-card-name">{member.name}</h3>
+                <p className="team-card-role">{member.role}</p>
+              </div>
+              {member.linkedin && (
+                <a
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="team-card-linkedin"
+                  title={`${member.name} on LinkedIn`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.25c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
+                  </svg>
+                </a>
+              )}
             </div>
           </div>
         ))}

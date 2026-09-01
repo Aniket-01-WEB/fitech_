@@ -84,8 +84,10 @@ export default function LoginPage() {
     attemptLogin(demoEmail, DEMO_PASSWORD, demoRole);
   };
 
-  const handleRoleSwitch = (newRole) => {
+  const switchRole = (newRole) => {
     setRole(newRole);
+    setEmail('');
+    setPassword('');
     setErrorMsg('');
   };
 
@@ -122,8 +124,7 @@ export default function LoginPage() {
     setIsSubmitting(false);
   };
 
-  // Step 2: verifying the code proves inbox ownership and opens a
-  // temporary recovery session.
+  // Step 2: verifying the code proves inbox ownership and opens a temporary recovery session.
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -162,7 +163,6 @@ export default function LoginPage() {
       setPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      setOtpCode('');
       setErrorMsg('');
       setInfoMsg('Password updated. Please log in with your new password.');
     } catch (err) {
@@ -171,188 +171,190 @@ export default function LoginPage() {
     setIsSubmitting(false);
   };
 
+  const roleLabel = {
+    student: {
+      badge: 'MEMBER AUTHENTICATION',
+      subtitle: 'Sign in to discover upcoming events, workshops, and lab sessions.',
+      emailLabel: 'Email Address',
+      emailPlaceholder: 'Enter Registered Email ID',
+      passLabel: 'Password',
+      passPlaceholder: '••••••••',
+    },
+    admin: {
+      badge: 'ADMIN AUTHENTICATION',
+      subtitle: 'Sign in to manage events, recordings, and member resources.',
+      emailLabel: 'Admin Email',
+      emailPlaceholder: 'admin@matrix.club',
+      passLabel: 'Admin Password',
+      passPlaceholder: 'Enter admin password',
+    },
+    superadmin: {
+      badge: 'SUPER ADMIN AUTHENTICATION',
+      subtitle: 'Sign in to oversee all operations and manage member roles.',
+      emailLabel: 'Super Admin Email',
+      emailPlaceholder: 'superadmin@matrix.club',
+      passLabel: 'Super Admin Password',
+      passPlaceholder: 'Enter super admin password',
+    },
+  };
+
+  const lbl = roleLabel[role];
+
   return (
-    <div className="portal-page">
-      <div className="portal-login-card">
-        <div className="portal-card-header">
-          <span className="portal-badge">MATRIX AUTH GATEWAY</span>
-          <h1 className="portal-login-title">CLUB MEMBER ACCESS</h1>
-          <p className="portal-login-subtitle">
+    <div className="lp-shell">
+      {/* ── MAIN LOGIN CARD ── */}
+      <div className="lp-card">
+        {/* Header */}
+        <div className="lp-header">
+          <span className="lp-badge">
+            {view === 'login' ? lbl.badge : 'PASSWORD RECOVERY'}
+          </span>
+          <h1 className="lp-heading">
+            {view === 'login' ? 'WELCOME' : 'RESET PASSWORD'}
+          </h1>
+          <p className="lp-subtext">
             {view === 'login'
-              ? 'Sign in to access masterclass recordings, event passes, and project dashboards.'
+              ? lbl.subtitle
               : 'Reset your password — verify your email, then choose a new one.'}
           </p>
         </div>
 
-        {view === 'login' && (
-          <div className="portal-role-switch">
-            <button
-              type="button"
-              className={`portal-role-tab ${role === 'student' ? 'active' : ''}`}
-              onClick={() => handleRoleSwitch('student')}
-            >
-              STUDENT PORTAL
-            </button>
-            <button
-              type="button"
-              className={`portal-role-tab ${role === 'admin' ? 'active' : ''}`}
-              onClick={() => handleRoleSwitch('admin')}
-            >
-              ADMIN CONSOLE
-            </button>
-            <button
-              type="button"
-              className={`portal-role-tab ${role === 'superadmin' ? 'active' : ''}`}
-              onClick={() => handleRoleSwitch('superadmin')}
-            >
-              SUPER ADMIN
-            </button>
-          </div>
+        {/* Info & Error messages */}
+        {infoMsg && (
+          <p style={{ color: '#166534', background: '#dcfce7', border: '1px solid #bbf7d0', padding: '10px 14px', fontSize: '13px', marginBottom: '16px' }}>
+            {infoMsg}
+          </p>
         )}
+        {errorMsg && <p className="lp-error">{errorMsg}</p>}
 
-        {infoMsg && <p style={{ color: '#166534', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', marginBottom: '16px' }}>{infoMsg}</p>}
-        {errorMsg && <p className="portal-field-error" style={{ marginBottom: '16px' }}>{errorMsg}</p>}
-
+        {/* VIEW 1: LOGIN FORM */}
         {view === 'login' && (
           <>
-            <form onSubmit={handleSubmit} className="portal-form">
-              <div className="form-group">
-                <label htmlFor="login-email">Registered Email</label>
+            <form onSubmit={handleSubmit} className="lp-form">
+              <div className="lp-field">
+                <label className="lp-label" htmlFor="lp-email">
+                  {lbl.emailLabel} <span className="lp-req">*</span>
+                </label>
                 <input
                   type="email"
-                  id="login-email"
+                  id="lp-email"
+                  className="lp-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder={lbl.emailPlaceholder}
                   required
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="login-pass">Password</label>
+              <div className="lp-field">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="lp-label" htmlFor="lp-password" style={{ margin: 0 }}>
+                    {lbl.passLabel} <span className="lp-req">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={goToForgotPassword}
+                    style={{ font: 'inherit', fontSize: '12px', color: '#0f172a', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <input
                   type="password"
-                  id="login-pass"
+                  id="lp-password"
+                  className="lp-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={lbl.passPlaceholder}
                   required
                 />
-                <button
-                  type="button"
-                  onClick={goToForgotPassword}
-                  style={{ font: 'inherit', fontSize: '12px', color: '#0f172a', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', marginTop: '6px', padding: 0, alignSelf: 'flex-end' }}
-                >
-                  Forgot password?
-                </button>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
-                {isSubmitting ? 'AUTHENTICATING...' : 'AUTHENTICATE & LOG IN →'}
+              <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
+                {isSubmitting ? 'AUTHENTICATING...' : 'SIGN IN →'}
               </button>
             </form>
 
-            <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
-              <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '10px' }}>
-                QUICK DEMO ACCESSIBILITY:
-              </span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo('student', 'student@matrix.club')}
-                  className="btn btn-secondary"
-                  disabled={isSubmitting}
-                  style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
-                >
-                  ⚡ Student Demo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo('admin', 'admin@matrix.club')}
-                  className="btn btn-secondary"
-                  disabled={isSubmitting}
-                  style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
-                >
-                  ⚡ Admin Demo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo('superadmin', 'superadmin@matrix.club')}
-                  className="btn btn-secondary"
-                  disabled={isSubmitting}
-                  style={{ flex: '1 1 140px', fontSize: '12px', padding: '10px 12px' }}
-                >
-                  ⚡ Super Admin Demo
-                </button>
-              </div>
-            </div>
-
+            {/* Join / Admin Notice links */}
             {role === 'student' && (
-              <div className="portal-footer-links" style={{ marginTop: '24px', textAlign: 'center' }}>
-                <p style={{ fontSize: '13px', color: '#64748b' }}>
-                  Haven&apos;t registered yet?{' '}
-                  <button
-                    type="button"
-                    onClick={openJoinModal}
-                    style={{ font: 'inherit', color: '#0f172a', fontWeight: '700', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    Join Us
-                  </button>
-                </p>
-              </div>
+              <p className="lp-join-text">
+                Not registered yet?{' '}
+                <button type="button" onClick={openJoinModal} className="lp-join-link">
+                  Join us →
+                </button>
+              </p>
             )}
 
             {role === 'admin' && (
-              <div className="portal-footer-links" style={{ marginTop: '24px', textAlign: 'center' }}>
-                <p style={{ fontSize: '13px', color: '#64748b' }}>
-                  Admin accounts aren&apos;t self-registered here.{' '}
-                  <button
-                    type="button"
-                    onClick={openJoinModal}
-                    style={{ font: 'inherit', color: '#0f172a', fontWeight: '700', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    Create a student account
-                  </button>
-                  {' '}first, then request admin access from your Student Portal profile — a Super Admin reviews every request.
-                </p>
-              </div>
+              <p className="lp-join-text" style={{ fontSize: '12.5px', textAlign: 'left', lineHeight: '1.5' }}>
+                Admin accounts aren&apos;t self-registered here.{' '}
+                <button type="button" onClick={openJoinModal} className="lp-join-link">
+                  Create a student account
+                </button>
+                {' '}first, then request admin access from your Student Portal profile — a Super Admin reviews every request.
+              </p>
             )}
+
+            {/* Divider + role switch links */}
+            <div className="lp-divider" />
+            <div className="lp-role-links">
+              {role !== 'admin' && (
+                <button type="button" className="lp-role-link" onClick={() => switchRole('admin')}>
+                  Login as Admin →
+                </button>
+              )}
+              {role !== 'superadmin' && (
+                <button type="button" className="lp-role-link" onClick={() => switchRole('superadmin')}>
+                  Login as Superadmin →
+                </button>
+              )}
+              {role !== 'student' && (
+                <button type="button" className="lp-role-link lp-role-link-back" onClick={() => switchRole('student')}>
+                  ← Back to Student Login
+                </button>
+              )}
+            </div>
           </>
         )}
 
+        {/* VIEW 2: FORGOT - REQUEST OTP */}
         {view === 'forgot-request' && (
-          <form onSubmit={handleRequestOtp} className="portal-form">
-            <div className="form-group">
-              <label htmlFor="reset-email">Registered Email</label>
+          <form onSubmit={handleRequestOtp} className="lp-form">
+            <div className="lp-field">
+              <label className="lp-label" htmlFor="reset-email">Registered Email <span className="lp-req">*</span></label>
               <input
                 type="email"
                 id="reset-email"
+                className="lp-input"
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
+            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
               {isSubmitting ? 'SENDING CODE...' : 'SEND VERIFICATION CODE →'}
             </button>
             <button
               type="button"
               onClick={backToLogin}
-              style={{ font: 'inherit', fontSize: '13px', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', marginTop: '16px', textAlign: 'center', width: '100%' }}
+              className="lp-role-link lp-role-link-back"
+              style={{ marginTop: '12px' }}
             >
               ← Back to login
             </button>
           </form>
         )}
 
+        {/* VIEW 3: FORGOT - VERIFY OTP */}
         {view === 'forgot-verify' && (
-          <form onSubmit={handleVerifyOtp} className="portal-form">
-            <div className="form-group">
-              <label htmlFor="reset-otp">6-Digit Verification Code</label>
+          <form onSubmit={handleVerifyOtp} className="lp-form">
+            <div className="lp-field">
+              <label className="lp-label" htmlFor="reset-otp">6-Digit Verification Code <span className="lp-req">*</span></label>
               <input
                 type="text"
                 id="reset-otp"
+                className="lp-input"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value)}
                 placeholder="123456"
@@ -361,14 +363,14 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
+            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
               {isSubmitting ? 'VERIFYING...' : 'VERIFY CODE →'}
             </button>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
               <button
                 type="button"
                 onClick={backToLogin}
-                style={{ font: 'inherit', fontSize: '13px', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}
+                className="lp-role-link"
               >
                 ← Back to login
               </button>
@@ -384,13 +386,15 @@ export default function LoginPage() {
           </form>
         )}
 
+        {/* VIEW 4: FORGOT - SET NEW PASSWORD */}
         {view === 'forgot-reset' && (
-          <form onSubmit={handleResetPassword} className="portal-form">
-            <div className="form-group">
-              <label htmlFor="reset-new-pass">New Password</label>
+          <form onSubmit={handleResetPassword} className="lp-form">
+            <div className="lp-field">
+              <label className="lp-label" htmlFor="reset-new-pass">New Password <span className="lp-req">*</span></label>
               <input
                 type="password"
                 id="reset-new-pass"
+                className="lp-input"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="At least 8 characters"
@@ -398,11 +402,12 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="reset-confirm-pass">Confirm New Password</label>
+            <div className="lp-field">
+              <label className="lp-label" htmlFor="reset-confirm-pass">Confirm New Password <span className="lp-req">*</span></label>
               <input
                 type="password"
                 id="reset-confirm-pass"
+                className="lp-input"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter password"
@@ -410,11 +415,42 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}>
+            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
               {isSubmitting ? 'SAVING...' : 'RESET PASSWORD →'}
             </button>
           </form>
         )}
+      </div>
+
+      {/* ── DEMO BUTTONS — outside the card in blank space ── */}
+      <div className="lp-demo-strip">
+        <span className="lp-demo-label">QUICK DEMO ACCESS</span>
+        <div className="lp-demo-btns">
+          <button
+            type="button"
+            className="lp-demo-btn"
+            disabled={isSubmitting}
+            onClick={() => handleQuickDemo('student', 'student@matrix.club')}
+          >
+            ⚡ Student Demo
+          </button>
+          <button
+            type="button"
+            className="lp-demo-btn"
+            disabled={isSubmitting}
+            onClick={() => handleQuickDemo('admin', 'admin@matrix.club')}
+          >
+            ⚡ Admin Demo
+          </button>
+          <button
+            type="button"
+            className="lp-demo-btn"
+            disabled={isSubmitting}
+            onClick={() => handleQuickDemo('superadmin', 'superadmin@matrix.club')}
+          >
+            ⚡ Superadmin Demo
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1616,216 +1616,149 @@ canvas{display:block}
   width: max-content;
 }
 
+/* ═══════════════════════════════════════════════
+   CORE MEMBERS / TEAM CARD — FULL-FIT OVERLAY REDESIGN
+   ═══════════════════════════════════════════════ */
 .team-card {
-  width: 290px;
+  width: 270px;
   height: 380px;
   flex-shrink: 0;
-  border-radius: 20px;
+  border-radius: 18px !important;
   position: relative;
-  perspective: 1000px;
-  cursor: default;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  overflow: hidden !important;
+  cursor: pointer;
+  background: #0f172a;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  transform-style: preserve-3d;
-  border-radius: 20px;
-  will-change: transform;
+.team-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.28), 0 4px 12px rgba(15, 23, 42, 0.12);
 }
 
-.team-card.flipped .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back {
+.team-card-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 24px;
-  box-sizing: border-box;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 18px;
 }
 
-.flip-card-front {
-  z-index: 2;
-  transform: rotateY(0deg);
+.team-card:hover .team-card-image {
+  transform: scale(1.05);
 }
 
-.flip-card-back {
-  transform: rotateY(180deg);
-  z-index: 1;
-}
-
-/* Image Frame */
-.team-image-frame {
-  width: 135px;
-  height: 135px;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.team-img {
+.team-card-fallback {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Typography & Base Components */
-.team-name {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.2px;
-  margin: 0 0 20px 0;
-  text-transform: uppercase;
-  line-height: 1.1;
-}
-
-.team-role-pill {
-  display: inline-flex;
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 60%, #020617 100%);
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 18px;
-  border-radius: 9999px;
-  font-family: var(--font-heading);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: 8px;
-  max-width: 90%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-radius: 18px;
 }
 
-.flip-hint {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin-top: auto;
-}
-
-.team-bio-text {
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.55;
-  margin: 12px 0;
-}
-
-.team-linkedin-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  font-family: var(--font-heading);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  margin-top: auto;
-}
-
-/* ==========================================================================
-   THEME 1: BLACK / DARK AESTHETIC (.theme-black)
-   ========================================================================== */
-.team-card.theme-black .flip-card-front,
-.team-card.theme-black .flip-card-back {
-  background: #0e172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 48px rgba(10, 15, 30, 0.4);
-}
-
-.team-card.theme-black .team-image-frame {
+.team-card-fallback-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.06);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-}
-
-.team-card.theme-black .team-empty-avatar {
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-heading);
   font-size: 32px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.4);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 50px;
 }
 
-.team-card.theme-black .team-name {
+.team-card-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.75) 28%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0) 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 18px;
+}
+
+.team-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 18px 18px 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  z-index: 2;
+}
+
+.team-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  min-width: 0;
+}
+
+.team-card-name {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 18.5px;
+  font-weight: 800;
   color: #ffffff;
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  word-break: break-word;
 }
 
-.team-card.theme-black .team-role-pill {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #cbd5e1;
+.team-card-role {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #f1f5f9;
+  opacity: 0.92;
+  margin: 0;
+  line-height: 1.25;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
-.team-card.theme-black .flip-hint {
-  color: rgba(255, 255, 255, 0.35);
+.team-card-linkedin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
-.team-card.theme-black .team-bio-text {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.team-card.theme-black .team-linkedin-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff !important;
-}
-
-.team-card.theme-black .team-linkedin-btn:hover {
-  background: #ffffff;
-  color: #0e172a !important;
-}
-
-/* ==========================================================================
-   THEME 2: LIGHT AESTHETIC (.theme-white)
-   ========================================================================== */
-.team-card.theme-white .flip-card-front,
-.team-card.theme-white .flip-card-back {
-  background: linear-gradient(155deg, #ffffff 0%, #f8fafc 45%, #eef2f6 100%);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow: 
-    0 20px 42px -10px rgba(15, 23, 42, 0.1),
-    0 6px 16px -4px rgba(15, 23, 42, 0.06),
-    inset 0 1px 2px rgba(255, 255, 255, 1);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.team-card.theme-white:hover .flip-card-front,
-.team-card.theme-white:hover .flip-card-back {
-  border-color: #cbd5e1;
-  box-shadow: 
-    0 28px 56px -12px rgba(15, 23, 42, 0.16),
-    0 10px 24px -6px rgba(15, 23, 42, 0.08),
-    inset 0 1px 2px rgba(255, 255, 255, 1);
+.team-card-linkedin:hover {
+  color: #ffffff;
+  transform: scale(1.15);
 }
 
 .team-card.theme-white .team-image-frame {
@@ -3993,4 +3926,290 @@ canvas{display:block}
   color: #ffffff !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+
+/* ═══════════════════════════════════════════════
+   LOGIN PAGE — NEW CLEAN DESIGN
+   ═══════════════════════════════════════════════ */
+
+.lp-shell {
+  min-height: 100vh;
+  background: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px clamp(20px, 5vw, 40px) 40px;
+  gap: 32px;
+}
+
+/* ── Card ── */
+.lp-card {
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  border: 1px solid #dde3ec;
+  box-shadow: 0 8px 40px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
+  padding: 24px 36px;
+}
+
+/* ── Header ── */
+.lp-header {
+  margin-bottom: 14px;
+}
+
+.lp-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 4px 11px;
+  border-radius: 100px !important;
+  margin-bottom: 10px;
+}
+
+.lp-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+
+.lp-subtext {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Error ── */
+.lp-error {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #ef4444;
+  font-weight: 500;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+/* ── Form ── */
+.lp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.lp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lp-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lp-req {
+  color: #ef4444;
+}
+
+.lp-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0 !important;
+}
+
+.lp-input::placeholder {
+  color: #94a3b8;
+}
+
+.lp-input:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.07);
+}
+
+/* ── Submit button ── */
+.lp-submit-btn {
+  width: 100%;
+  padding: 13px 24px;
+  background: #0f172a;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 2px;
+  border-radius: 0 !important;
+}
+
+.lp-submit-btn:hover {
+  background: #1e293b;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.22);
+}
+
+/* ── Join link ── */
+.lp-join-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.lp-join-link {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.lp-join-link:hover {
+  color: #334155;
+}
+
+/* ── Divider ── */
+.lp-divider {
+  width: 100%;
+  height: 1px;
+  background: #e2e8f0;
+  margin-bottom: 12px;
+}
+
+/* ── Role switch links (Login as Admin / Superadmin / Back) ── */
+.lp-role-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 24px;
+}
+
+.lp-role-link {
+  font-family: var(--font-alt);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease, gap 0.2s ease;
+  text-decoration: none;
+}
+
+.lp-role-link:hover {
+  color: #334155;
+  gap: 7px;
+}
+
+.lp-role-link-back {
+  color: #64748b;
+  font-weight: 600;
+  font-size: 12.5px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.lp-role-link-back:hover {
+  color: #0f172a;
+}
+
+/* ── Demo buttons — outside the card ── */
+.lp-demo-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.lp-demo-label {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.lp-demo-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.lp-demo-btn {
+  font-family: var(--font-alt);
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #cbd5e1;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0 !important;
+}
+
+.lp-demo-btn:hover {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #94a3b8;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .lp-card {
+    padding: 28px 22px;
+  }
+
+  .lp-demo-btns {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .lp-demo-btn {
+    width: 100%;
+    text-align: center;
+  }
 }
