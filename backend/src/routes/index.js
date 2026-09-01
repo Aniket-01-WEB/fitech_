@@ -6,6 +6,7 @@ import recordings from './recordings.js';
 import notes from './notes.js';
 import activity from './activity.js';
 import members from './members.js';
+import adminRequests from './adminRequests.js';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/recordings', recordings);
 router.use('/notes', notes);
 router.use('/activity', activity);
 router.use('/members', members);
+router.use('/admin-requests', adminRequests);
 
 export default router;

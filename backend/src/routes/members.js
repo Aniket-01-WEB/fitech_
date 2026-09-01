@@ -17,32 +17,4 @@ router.get('/', requireUser, async (req, res) => {
   res.json({ members: data });
 });
 
-// POST /api/members/:id/approve — the guard_membership_status_change
-// trigger rejects this unless the caller's role is 'superadmin', so no
-// extra role check is needed here — same pattern as event approval.
-router.post('/:id/approve', requireUser, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('profiles')
-    .update({ membership_status: 'approved' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-
-  if (error) return sendError(res, error, 403);
-  res.json({ member: data });
-});
-
-// POST /api/members/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('profiles')
-    .update({ membership_status: 'rejected' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-
-  if (error) return sendError(res, error, 403);
-  res.json({ member: data });
-});
-
 export default router;

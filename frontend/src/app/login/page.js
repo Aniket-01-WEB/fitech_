@@ -287,17 +287,33 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {role !== 'superadmin' && (
+            {role === 'student' && (
               <div className="portal-footer-links" style={{ marginTop: '24px', textAlign: 'center' }}>
                 <p style={{ fontSize: '13px', color: '#64748b' }}>
-                  {role === 'student' && <>Haven&apos;t registered yet?{' '}</>}
+                  Haven&apos;t registered yet?{' '}
                   <button
                     type="button"
                     onClick={openJoinModal}
                     style={{ font: 'inherit', color: '#0f172a', fontWeight: '700', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
                   >
-                    {role === 'student' ? 'Join Us' : 'Apply to be a Member'}
+                    Join Us
                   </button>
+                </p>
+              </div>
+            )}
+
+            {role === 'admin' && (
+              <div className="portal-footer-links" style={{ marginTop: '24px', textAlign: 'center' }}>
+                <p style={{ fontSize: '13px', color: '#64748b' }}>
+                  Admin accounts aren&apos;t self-registered here.{' '}
+                  <button
+                    type="button"
+                    onClick={openJoinModal}
+                    style={{ font: 'inherit', color: '#0f172a', fontWeight: '700', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    Create a student account
+                  </button>
+                  {' '}first, then request admin access from your Student Portal profile — a Super Admin reviews every request.
                 </p>
               </div>
             )}

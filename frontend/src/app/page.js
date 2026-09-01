@@ -353,6 +353,8 @@ export default function HomePage() {
   // Only Super-Admin-approved events are ever shown publicly.
   const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
   const upcomingEvents = approvedEvents.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
+  const pastEvents = approvedEvents.filter(evt => evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past'));
+  const visibleEvents = eventsTab === 'upcoming' ? upcomingEvents : pastEvents;
 
   return (
     <div className="home-wrapper">
@@ -477,9 +479,9 @@ export default function HomePage() {
       <section className="section" id="events" style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', padding: '48px 0 24px 0' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
-            <h2 className="section-title" style={{ margin: 0 }}>EVENTS & MASTERCLASSES</h2>
+            <h2 className="section-title" style={{ margin: 0, maxWidth: 'none', whiteSpace: 'nowrap', fontSize: 'clamp(24px, 4vw, 56px)' }}>EVENTS & MASTERCLASSES</h2>
 
-            <div className="events-tabs">
+            <div className="events-tabs" style={{ position: 'relative', top: '3px' }}>
               <div
                 className="events-tabs-indicator"
                 style={{
@@ -488,21 +490,29 @@ export default function HomePage() {
               />
               <button
                 type="button"
-                className="tab-btn active"
+                className={`tab-btn ${eventsTab === 'upcoming' ? 'active' : ''}`}
+                onClick={() => setEventsTab('upcoming')}
               >
-                UPCOMING SESSIONS
+                UPCOMING
+              </button>
+              <button
+                type="button"
+                className={`tab-btn ${eventsTab === 'past' ? 'active' : ''}`}
+                onClick={() => setEventsTab('past')}
+              >
+                PAST
               </button>
             </div>
           </div>
 
           <div className="events-marquee-wrapper">
-            {upcomingEvents.length === 0 ? (
+            {visibleEvents.length === 0 ? (
               <div className="empty-events-box">
-                <p className="empty-events-text">No upcoming events.</p>
+                <p className="empty-events-text">{eventsTab === 'upcoming' ? 'No upcoming events.' : 'No past events yet.'}</p>
               </div>
             ) : (
               <div className="events-marquee-track">
-                {upcomingEvents.map((evt, idx) => (
+                {visibleEvents.map((evt, idx) => (
                   <div
                     key={evt.id}
                     className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}

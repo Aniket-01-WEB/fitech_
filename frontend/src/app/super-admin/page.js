@@ -19,9 +19,9 @@ export default function SuperAdminPortalPage() {
     resubmitEvent,
     getPendingEvents,
     members,
-    getPendingMembers,
-    approveMember,
-    rejectMember
+    getPendingAdminRequests,
+    approveAdminRequest,
+    rejectAdminRequest
   } = usePortal();
 
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function SuperAdminPortalPage() {
   if (!currentUser || currentUser.role !== 'superadmin') return null;
 
   const pendingEvents = getPendingEvents();
-  const pendingMembers = getPendingMembers();
+  const pendingAdminRequests = getPendingAdminRequests();
   const memberList = Object.values(members).sort((a, b) => a.name.localeCompare(b.name));
   const memberCount = memberList.length;
 
@@ -69,8 +69,8 @@ export default function SuperAdminPortalPage() {
                 <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Awaiting Review</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingMembers.length}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Pending Members</span>
+                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingAdminRequests.length}</span>
+                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Admin Requests</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{events.length}</span>
@@ -102,10 +102,10 @@ export default function SuperAdminPortalPage() {
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'members' ? 'active' : ''}`}
-            onClick={() => setActiveTab('members')}
+            className={`portal-role-tab ${activeTab === 'admin-requests' ? 'active' : ''}`}
+            onClick={() => setActiveTab('admin-requests')}
           >
-            MEMBER APPLICATIONS ({pendingMembers.length})
+            ADMIN REQUESTS ({pendingAdminRequests.length})
           </button>
           <button
             type="button"
@@ -213,43 +213,41 @@ export default function SuperAdminPortalPage() {
           </div>
         )}
 
-        {/* TAB 3: MEMBER APPLICATIONS */}
-        {activeTab === 'members' && (
+        {/* TAB 3: ADMIN ACCESS REQUESTS */}
+        {activeTab === 'admin-requests' && (
           <div>
-            {pendingMembers.length === 0 ? (
+            {pendingAdminRequests.length === 0 ? (
               <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending membership applications. New sign-ups from the Join form will show up here for approval.</p>
+                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending admin access requests. Members who apply for admin access from their Student Portal will show up here for approval.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
-                {pendingMembers.map(member => (
-                  <div key={member.id} className="simple-event-card">
+                {pendingAdminRequests.map(request => (
+                  <div key={request.id} className="simple-event-card">
                     <div className="simple-card-top">
                       <span className="status-pill pending">⏳ PENDING REVIEW</span>
-                      <span className="simple-card-category" style={{ display: 'block', marginTop: '8px' }}>{member.interestedDomain}</span>
-                      <h3 className="simple-card-title">{member.name}</h3>
+                      <h3 className="simple-card-title" style={{ marginTop: '8px' }}>{request.applicantName}</h3>
                       <p className="simple-card-desc">
-                        {member.department} • {member.currentYear} • {member.school}
+                        {request.reason || 'No reason given.'}
                       </p>
                     </div>
                     <div className="simple-card-bottom">
                       <div className="simple-card-meta">
-                        <span>🎓 Roll {member.rollNumber} / Reg {member.regNumber}</span>
-                        <span>📧 {member.email}</span>
-                        <span>📞 {member.contactNumber}</span>
+                        <span>📧 {request.applicantEmail}</span>
+                        <span>🗓 Requested {new Date(request.requestedAt).toLocaleDateString()}</span>
                       </div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                         <button
                           type="button"
-                          onClick={() => approveMember(member.id).catch(err => alert(err.message))}
+                          onClick={() => approveAdminRequest(request.id).catch(err => alert(err.message))}
                           className="btn btn-primary"
                           style={{ flex: 1, justifyContent: 'center', fontSize: '12px', background: '#15803d', border: '1px solid #15803d' }}
                         >
-                          ✓ APPROVE
+                          ✓ APPROVE — GRANT ADMIN
                         </button>
                         <button
                           type="button"
-                          onClick={() => rejectMember(member.id).catch(err => alert(err.message))}
+                          onClick={() => rejectAdminRequest(request.id).catch(err => alert(err.message))}
                           className="btn btn-secondary"
                           style={{ flex: 1, justifyContent: 'center', fontSize: '12px', color: '#ef4444' }}
                         >
@@ -282,7 +280,6 @@ export default function SuperAdminPortalPage() {
                       <th style={{ padding: '12px' }}>DEPARTMENT / YEAR</th>
                       <th style={{ padding: '12px' }}>TRACK INTEREST</th>
                       <th style={{ padding: '12px' }}>ROLE</th>
-                      <th style={{ padding: '12px' }}>MEMBERSHIP</th>
                       <th style={{ padding: '12px' }}>CONTACT / EMAIL</th>
                     </tr>
                   </thead>
@@ -297,11 +294,6 @@ export default function SuperAdminPortalPage() {
                           <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: m.role === 'superadmin' ? '#6d28d9' : m.role === 'admin' ? '#0f172a' : '#64748b' }}>
                             {m.role}
                           </span>
-                        </td>
-                        <td style={{ padding: '12px' }}>
-                          {m.role === 'student'
-                            ? <span className={`status-pill ${m.membershipStatus}`}>{m.membershipStatus?.toUpperCase()}</span>
-                            : <span style={{ color: '#94a3b8', fontSize: '12px' }}>N/A</span>}
                         </td>
                         <td style={{ padding: '12px' }}>{m.contactNumber || '—'} / {m.email}</td>
                       </tr>

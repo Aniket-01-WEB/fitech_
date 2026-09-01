@@ -31,12 +31,17 @@ export default function StudentPortalPage() {
     openRecordingPlayer,
     saveMember,
     getStudentActivity,
-    updateStudentActivity
+    updateStudentActivity,
+    getMyAdminRequest,
+    requestAdminAccess,
+    resubmitAdminRequest
   } = usePortal();
 
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('my-events');
   const [editingProfile, setEditingProfile] = useState(false);
+  const [adminReason, setAdminReason] = useState('');
+  const [submittingAdminRequest, setSubmittingAdminRequest] = useState(false);
 
   // memberProfile is derived every render so it's always safe to call as a hook
   // initializer below, regardless of whether currentUser has hydrated yet.
@@ -71,38 +76,6 @@ export default function StudentPortalPage() {
     return null;
   }
 
-  // A new member's application must be approved by a Super Admin before
-  // they can use the portal — mirrors the event approval workflow. RLS
-  // enforces this server-side too (recordings/notes reads and event
-  // registration all require is_member_approved()); this is just the UX.
-  if (currentUser.membershipStatus !== 'approved') {
-    return (
-      <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
-        <div className="container">
-          <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center', padding: '48px 32px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
-            {currentUser.membershipStatus === 'rejected' ? (
-              <>
-                <div style={{ fontSize: '40px', marginBottom: '16px' }}>✕</div>
-                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>MEMBERSHIP APPLICATION DECLINED</h2>
-                <p style={{ color: '#64748b', fontSize: '14px' }}>
-                  Your membership application wasn&apos;t approved by the Super Admin. If you believe this is a mistake, reach out to the club directly.
-                </p>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: '40px', marginBottom: '16px' }}>⏳</div>
-                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>APPLICATION PENDING SUPER ADMIN APPROVAL</h2>
-                <p style={{ color: '#64748b', fontSize: '14px' }}>
-                  Thanks for applying to MATRIX FinTech Club{currentUser.name ? `, ${currentUser.name}` : ''}. A Super Admin needs to approve your membership before you can register for events or access recordings and notes. Check back soon.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Only Super-Admin-approved events are ever visible/joinable here.
   const approvedEvents = getApprovedEvents();
   const userActivity = getStudentActivity(currentUser.email);
@@ -117,6 +90,33 @@ export default function StudentPortalPage() {
       return;
     }
     setEditingProfile(false);
+  };
+
+  const myAdminRequest = getMyAdminRequest();
+
+  const handleAdminRequestSubmit = async (e) => {
+    e.preventDefault();
+    setSubmittingAdminRequest(true);
+    try {
+      await requestAdminAccess(adminReason.trim());
+      setAdminReason('');
+    } catch (err) {
+      alert(err.message || 'Failed to submit request.');
+    } finally {
+      setSubmittingAdminRequest(false);
+    }
+  };
+
+  const handleAdminRequestResubmit = async () => {
+    if (!myAdminRequest) return;
+    setSubmittingAdminRequest(true);
+    try {
+      await resubmitAdminRequest(myAdminRequest.id);
+    } catch (err) {
+      alert(err.message || 'Failed to resubmit request.');
+    } finally {
+      setSubmittingAdminRequest(false);
+    }
   };
 
   const handleNoteDownload = (note) => {
@@ -502,6 +502,57 @@ export default function StudentPortalPage() {
                 </div>
               </form>
             )}
+
+            {/* ADMIN ACCESS REQUEST */}
+            <div style={{ marginTop: '32px', background: '#ffffff', padding: '32px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>REQUEST ADMIN ACCESS</h3>
+
+              {!myAdminRequest && (
+                <>
+                  <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '16px' }}>
+                    Want to help run the club — create events, upload notes? Apply for admin access. A Super Admin reviews every request before it&apos;s granted.
+                  </p>
+                  <form onSubmit={handleAdminRequestSubmit}>
+                    <div className="form-group">
+                      <label>Why do you want admin access? (optional)</label>
+                      <textarea
+                        value={adminReason}
+                        onChange={(e) => setAdminReason(e.target.value)}
+                        rows={3}
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontFamily: 'inherit', fontSize: '14px', resize: 'vertical' }}
+                        placeholder="e.g. I'd like to organize and run the workshops track."
+                      />
+                    </div>
+                    <button type="submit" className="btn btn-primary" disabled={submittingAdminRequest} style={{ marginTop: '12px' }}>
+                      {submittingAdminRequest ? 'SUBMITTING…' : 'APPLY FOR ADMIN ACCESS'}
+                    </button>
+                  </form>
+                </>
+              )}
+
+              {myAdminRequest && myAdminRequest.status === 'pending' && (
+                <p style={{ color: '#b45309', fontSize: '14px', fontWeight: '600' }}>
+                  ⏳ Your admin access request is awaiting Super Admin review.
+                </p>
+              )}
+
+              {myAdminRequest && myAdminRequest.status === 'approved' && (
+                <p style={{ color: '#15803d', fontSize: '14px', fontWeight: '600' }}>
+                  ✓ Your admin access request was approved. Sign out and back in to switch to the Admin Console.
+                </p>
+              )}
+
+              {myAdminRequest && myAdminRequest.status === 'rejected' && (
+                <>
+                  <p style={{ color: '#b91c1c', fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>
+                    ✕ Your admin access request was declined.
+                  </p>
+                  <button type="button" onClick={handleAdminRequestResubmit} className="btn btn-secondary" disabled={submittingAdminRequest}>
+                    {submittingAdminRequest ? 'RESUBMITTING…' : 'RESUBMIT REQUEST'}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>

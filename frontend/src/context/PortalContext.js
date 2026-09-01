@@ -30,10 +30,22 @@ function mapProfile(p) {
     currentYear: p.current_year || '1st Year',
     contactNumber: p.contact_number || '',
     interestedDomain: p.interested_domain || DOMAIN_OPTIONS[0],
-    gmail: p.email,
-    membershipStatus: p.membership_status || 'approved',
-    membershipReviewedBy: p.membership_reviewed_by || null,
-    membershipReviewedAt: p.membership_reviewed_at || null
+    gmail: p.email
+  };
+}
+
+function mapAdminRequest(r) {
+  const p = r.profiles || {};
+  return {
+    id: r.id,
+    userId: r.user_id,
+    reason: r.reason || '',
+    status: r.status,
+    requestedAt: r.requested_at ? new Date(r.requested_at).getTime() : Date.now(),
+    reviewedBy: r.reviewed_by || null,
+    reviewedAt: r.reviewed_at,
+    applicantName: p.name || (p.email ? p.email.split('@')[0] : ''),
+    applicantEmail: p.email || ''
   };
 }
 
@@ -109,6 +121,7 @@ export function PortalProvider({ children }) {
   const [registrations, setRegistrations] = useState([]);
   const [members, setMembers] = useState({}); // email -> mapped profile, staff-only
   const [activity, setActivity] = useState({}); // own email -> activity row
+  const [adminRequests, setAdminRequests] = useState([]); // own request (student) or all (staff)
 
   // Modals state
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
@@ -216,6 +229,16 @@ export function PortalProvider({ children }) {
     }
   }, []);
 
+  const refreshAdminRequests = useCallback(async () => {
+    if (!currentUserRef.current) return;
+    try {
+      const { adminRequests } = await api.get('/api/admin-requests');
+      setAdminRequests(adminRequests.map(mapAdminRequest));
+    } catch (err) {
+      console.error('Failed to load admin requests:', err);
+    }
+  }, []);
+
   function mapActivity(a) {
     return {
       totalSeconds: a.total_seconds || 0,
@@ -239,12 +262,14 @@ export function PortalProvider({ children }) {
       refreshRegistrations();
       refreshMembers();
       refreshActivity();
+      refreshAdminRequests();
     } else {
       setRecordings([]);
       setNotes([]);
       setRegistrations([]);
       setMembers({});
       setActivity({});
+      setAdminRequests([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id, isHydrated]);
@@ -441,20 +466,39 @@ export function PortalProvider({ children }) {
     return members[email.toLowerCase().trim()] || null;
   };
 
-  // ---- membership approval (Super Admin) ----
-  const getPendingMembers = useCallback(
-    () => Object.values(members).filter(m => m.role === 'student' && m.membershipStatus === 'pending'),
-    [members]
+  // ---- admin access requests ----
+  // Any signed-in member can apply to become an admin; a superadmin
+  // approves/rejects, and approval actually grants the admin role
+  // (handled server-side by the admin_requests_guard_status trigger).
+  const requestAdminAccess = async (reason) => {
+    await api.post('/api/admin-requests', { reason });
+    await refreshAdminRequests();
+  };
+
+  const resubmitAdminRequest = async (requestId) => {
+    await api.post(`/api/admin-requests/${requestId}/resubmit`);
+    await refreshAdminRequests();
+  };
+
+  const getMyAdminRequest = useCallback(
+    () => adminRequests.find(r => r.userId === currentUser?.id) || null,
+    [adminRequests, currentUser]
   );
 
-  const approveMember = async (memberId) => {
-    await api.post(`/api/members/${memberId}/approve`);
+  const getPendingAdminRequests = useCallback(
+    () => adminRequests.filter(r => r.status === 'pending'),
+    [adminRequests]
+  );
+
+  const approveAdminRequest = async (requestId) => {
+    await api.post(`/api/admin-requests/${requestId}/approve`);
+    await refreshAdminRequests();
     await refreshMembers();
   };
 
-  const rejectMember = async (memberId) => {
-    await api.post(`/api/members/${memberId}/reject`);
-    await refreshMembers();
+  const rejectAdminRequest = async (requestId) => {
+    await api.post(`/api/admin-requests/${requestId}/reject`);
+    await refreshAdminRequests();
   };
 
   // ---- recordings ----
@@ -602,9 +646,13 @@ export function PortalProvider({ children }) {
         members,
         saveMember,
         getMemberByEmail,
-        getPendingMembers,
-        approveMember,
-        rejectMember,
+        adminRequests,
+        requestAdminAccess,
+        resubmitAdminRequest,
+        getMyAdminRequest,
+        getPendingAdminRequests,
+        approveAdminRequest,
+        rejectAdminRequest,
         activity,
         updateStudentActivity,
         getStudentActivity,
