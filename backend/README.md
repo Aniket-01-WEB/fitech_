@@ -12,7 +12,9 @@ npm run dev            # http://localhost:4000, auto-restarts on file changes
 
 `GET /health` is a quick liveness check.
 
-**Live**: https://fitech-02.onrender.com (Render). Verified working end-to-end — Supabase connectivity, R2 presigned uploads, CORS, and security headers all tested against the deployed instance directly. Update Render's `FRONTEND_ORIGIN` env var the moment a frontend is deployed anywhere other than `http://localhost:3000`, or CORS will reject it. Render's free tier sleeps after 15 minutes idle — the first request after that is slow while it wakes up.
+**Live**: https://fitech-02.onrender.com (Render). Verified working end-to-end — Supabase connectivity, R2 presigned uploads, CORS, and security headers all tested against the deployed instance directly. Render's free tier sleeps after 15 minutes idle — the first request after that is slow while it wakes up.
+
+Frontend is live at https://fintechclub-phi.vercel.app, but Render's `FRONTEND_ORIGIN` is still set to `http://localhost:3000` — **update it in Render's dashboard** (Environment tab on the service) to `https://fintechclub-phi.vercel.app` (comma-separate with `http://localhost:3000` to keep local dev against the live backend working too — `FRONTEND_ORIGIN` accepts a comma-separated list, see `src/server.js`). Until that's updated, every request from the live frontend is rejected by CORS.
 
 ## Structure
 
