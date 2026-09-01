@@ -222,7 +222,7 @@ export function PortalProvider({ children }) {
       const { profile } = await api.get('/api/profile');
       setCurrentUser(mapProfile(profile));
     } catch (err) {
-      console.error('Failed to load profile:', err.message);
+      console.warn('Failed to load profile:', err.message);
       setCurrentUser(null);
     }
   }, []);
@@ -260,7 +260,7 @@ export function PortalProvider({ children }) {
         setEvents(events.map(mapEvent));
       }
     } catch (err) {
-      console.error('Failed to load events:', err.message);
+      console.warn('Failed to load events:', err.message);
     }
   }, []);
 
@@ -271,7 +271,7 @@ export function PortalProvider({ children }) {
         setRecordings(recordings.map(mapRecording));
       }
     } catch (err) {
-      console.error('Failed to load recordings:', err.message);
+      console.warn('Failed to load recordings:', err.message);
     }
   }, []);
 
@@ -281,7 +281,7 @@ export function PortalProvider({ children }) {
       const { notes } = await api.get('/api/notes');
       setNotes(notes.map(mapNote));
     } catch (err) {
-      console.error('Failed to load notes:', err.message);
+      console.warn('Failed to load notes:', err.message);
     }
   }, []);
 
@@ -291,7 +291,7 @@ export function PortalProvider({ children }) {
       const { registrations } = await api.get('/api/registrations');
       setRegistrations(registrations.map(mapRegistration));
     } catch (err) {
-      console.error('Failed to load registrations:', err.message);
+      console.warn('Failed to load registrations:', err.message);
     }
   }, []);
 
@@ -303,7 +303,7 @@ export function PortalProvider({ children }) {
       members.forEach(m => { map[m.email] = mapProfile(m); });
       setMembers(map);
     } catch (err) {
-      console.error('Failed to load members:', err.message);
+      console.warn('Failed to load members:', err.message);
     }
   }, []);
 
@@ -313,7 +313,7 @@ export function PortalProvider({ children }) {
       const { activity: row } = await api.get('/api/activity');
       setActivity(prev => ({ ...prev, [currentUserRef.current.email]: mapActivity(row) }));
     } catch (err) {
-      console.error('Failed to load activity:', err.message);
+      console.warn('Failed to load activity:', err.message);
     }
   }, []);
 
@@ -323,7 +323,7 @@ export function PortalProvider({ children }) {
       const { adminRequests } = await api.get('/api/admin-requests');
       setAdminRequests(adminRequests.map(mapAdminRequest));
     } catch (err) {
-      console.error('Failed to load admin requests:', err.message);
+      console.warn('Failed to load admin requests:', err.message);
     }
   }, []);
 
@@ -728,7 +728,7 @@ export function PortalProvider({ children }) {
       setActivity(prev => ({ ...prev, [currentUserRef.current.email]: mapped }));
       return mapped;
     } catch (err) {
-      console.error('Failed to update activity:', err.message);
+      console.warn('Failed to update activity:', err.message);
       return null;
     }
   };

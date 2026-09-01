@@ -39,7 +39,7 @@ export async function apiFetch(path, { method = 'GET', body } = {}) {
       signal: controller.signal,
     });
   } catch (err) {
-    console.error(`[api] ${method} ${path} network failure: ${err?.message || err}`);
+    console.warn(`[api] ${method} ${path} network failure: ${err?.message || err}`);
     if (err?.name === 'AbortError') {
       throw new Error('The server took too long to respond. Please try again.');
     }
