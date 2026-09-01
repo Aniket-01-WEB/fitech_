@@ -9,6 +9,11 @@ const nextConfig = {
   turbopack: {
     root: path.resolve(__dirname, '..'),
   },
+  // Disables Next.js's own dev-mode indicator — the floating circular
+  // "N" badge it renders in the bottom-left corner during `next dev`.
+  // Framework-injected, not part of this app's own markup/CSS; already
+  // absent from production builds regardless.
+  devIndicators: false,
 };
 
 export default nextConfig;
