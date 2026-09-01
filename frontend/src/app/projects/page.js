@@ -56,27 +56,29 @@ export default function ProjectsPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '28px' }}>
         {ALL_PROJECTS.map((proj, idx) => (
-          <div key={idx} className="simple-event-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div className="simple-card-top">
-              <span className="simple-card-category">{proj.category}</span>
-              <h3 className="simple-card-title">{proj.name}</h3>
-              <p className="simple-card-desc" style={{ fontSize: '14px', lineHeight: '1.6' }}>{proj.desc}</p>
-            </div>
-            <div className="simple-card-bottom">
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                {proj.tags.map((t, i) => (
-                  <span key={i} className="projects-reveal-card-tag">{t}</span>
-                ))}
+          <div key={idx} className="lab-card-container">
+            <div className="simple-event-card lab-build-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="simple-card-top">
+                <span className="simple-card-category">{proj.category}</span>
+                <h3 className="simple-card-title">{proj.name}</h3>
+                <p className="simple-card-desc" style={{ fontSize: '14px', lineHeight: '1.6' }}>{proj.desc}</p>
               </div>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="simple-action-btn"
-                style={{ textAlign: 'center', width: '100%', display: 'inline-block' }}
-              >
-                VIEW REPOSITORY ON GITHUB ↗
-              </a>
+              <div className="simple-card-bottom">
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                  {proj.tags.map((t, i) => (
+                    <span key={i} className="projects-reveal-card-tag">{t}</span>
+                  ))}
+                </div>
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="simple-action-btn"
+                  style={{ textAlign: 'center', width: '100%', display: 'inline-block' }}
+                >
+                  VIEW REPOSITORY ON GITHUB ↗
+                </a>
+              </div>
             </div>
           </div>
         ))}

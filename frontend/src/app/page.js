@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
+import Footer from '@/components/Footer';
 
 const DOMAINS_DATA = [
   {
@@ -450,37 +451,86 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="events-marquee-wrapper">
-            {visibleEvents.length === 0 ? (
+          {eventsTab === 'upcoming' ? (
+            upcomingEvents.length === 0 ? (
               <div className="empty-events-box">
-                <p className="empty-events-text">{eventsTab === 'upcoming' ? 'No upcoming events.' : 'No past events yet.'}</p>
+                <p className="empty-events-text">No upcoming events.</p>
               </div>
             ) : (
-              <div className="events-marquee-track">
-                {visibleEvents.map((evt, idx) => (
-                  <div
-                    key={evt.id}
-                    className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
-                    onClick={() => openDetailModal(evt)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="event-image" style={{ background: evt.banner || 'linear-gradient(135deg, #0f172a, #1e293b)' }}>
-                      <span className="event-category">{evt.type || 'Event'}</span>
-                    </div>
-                    <div className="event-body">
-                      <h3 className="event-name">{evt.title}</h3>
-                      <div className="event-meta">
-                        <span>📅 {evt.time}</span>
-                        <span>📍 {evt.venue}</span>
-                      </div>
-                      <p className="event-desc">{evt.description}</p>
-                      <span className="text-link">View Details & Register →</span>
-                    </div>
+              <div
+                className="upcoming-hero-event-card"
+                onClick={() => openDetailModal(upcomingEvents[0])}
+                style={{
+                  backgroundImage: `url(${upcomingEvents[0].image || upcomingEvents[0].banner || '/upcoming_event_bg.jpg'})`,
+                  cursor: 'pointer'
+                }}
+              >
+                <div className="upcoming-hero-event-overlay" />
+                <div className="upcoming-hero-event-content">
+                  <div className="upcoming-hero-event-top">
+                    <span className="upcoming-hero-date-badge">
+                      📅 {upcomingEvents[0].time}
+                    </span>
                   </div>
-                ))}
+
+                  <div className="upcoming-hero-event-main">
+                    <h3 className="upcoming-hero-event-title">{upcomingEvents[0].title}</h3>
+                    <p className="upcoming-hero-event-desc">{upcomingEvents[0].description}</p>
+                  </div>
+
+                  <div className="upcoming-hero-event-bottom">
+                    <div className="upcoming-hero-venue-info">
+                      <span className="upcoming-hero-venue-icon">📍</span>
+                      <span className="upcoming-hero-venue-text">{upcomingEvents[0].venue}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="upcoming-hero-action-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDetailModal(upcomingEvents[0]);
+                      }}
+                    >
+                      VIEW DETAILS & REGISTER <span className="arrow">→</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            )
+          ) : (
+            <div className="events-marquee-wrapper">
+              {pastEvents.length === 0 ? (
+                <div className="empty-events-box">
+                  <p className="empty-events-text">No past events yet.</p>
+                </div>
+              ) : (
+                <div className="events-marquee-track">
+                  {pastEvents.map((evt, idx) => (
+                    <div
+                      key={evt.id}
+                      className={`event-card ${idx % 2 === 0 ? 'theme-white' : 'theme-black'}`}
+                      onClick={() => openDetailModal(evt)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div className="event-image" style={{ background: evt.banner || 'linear-gradient(135deg, #0f172a, #1e293b)' }}>
+                        <span className="event-category">{evt.type || 'Event'}</span>
+                      </div>
+                      <div className="event-body">
+                        <h3 className="event-name">{evt.title}</h3>
+                        <div className="event-meta">
+                          <span>📅 {evt.time}</span>
+                          <span>📍 {evt.venue}</span>
+                        </div>
+                        <p className="event-desc">{evt.description}</p>
+                        <span className="text-link">View Archive →</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -490,17 +540,19 @@ export default function HomePage() {
           <h2 className="section-title" style={{ margin: '0 0 48px 0', textAlign: 'left', maxWidth: 'none' }}>FEATURED LAB BUILDS</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {PROJECTS_DATA.map((proj, idx) => (
-              <div key={idx} className="simple-event-card">
-                <div className="simple-card-top">
-                  <span className="simple-card-category">{proj.category}</span>
-                  <h3 className="simple-card-title">{proj.name}</h3>
-                  <p className="simple-card-desc">{proj.desc}</p>
-                </div>
-                <div className="simple-card-bottom">
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    {proj.tags.map((t, i) => (
-                      <span key={i} className="projects-reveal-card-tag">{t}</span>
-                    ))}
+              <div key={idx} className="lab-card-container">
+                <div className="simple-event-card lab-build-card">
+                  <div className="simple-card-top">
+                    <span className="simple-card-category">{proj.category}</span>
+                    <h3 className="simple-card-title">{proj.name}</h3>
+                    <p className="simple-card-desc">{proj.desc}</p>
+                  </div>
+                  <div className="simple-card-bottom">
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      {proj.tags.map((t, i) => (
+                        <span key={i} className="projects-reveal-card-tag">{t}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -622,6 +674,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

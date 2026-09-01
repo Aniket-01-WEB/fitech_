@@ -115,14 +115,93 @@ function mapRegistration(r) {
   };
 }
 
+const DEFAULT_EVENTS = [
+  {
+    id: 'demo-evt-1',
+    title: 'Adamas FinTech & Quantitative Research Summit',
+    type: 'FLAGSHIP SUMMIT',
+    banner: '/upcoming_event_bg.jpg',
+    image: '/upcoming_event_bg.jpg',
+    event_time_label: 'March 28, 2026 • 10:00 AM IST',
+    venue: 'Adamas University Main Auditorium',
+    description: 'Premier academic and industry gathering featuring quantitative researchers, fintech leaders, algorithmic labs, and student innovators.',
+    status: 'approved',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'demo-evt-2',
+    title: 'DeFi Liquidity Pools & Invariant Modeling Summit',
+    type: 'SUMMIT',
+    banner: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+    event_time_label: 'April 02, 2026 • 5:30 PM EST',
+    venue: 'Main Auditorium & YouTube Live',
+    description: 'Analyzing Uniswap v4 hook architecture, concentrated liquidity invariants, and MEV arbitrage searchers.',
+    status: 'approved',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'demo-evt-3',
+    title: 'AI Transformer Volatility Forecasting Hackathon',
+    type: 'HACKATHON',
+    banner: 'linear-gradient(135deg, #064e3b, #047857)',
+    event_time_label: 'April 20, 2026 • 10:00 AM EST',
+    venue: 'Computational Finance Center',
+    description: 'Build predictive volatility surfaces using domain-adapted LLMs and time-series transformer architectures.',
+    status: 'approved',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'demo-evt-4',
+    title: '2025 Algorithmic Trading Architecture Symposium',
+    type: 'PAST EVENT 2025',
+    banner: 'linear-gradient(135deg, #334155, #475569)',
+    event_time_label: 'December 12, 2025',
+    venue: 'Archived Recording',
+    description: 'Retrospective analysis of zero-copy network stacks and kernel-bypass TCP socket programming in trading systems.',
+    status: 'approved',
+    created_at: new Date('2025-12-12').toISOString()
+  }
+];
+
+const DEFAULT_RECORDINGS = [
+  {
+    id: 'demo-rec-1',
+    title: 'C++ Low-Latency Systems & Cache Optimization',
+    type: 'MASTERCLASS',
+    recording_date: 'February 2026',
+    duration_label: '1h 45m',
+    duration_seconds: 6300,
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    speaker: 'Aniket Dutta (Tech Lead)',
+    banner: 'linear-gradient(135deg, #0f172a, #1e293b)',
+    description: 'Cache-friendly data structures, ring buffers, and SIMD vectorization techniques for high-throughput quantitative engines.',
+    takeaways: ['Ring buffer lock-free queues', 'L1/L2 cache locality patterns', 'Kernel bypass networking basics'],
+    status: 'approved'
+  },
+  {
+    id: 'demo-rec-2',
+    title: 'Stochastic Calculus & Derivative Pricing Models',
+    type: 'LECTURE',
+    recording_date: 'January 2026',
+    duration_label: '2h 10m',
+    duration_seconds: 7800,
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    speaker: 'Quant Research Group',
+    banner: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+    description: 'Black-Scholes-Merton PDE derivations, Monte Carlo simulations, and implied volatility surface fitting in Python.',
+    takeaways: ['Black-Scholes PDE numerical solvers', 'Monte Carlo CUDA acceleration', 'Implied volatility skew calibration'],
+    status: 'approved'
+  }
+];
+
 const PortalContext = createContext();
 
 export function PortalProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null); // mapped profile, or null
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [events, setEvents] = useState([]);
-  const [recordings, setRecordings] = useState([]);
+  const [events, setEvents] = useState(DEFAULT_EVENTS.map(mapEvent));
+  const [recordings, setRecordings] = useState(DEFAULT_RECORDINGS.map(mapRecording));
   const [notes, setNotes] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const [members, setMembers] = useState({}); // email -> mapped profile, staff-only
@@ -177,17 +256,20 @@ export function PortalProvider({ children }) {
   const refreshEvents = useCallback(async () => {
     try {
       const { events } = await api.get('/api/events');
-      setEvents(events.map(mapEvent));
+      if (events && events.length > 0) {
+        setEvents(events.map(mapEvent));
+      }
     } catch (err) {
       console.error('Failed to load events:', err);
     }
   }, []);
 
   const refreshRecordings = useCallback(async () => {
-    if (!currentUserRef.current) return;
     try {
       const { recordings } = await api.get('/api/recordings');
-      setRecordings(recordings.map(mapRecording));
+      if (recordings && recordings.length > 0) {
+        setRecordings(recordings.map(mapRecording));
+      }
     } catch (err) {
       console.error('Failed to load recordings:', err);
     }

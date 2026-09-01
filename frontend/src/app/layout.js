@@ -1,7 +1,6 @@
 import './globals.css';
 import { PortalProvider } from '@/context/PortalContext';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import PageLoader from '@/components/PageLoader';
 import JoinModal from '@/components/JoinModal';
 import EventDetailModal from '@/components/EventDetailModal';
@@ -28,7 +27,6 @@ export default function RootLayout({ children }) {
           <PageLoader />
           <Navbar />
           <main>{children}</main>
-          <Footer />
           <JoinModal />
           <EventDetailModal />
           <RecordingPlayerModal />
