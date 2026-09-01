@@ -49,21 +49,24 @@ router.post('/upload-url', requireUser, requireStaff, async (req, res) => {
   }
 });
 
-// POST /api/notes — staff-only via RLS. Requires a file_url, an
-// external_link, or an r2_key (an object already PUT to R2 via the
-// presigned URL above) — the notes_has_source check constraint enforces
-// this. New notes always start 'pending' (notes_force_pending trigger).
+// POST /api/notes — staff-only via RLS. Requires an external_link or an
+// r2_key (an object already PUT to R2 via the presigned URL above) — the
+// notes_has_source check constraint enforces this. There's deliberately
+// no way to hand this route a raw file_url: a note's file either lives
+// in this app's own R2 bucket, or it's a link to somewhere the admin
+// pointed at, never an arbitrary client-supplied "here's a URL" blob.
+// New notes always start 'pending' (notes_force_pending trigger).
 router.post('/', requireUser, async (req, res) => {
-  const { title, domain, description, file_url, external_link, file_type, topics, r2_key } = req.body;
+  const { title, domain, description, external_link, file_type, topics, r2_key } = req.body;
 
   if (!title) return res.status(400).json({ error: 'title is required.' });
-  if (!file_url && !external_link && !r2_key) {
-    return res.status(400).json({ error: 'Provide a file_url, an external_link, or upload a file first.' });
+  if (!external_link && !r2_key) {
+    return res.status(400).json({ error: 'Provide an external_link, or upload a file first.' });
   }
 
   const { data, error } = await req.supabase
     .from('notes')
-    .insert({ title, domain, description, file_url, external_link, file_type, topics, r2_key })
+    .insert({ title, domain, description, external_link, file_type, topics, r2_key })
     .select()
     .single();
 
