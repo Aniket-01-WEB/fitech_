@@ -29,7 +29,7 @@ const INTRO_BOOT = `try{if(location.pathname==='/'&&sessionStorage.getItem('matr
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT }} />
         <PortalProvider>
