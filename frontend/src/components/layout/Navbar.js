@@ -59,7 +59,7 @@ export default function Navbar() {
           {/* Left Brand */}
           <Link href="/" className="curved-nav-brand" aria-label="FITECH Home">
             <Image
-              src="/logo_club-removebg-preview.png"
+              src="/images/logo-alt.png"
               alt="FITECH Club Logo"
               width={34}
               height={34}

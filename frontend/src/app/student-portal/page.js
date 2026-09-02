@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { usePortal, DOMAIN_OPTIONS } from '@/context/PortalContext';
 
 const DEFAULT_PROFILE_TEMPLATE = {

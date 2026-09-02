@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
+import { statusHandler } from '../lib/statusUpdater.js';
 import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
 import { sensitiveActionLimiter } from '../lib/rateLimit.js';
 import {
@@ -83,41 +84,14 @@ router.patch('/:id', requireUser, validateIdParam, validateBody(recordingUpdateS
 
 // POST /api/recordings/:id/approve — the recordings_guard_status trigger
 // rejects this unless the caller is a superadmin.
-router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('recordings')
-    .update({ status: 'approved' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ recording: data });
-});
+router.post('/:id/approve', requireUser, validateIdParam, statusHandler('recordings', 'approved', 'recording'));
 
 // POST /api/recordings/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('recordings')
-    .update({ status: 'rejected' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ recording: data });
-});
+router.post('/:id/reject', requireUser, validateIdParam, statusHandler('recordings', 'rejected', 'recording'));
 
 // POST /api/recordings/:id/resubmit — the uploader can move a rejected
 // recording back to pending for another review.
-router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('recordings')
-    .update({ status: 'pending' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ recording: data });
-});
+router.post('/:id/resubmit', requireUser, validateIdParam, statusHandler('recordings', 'pending', 'recording'));
 
 // DELETE /api/recordings/:id — staff-only via RLS. Best-effort cleanup of
 // the R2 object; a failed R2 delete never blocks removing the row.

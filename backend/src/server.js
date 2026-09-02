@@ -4,17 +4,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import apiRouter from './routes/index.js';
 import { generalLimiter } from './lib/rateLimit.js';
+import { PORT, ALLOWED_ORIGINS } from './config/index.js';
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-// Comma-separated for prod + local dev at once, e.g.
-// "https://fitech.club,http://localhost:3000". Never a wildcard — this API
-// is credentialed (Authorization header), so the allowed origin list must
-// be explicit.
-const ALLOWED_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
-  .split(',')
-  .map((o) => o.trim())
-  .filter(Boolean);
 
 app.use(helmet());
 app.use(cors({
@@ -62,10 +54,36 @@ app.use((req, res) => {
 // already turn into a JSON error response itself.
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error(err);
+  console.error('[unhandled]', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+// ---- process-level safety nets ----
+process.on('uncaughtException', (err) => {
+  console.error('[fatal] uncaughtException', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[fatal] unhandledRejection', reason);
+});
+
+// ---- start & graceful shutdown ----
+const server = app.listen(PORT, () => {
   console.log(`MATRIX backend listening on http://localhost:${PORT}`);
 });
+
+function shutdown(signal) {
+  console.log(`\n${signal} received — shutting down gracefully`);
+  server.close(() => {
+    console.log('All connections closed. Exiting.');
+    process.exit(0);
+  });
+  // Force exit after 10s if connections won't close
+  setTimeout(() => {
+    console.error('Forced shutdown after timeout');
+    process.exit(1);
+  }, 10_000).unref();
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

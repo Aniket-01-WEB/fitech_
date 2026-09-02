@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
+import { statusHandler } from '../lib/statusUpdater.js';
 import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
 import { sensitiveActionLimiter } from '../lib/rateLimit.js';
 import {
@@ -86,41 +87,14 @@ router.post('/', requireUser, validateBody(noteCreateSchema), async (req, res) =
 
 // POST /api/notes/:id/approve — the notes_guard_status trigger rejects
 // this unless the caller is a superadmin.
-router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('notes')
-    .update({ status: 'approved' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ note: data });
-});
+router.post('/:id/approve', requireUser, validateIdParam, statusHandler('notes', 'approved', 'note'));
 
 // POST /api/notes/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('notes')
-    .update({ status: 'rejected' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ note: data });
-});
+router.post('/:id/reject', requireUser, validateIdParam, statusHandler('notes', 'rejected', 'note'));
 
 // POST /api/notes/:id/resubmit — the uploader can move a rejected note
 // back to pending for another review.
-router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase
-    .from('notes')
-    .update({ status: 'pending' })
-    .eq('id', req.params.id)
-    .select()
-    .single();
-  if (error) return sendError(res, error, 403);
-  res.json({ note: data });
-});
+router.post('/:id/resubmit', requireUser, validateIdParam, statusHandler('notes', 'pending', 'note'));
 
 // DELETE /api/notes/:id — staff-only via RLS. Best-effort cleanup of the
 // R2 object; the row is the source of truth, so a failed R2 delete never

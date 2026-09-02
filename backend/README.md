@@ -5,8 +5,8 @@ Standalone Node.js/Express API for the MATRIX FinTech Club app. Talks to Supabas
 ## Getting Started
 
 ```bash
+cd backend
 npm install
-cp .env.example .env   # already filled in for this project — edit if you point at a different Supabase project
 npm run dev            # http://localhost:4000, auto-restarts on file changes
 ```
 
@@ -44,7 +44,7 @@ A free-tier Supabase project pauses itself after 7 days with no activity. `npm r
 
 This deliberately does **not** run as a timer inside the long-running Express process: nothing guarantees this server stays up continuously for 5 days straight (it doesn't, in local dev), so a `setInterval`/`node-cron` in here wouldn't reliably fire. Instead, [`.github/workflows/supabase-keepalive.yml`](../.github/workflows/supabase-keepalive.yml) runs it on a schedule (every 5 days) via GitHub Actions — that fires regardless of whether anyone's server or machine is running.
 
-**One-time setup**: add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as repo secrets (GitHub → Settings → Secrets and variables → Actions) — same values as `backend/.env`. Without them the scheduled run fails (visible in the Actions tab, doesn't affect anything else). You can also trigger it manually from the Actions tab (`workflow_dispatch`) to test it right away.
+**One-time setup**: add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as repo secrets (GitHub → Settings → Secrets and variables → Actions) — same values as the root `.env`. Without them the scheduled run fails (visible in the Actions tab, doesn't affect anything else). You can also trigger it manually from the Actions tab (`workflow_dispatch`) to test it right away.
 
 ## Keeping Render awake
 

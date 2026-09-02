@@ -1,10 +1,10 @@
 import './globals.css';
 import { PortalProvider } from '@/context/PortalContext';
-import Navbar from '@/components/Navbar';
-import PageLoader from '@/components/PageLoader';
-import JoinModal from '@/components/JoinModal';
-import EventDetailModal from '@/components/EventDetailModal';
-import RecordingPlayerModal from '@/components/RecordingPlayerModal';
+import Navbar from '@/components/layout/Navbar';
+import PageLoader from '@/components/layout/PageLoader';
+import JoinModal from '@/components/modals/JoinModal';
+import EventDetailModal from '@/components/modals/EventDetailModal';
+import RecordingPlayerModal from '@/components/modals/RecordingPlayerModal';
 
 export const metadata = {
   title: 'MATRIX FinTech Club | Quantitative Finance & Financial Engineering Society',

@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { usePortal } from '@/context/PortalContext';
-import Footer from '@/components/Footer';
+import Footer from '@/components/layout/Footer';
 
 const DOMAINS_DATA = [
   {
@@ -96,7 +94,7 @@ const TEAM_DATA = [
     name: 'PRITESH SHRIVASTAV',
     role: 'V. PRESIDENT',
     avatar: 'P',
-    image: '/prof_file/pritesh.jpeg',
+    image: '/images/team/pritesh.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
@@ -112,7 +110,7 @@ const TEAM_DATA = [
     name: 'SOUVIK BANDOPADHYA',
     role: 'SECRETARY',
     avatar: 'S',
-    image: '/prof_file/souvik.jpeg',
+    image: '/images/team/souvik.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
@@ -144,7 +142,7 @@ const TEAM_DATA = [
     name: 'ANIKET DUTTA',
     role: 'TECH LEAD',
     avatar: 'A',
-    image: '/prof_file/aniket.jpeg',
+    image: '/images/team/aniket.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
@@ -168,7 +166,7 @@ const TEAM_DATA = [
     name: 'GOURAV GHOSH',
     role: 'DESIGN LEAD',
     avatar: 'G',
-    image: '/prof_file/Gourav.jpeg',
+    image: '/images/team/gourav.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   },
@@ -200,17 +198,14 @@ const TEAM_DATA = [
     name: 'DEBJIT MODAK',
     role: 'DOCUMENTATION',
     avatar: 'D',
-    image: '/prof_file/debjit.jpeg',
+    image: '/images/team/debjit.jpeg',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
   }
 ];
 
-const ORBIT_TAGS = ['QUANT', 'ALGO', 'DEFI', 'AI', 'RISK', 'HFT'];
-
 export default function HomePage() {
   const [eventsTab, setEventsTab] = useState('upcoming');
-  const [flippedCards, setFlippedCards] = useState({});
   const { events, openDetailModal, openJoinModal } = usePortal();
 
   const teamWrapperRef = useRef(null);
@@ -280,10 +275,6 @@ export default function HomePage() {
     isMouseDownRef.current = false;
   };
 
-  const handleCardFlip = (index) => {
-    if (isDraggingRef.current) return;
-    setFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
-  };
 
   // Only Super-Admin-approved events are ever shown publicly.
   const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
@@ -453,7 +444,7 @@ export default function HomePage() {
                 className="upcoming-hero-event-card"
                 onClick={() => openDetailModal(upcomingEvents[0])}
                 style={{
-                  backgroundImage: `url(${upcomingEvents[0].image || upcomingEvents[0].banner || '/upcoming_event_bg.jpg'})`,
+                  backgroundImage: `url(${upcomingEvents[0].image || upcomingEvents[0].banner || '/images/event-summit.jpg'})`,
                   cursor: 'pointer'
                 }}
               >

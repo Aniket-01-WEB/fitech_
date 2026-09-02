@@ -11,12 +11,21 @@ backend/    Standalone Node/Express API — the only thing that talks to Supabas
 
 ## Running locally
 
-Each app runs independently, in its own terminal:
+This repository is configured as an npm workspace. You only need to run commands from the root directory:
 
-```bash
-cd backend && npm install && npm run dev    # http://localhost:4000
-cd frontend && npm install && npm run dev   # http://localhost:3000
-```
+1. Create a `.env` file in the root directory and add your environment variables (Supabase and R2 keys).
+
+2. Install dependencies for the root, frontend, and backend all at once:
+   ```bash
+   npm install
+   ```
+
+3. Start both the Next.js frontend (with Turbopack enabled) and the Express backend concurrently:
+   ```bash
+   npm run dev
+   # Or just double-click run-dev.bat on Windows
+   ```
+   *Frontend will run on http://localhost:3000, Backend on http://localhost:4000.*
 
 ## Deployment
 
@@ -84,6 +93,6 @@ Uploaded notes and recording videos live in a private Cloudflare R2 bucket, not 
 3. The browser then creates the note/recording row with the resulting object key (`r2_key`); it starts `pending` like every other upload here.
 4. Once a Super Admin approves it, any request that lists notes/recordings and finds an `r2_key` gets a freshly-minted, short-lived **presigned GET URL** in its place — minted only for a caller RLS already cleared to see that row, never stored, never public.
 
-Requires four vars in `backend/.env` (see `backend/.env.example`): `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Get an access key/secret from the Cloudflare dashboard → R2 → Manage API Tokens, scoped to just this bucket. Live-verified working end-to-end (real upload, approval, and student read) against the `fitech` bucket.
+Requires four vars in your root `.env` file: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Get an access key/secret from the Cloudflare dashboard → R2 → Manage API Tokens, scoped to just this bucket. Live-verified working end-to-end (real upload, approval, and student read) against the `fitech` bucket.
 
 **Bucket CORS**: the browser uploads straight to R2 with the presigned URL, so the bucket needs a CORS policy allowing the app's origin to `PUT`/`GET`/`HEAD` — R2 blocks cross-origin requests by default regardless of how valid the presigned URL's signature is. Currently set (via `PutBucketCorsCommand`, same S3 API the app already uses) to allow `http://localhost:3000` and `https://*.vercel.app`. **If the site deploys somewhere other than Vercel, add that real origin to the bucket's CORS rule** — Cloudflare dashboard → R2 → `fitech` → Settings → CORS Policy, or re-run `PutBucketCorsCommand` with the updated origin list.

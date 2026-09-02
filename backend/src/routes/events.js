@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireUser, attachSupabase } from '../middleware/requireUser.js';
 import { sendError } from '../lib/errorResponse.js';
+import { statusHandler } from '../lib/statusUpdater.js';
 import { validateBody, validateIdParam, eventCreateSchema, eventUpdateSchema } from '../lib/validation.js';
 
 const router = Router();
@@ -51,26 +52,14 @@ router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
 // rejects this update unless the caller's profile role is 'superadmin',
 // so this route needs no extra role check of its own — the database is
 // the actual enforcement point.
-router.post('/:id/approve', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase.from('events').update({ status: 'approved' }).eq('id', req.params.id).select().single();
-  if (error) return sendError(res, error, 403);
-  res.json({ event: data });
-});
+router.post('/:id/approve', requireUser, validateIdParam, statusHandler('events', 'approved', 'event'));
 
 // POST /api/events/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase.from('events').update({ status: 'rejected' }).eq('id', req.params.id).select().single();
-  if (error) return sendError(res, error, 403);
-  res.json({ event: data });
-});
+router.post('/:id/reject', requireUser, validateIdParam, statusHandler('events', 'rejected', 'event'));
 
 // POST /api/events/:id/resubmit — an admin moving their own rejected
 // event back to 'pending' for another look (or a super admin, via the
 // same trigger's staff branch).
-router.post('/:id/resubmit', requireUser, validateIdParam, async (req, res) => {
-  const { data, error } = await req.supabase.from('events').update({ status: 'pending' }).eq('id', req.params.id).select().single();
-  if (error) return sendError(res, error, 403);
-  res.json({ event: data });
-});
+router.post('/:id/resubmit', requireUser, validateIdParam, statusHandler('events', 'pending', 'event'));
 
 export default router;

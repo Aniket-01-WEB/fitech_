@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { requireUser } from '../middleware/requireUser.js';
 import { sendError } from '../lib/errorResponse.js';
-import { validateBody, validateQuery, validateIdParam, registrationCreateSchema, registrationQuerySchema } from '../lib/validation.js';
+import { validateBody, validateQuery, registrationCreateSchema, registrationQuerySchema } from '../lib/validation.js';
 
 const router = Router();
 

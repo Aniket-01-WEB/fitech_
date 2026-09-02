@@ -26,7 +26,7 @@ const TEAM_DATA = [
     name: 'PRITESH SHRIVASTAV',
     role: 'V. PRESIDENT',
     avatar: 'P',
-    image: '/prof_file/pritesh.jpeg',
+    image: '/images/team/pritesh.jpeg',
     bio: 'Managing internal operations, core project execution, and cross-team coordination.',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
@@ -44,7 +44,7 @@ const TEAM_DATA = [
     name: 'SOUVIK BANDOPADHYA',
     role: 'SECRETARY',
     avatar: 'S',
-    image: '/prof_file/souvik.jpeg',
+    image: '/images/team/souvik.jpeg',
     bio: 'Overseeing governance, administration, and official communication channels.',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
@@ -80,7 +80,7 @@ const TEAM_DATA = [
     name: 'ANIKET DUTTA',
     role: 'TECH LEAD',
     avatar: 'A',
-    image: '/prof_file/aniket.jpeg',
+    image: '/images/team/aniket.jpeg',
     bio: 'Leading quantitative platform architecture, low-latency engines, and web infrastructure.',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
@@ -107,7 +107,7 @@ const TEAM_DATA = [
     name: 'GOURAV GHOSH',
     role: 'DESIGN LEAD',
     avatar: 'G',
-    image: '/prof_file/Gourav.jpeg',
+    image: '/images/team/gourav.jpeg',
     bio: 'Crafting visual design language, UI/UX design systems, and brand identity.',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'
@@ -143,7 +143,7 @@ const TEAM_DATA = [
     name: 'DEBJIT MODAK',
     role: 'DOCUMENTATION',
     avatar: 'D',
-    image: '/prof_file/debjit.jpeg',
+    image: '/images/team/debjit.jpeg',
     bio: 'Curating research documentation, society archives, and technical reports.',
     linkedin: 'https://linkedin.com',
     theme: 'theme-black'

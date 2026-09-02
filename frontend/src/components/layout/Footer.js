@@ -37,7 +37,7 @@ export default function Footer() {
         <div className="footer-brand-row">
           <div className="footer-brand">
             <Image
-              src="/logo_club-removebg-preview.png"
+              src="/images/logo-alt.png"
               alt="FITECH Logo"
               width={64}
               height={64}
@@ -46,7 +46,7 @@ export default function Footer() {
             <span className="footer-brand-title">FITECH</span>
           </div>
           <p className="footer-mission-desc">
-            FITECH is a student-led fintech ecosystem. We're bridging the gap between quantitative finance, cutting-edge software engineering, and financial technology to shape the future of innovation. We call it Financial Intelligence.
+            FITECH is a student-led fintech ecosystem. We&apos;re bridging the gap between quantitative finance, cutting-edge software engineering, and financial technology to shape the future of innovation. We call it Financial Intelligence.
           </p>
         </div>
 
