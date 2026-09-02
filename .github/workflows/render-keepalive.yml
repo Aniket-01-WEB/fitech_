@@ -1,0 +1,26 @@
+name: Render backend keepalive
+
+# Render's free tier spins the backend down after 15 minutes with no
+# traffic; the first request after that fails to connect outright while
+# it wakes back up. This pings the live backend's health endpoint every
+# 10 minutes -- comfortably under that 15-minute threshold -- so it never
+# actually goes to sleep. Unrelated to supabase-keepalive.yml, which
+# pings Supabase itself on a completely different (5-day) cadence to
+# stop the database project from auto-pausing -- that's a separate
+# problem with a separate timescale.
+on:
+  schedule:
+    - cron: '*/10 * * * *' # every 10 minutes
+  workflow_dispatch: {} # lets you trigger it manually from the Actions tab too
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://fitech-02.onrender.com/health)
+          echo "Backend responded: $status"
+          if [ "$status" != "200" ]; then
+            echo "::warning::Render backend health check returned $status (expected 200)"
+          fi

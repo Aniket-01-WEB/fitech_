@@ -12,9 +12,7 @@ npm run dev            # http://localhost:4000, auto-restarts on file changes
 
 `GET /health` is a quick liveness check.
 
-**Live**: https://fitech-02.onrender.com (Render). Verified working end-to-end — Supabase connectivity, R2 presigned uploads, CORS, and security headers all tested against the deployed instance directly. Render's free tier sleeps after 15 minutes idle — the first request after that is slow while it wakes up.
-
-Frontend is live at https://fintechclub-phi.vercel.app, but Render's `FRONTEND_ORIGIN` is still set to `http://localhost:3000` — **update it in Render's dashboard** (Environment tab on the service) to `https://fintechclub-phi.vercel.app` (comma-separate with `http://localhost:3000` to keep local dev against the live backend working too — `FRONTEND_ORIGIN` accepts a comma-separated list, see `src/server.js`). Until that's updated, every request from the live frontend is rejected by CORS.
+**Live**: https://fitech-02.onrender.com (Render). Frontend is live at https://fintechclub-phi.vercel.app — both verified working together end-to-end (a real login round-trip against the deployed instances, not just a config check): Supabase connectivity, R2 presigned uploads, CORS, and security headers all confirmed live. Render's free tier sleeps after 15 minutes idle — see "Keeping Render awake" below for how that's handled.
 
 ## Structure
 
@@ -47,6 +45,12 @@ A free-tier Supabase project pauses itself after 7 days with no activity. `npm r
 This deliberately does **not** run as a timer inside the long-running Express process: nothing guarantees this server stays up continuously for 5 days straight (it doesn't, in local dev), so a `setInterval`/`node-cron` in here wouldn't reliably fire. Instead, [`.github/workflows/supabase-keepalive.yml`](../.github/workflows/supabase-keepalive.yml) runs it on a schedule (every 5 days) via GitHub Actions — that fires regardless of whether anyone's server or machine is running.
 
 **One-time setup**: add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as repo secrets (GitHub → Settings → Secrets and variables → Actions) — same values as `backend/.env`. Without them the scheduled run fails (visible in the Actions tab, doesn't affect anything else). You can also trigger it manually from the Actions tab (`workflow_dispatch`) to test it right away.
+
+## Keeping Render awake
+
+A different problem from the one above, on a completely different timescale: Render's free tier spins the backend process itself down after 15 minutes with no traffic, and the first request after that fails to connect outright (not just slow) while the container wakes back up — a real user hitting the live site during that window sees a clean "can't reach the server" error rather than the app crashing (see `frontend/src/lib/api.js`), but it's still a bad first impression.
+
+[`.github/workflows/render-keepalive.yml`](../.github/workflows/render-keepalive.yml) pings `/health` every 10 minutes — comfortably under the 15-minute threshold — so the instance never actually goes idle. No secrets needed (it's just a public health check); nothing to configure. Trigger it manually from the Actions tab to test it, or just watch it run on schedule.
 
 ## API routes
 
