@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.js",
+    "build": "npm run build --workspaces --if-present",
     "install:all": "npm install && npm install -w frontend && npm install -w backend"
   },
   "workspaces": [
