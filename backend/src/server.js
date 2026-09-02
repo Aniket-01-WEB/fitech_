@@ -21,7 +21,14 @@ app.use(cors({
   origin(origin, callback) {
     // No Origin header (curl, server-to-server, same-origin) — allow.
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
-    callback(new Error('Not allowed by CORS'));
+    // A disallowed origin is expected, routine traffic (bots, scanners,
+    // a stray preview-deployment URL) — not an application error, so
+    // callback(null, false) just omits the CORS headers (the browser
+    // enforces the actual block) instead of throwing, which would
+    // otherwise fall through to the generic error handler and log a
+    // full stack trace for every single rejected request.
+    console.warn(`[cors] rejected origin: ${origin}`);
+    callback(null, false);
   },
   credentials: true,
 }));
