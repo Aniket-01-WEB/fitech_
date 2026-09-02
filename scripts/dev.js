@@ -20,6 +20,16 @@ if (fs.existsSync(envPath)) {
 // Pass all environment variables down to child processes
 const env = { ...process.env, FORCE_COLOR: '1' };
 
+// PORT in the root .env is the backend's port (4000). Next.js's own CLI
+// also reads PORT from the environment when no -p flag is given, so
+// passing the shared env straight through to the frontend child makes
+// `next dev` try to bind the *same* port the backend just took — it loses
+// that race and dies with EADDRINUSE. Give the frontend child a copy of
+// the env with PORT stripped so Next falls back to its own default (3000)
+// instead of colliding with the backend.
+const frontendEnv = { ...env };
+delete frontendEnv.PORT;
+
 console.log('🚀 Starting Backend and Frontend...');
 
 // Start Backend
@@ -40,7 +50,7 @@ backend.stderr.on('data', (data) => {
 // Start Frontend
 const frontend = spawn('npm', ['run', 'dev'], {
   cwd: path.resolve(rootDir, 'frontend'),
-  env,
+  env: frontendEnv,
   shell: true,
   stdio: 'pipe'
 });

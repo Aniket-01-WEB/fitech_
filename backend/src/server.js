@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import './loadEnv.js'; // must run before anything below that reads process.env at module scope
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
