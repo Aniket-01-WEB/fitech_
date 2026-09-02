@@ -2572,94 +2572,6 @@ canvas{display:block}
   cursor: pointer;
 }
 
-.page-loader {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  background: #ffffff;
-  color: #0a0a0a;
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.6s ease;
-  will-change: transform, opacity;
-}
-
-.page-loader.loaded {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.loader-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 380px;
-  width: 90%;
-  text-align: center;
-}
-
-.loader-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 32px;
-  animation: loaderPulse 2s ease-in-out infinite alternate;
-}
-
-.loader-logo {
-  height: 52px;
-  width: auto;
-}
-
-.loader-title {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 5px;
-  color: #0a0a0a;
-  text-transform: uppercase;
-}
-
-.loader-progress-wrap {
-  width: 100%;
-  height: 2px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.loader-progress-bar {
-  height: 100%;
-  width: 0%;
-  background: #000000;
-  transition: width 0.1s linear;
-}
-
-.loader-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  color: rgba(0, 0, 0, 0.55);
-  text-transform: uppercase;
-}
-
-@keyframes loaderPulse {
-  0% { transform: scale(0.98); opacity: 0.85; }
-  100% { transform: scale(1.02); opacity: 1; }
-}
-
 /* PORTAL EXTENSIONS */
 .portal-shell {
   min-height: 100vh;
@@ -4232,9 +4144,9 @@ canvas{display:block}
 }
 
 /* Applied by the boot script in layout.js BEFORE first paint, so the very
-   first thing painted is the dark ground - never the MATRIX PageLoader, and
-   never a white flash. visibility is inherited and overridable, so the body
-   stays hidden while the intro alone is allowed to show. */
+   first thing painted is the dark ground, never a white flash. visibility is
+   inherited and overridable, so the body stays hidden while the intro alone
+   is allowed to show. */
 html.money-intro-active,
 html.money-intro-active body {
   background: var(--intro-ground) !important;
@@ -4252,7 +4164,7 @@ html.money-intro-active body .money-intro {
   position: fixed;
   inset: 0;
   height: 100dvh; /* mobile browsers: 100vh ignores the collapsing URL bar */
-  z-index: 1000000; /* above .page-loader (999999) */
+  z-index: 1000000; /* above every other layer on the page */
   background: var(--intro-ground);
   display: flex;
   align-items: center;
@@ -4341,13 +4253,4 @@ html.money-intro-active body .money-intro {
 body.money-intro-lock {
   overflow: hidden !important;
   touch-action: none;
-}
-
-/* Belt and braces alongside the visibility rule above: MoneyIntro sets
-   .money-intro-ran on <html> as soon as its chunk evaluates, so the existing
-   MATRIX PageLoader stays out of the way for the one load the intro owns.
-   PageLoader.js itself is untouched - it still runs and unmounts normally,
-   just invisibly, and is unaffected on every other page and every later visit. */
-html.money-intro-ran .page-loader {
-  display: none !important;
 }

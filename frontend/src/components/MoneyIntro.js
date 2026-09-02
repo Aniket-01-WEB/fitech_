@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useRef, useState, useSyncExternalStore }
 // ?v is bumped whenever the payload's shape changes, so a browser holding an
 // older copy can never satisfy this request from cache.
 const DATA_SRC = '/intro/ascii-frames.json?v=2';
-const SEEN_KEY = 'matrix_intro_seen';
 
 const BASE_FONT_PX = 10;     // measured at this size, then scaled to fit the viewport
 const FIT_W = 0.94;
@@ -64,24 +63,16 @@ const WATCHDOG_MS = 6000;
 
 /* Set by the boot script in layout.js before first paint, and dropped the moment
    the push begins. While present it blacks the page out and hides the body, so
-   nothing (the MATRIX PageLoader included) can flash behind the intro. */
+   nothing can flash behind the intro. */
 const ACTIVE_CLASS = 'money-intro-active';
 
-/* Resolved once per page load: the intro is a landing moment, not a page transition. */
-let introWillPlay = null;
-
+/* This is the site's loading screen, so it plays on every page load and on
+   every route - no pathname test, no once-per-session key. It stays one play
+   per document: the component sits in the root layout, so a client-side
+   navigation never remounts it and the finished state keeps it down once the
+   push has landed. */
 export function shouldPlayIntro() {
-  if (typeof window === 'undefined') return false;
-  if (introWillPlay === null) {
-    let seen = false;
-    try {
-      seen = window.sessionStorage.getItem(SEEN_KEY) === '1';
-    } catch {
-      seen = false; // storage blocked (private mode), just play it
-    }
-    introWillPlay = window.location.pathname === '/' && !seen;
-  }
-  return introWillPlay;
+  return typeof window !== 'undefined';
 }
 
 const fitHeightShare = () =>
@@ -201,7 +192,6 @@ export default function MoneyIntro() {
   const aspectRef = useRef(16 / 9);
   const fpsRef = useRef(30);
   const rafRef = useRef(0);
-  const playedRef = useRef(false);
   const timersRef = useRef([]);
   const closedRef = useRef(false);
 
@@ -220,15 +210,6 @@ export default function MoneyIntro() {
     clearTimers();
     window.cancelAnimationFrame(rafRef.current);
     releasePage(); // never leave the page blacked out, whatever went wrong
-    if (playedRef.current) {
-      // Only suppress future plays if it actually ran. Marking it seen after a
-      // failed load would silently kill the intro for the rest of the session.
-      try {
-        window.sessionStorage.setItem(SEEN_KEY, '1');
-      } catch {
-        /* storage blocked, the intro simply plays again next load */
-      }
-    }
     window.setTimeout(() => {
       document.body.classList.remove('money-intro-lock');
       setFinished(true);
@@ -393,7 +374,6 @@ export default function MoneyIntro() {
       }
       rafRef.current = window.requestAnimationFrame(tick);
     };
-    playedRef.current = true;
     rafRef.current = window.requestAnimationFrame(tick);
 
     addTimer(() => {
