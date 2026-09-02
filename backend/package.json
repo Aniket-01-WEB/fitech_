@@ -6,6 +6,7 @@
   "description": "Standalone Node/Express API for the MATRIX FinTech Club app — talks to Supabase Postgres, RLS-respecting (no service-role key).",
   "scripts": {
     "dev": "node --watch src/server.js",
+    "build": "node --check src/server.js",
     "start": "node src/server.js",
     "keepalive": "node scripts/keepalive.js"
   },
