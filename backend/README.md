@@ -12,7 +12,7 @@ npm run dev            # http://localhost:4000, auto-restarts on file changes
 
 `GET /health` is a quick liveness check.
 
-**Live**: https://fitech-02.onrender.com (Render). Frontend is live at https://fintechclub-phi.vercel.app — both verified working together end-to-end (a real login round-trip against the deployed instances, not just a config check): Supabase connectivity, R2 presigned uploads, CORS, and security headers all confirmed live. Render's free tier sleeps after 15 minutes idle — see "Keeping Render awake" below for how that's handled.
+**Live**: https://fitech-02.onrender.com (Render). Frontend is live at https://fitech-eta.vercel.app — both verified working together end-to-end (a real login round-trip against the deployed instances, not just a config check): Supabase connectivity, R2 presigned uploads, CORS, and security headers all confirmed live. Render's free tier sleeps after 15 minutes idle — see "Keeping Render awake" below for how that's handled.
 
 ## Structure
 
@@ -50,7 +50,7 @@ This deliberately does **not** run as a timer inside the long-running Express pr
 
 A different problem from the one above, on a completely different timescale: Render's free tier spins the backend process itself down after 15 minutes with no traffic, and the first request after that fails to connect outright (not just slow) while the container wakes back up — a real user hitting the live site during that window sees a clean "can't reach the server" error rather than the app crashing (see `frontend/src/lib/api.js`), but it's still a bad first impression.
 
-[`.github/workflows/render-keepalive.yml`](../.github/workflows/render-keepalive.yml) pings `/health` every 10 minutes — comfortably under the 15-minute threshold — so the instance never actually goes idle. No secrets needed (it's just a public health check); nothing to configure. Trigger it manually from the Actions tab to test it, or just watch it run on schedule.
+[`.github/workflows/render-keepalive.yml`](../.github/workflows/render-keepalive.yml) pings `/health` every 5 minutes — comfortably under the 15-minute threshold — so the instance never actually goes idle. No secrets needed (it's just a public health check); nothing to configure. Trigger it manually from the Actions tab to test it, or just watch it run on schedule.
 
 ## API routes
 
