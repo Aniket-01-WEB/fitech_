@@ -3,14 +3,16 @@ name: Render backend keepalive
 # Render's free tier spins the backend down after 15 minutes with no
 # traffic; the first request after that fails to connect outright while
 # it wakes back up. This pings the live backend's health endpoint every
-# 10 minutes -- comfortably under that 15-minute threshold -- so it never
-# actually goes to sleep. Unrelated to supabase-keepalive.yml, which
-# pings Supabase itself on a completely different (5-day) cadence to
-# stop the database project from auto-pausing -- that's a separate
-# problem with a separate timescale.
+# 5 minutes -- GitHub Actions' shortest supported schedule, and a full
+# 10-minute margin under Render's 15-minute threshold, so an occasional
+# late-firing scheduled run (GitHub doesn't guarantee exact timing) still
+# lands well before the backend would actually go idle. Unrelated to
+# supabase-keepalive.yml, which pings Supabase itself on a completely
+# different (5-day) cadence to stop the database project from
+# auto-pausing -- that's a separate problem with a separate timescale.
 on:
   schedule:
-    - cron: '*/10 * * * *' # every 10 minutes
+    - cron: '*/5 * * * *' # every 5 minutes
   workflow_dispatch: {} # lets you trigger it manually from the Actions tab too
 
 jobs:
