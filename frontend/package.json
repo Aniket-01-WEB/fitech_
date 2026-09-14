@@ -6,19 +6,25 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
     "next": "^16.3.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/node": "^26.5.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "eslint": "^9",
     "eslint-config-next": "^16.3.4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^6.0.3"
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-win32-x64-msvc": "^4.3.3",

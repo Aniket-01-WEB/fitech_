@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -8,13 +8,23 @@ const __dirname = path.dirname(__filename);
 // Load the repo-root .env by resolved path (not Next's own default of
 // frontend/.env.local) so this reads the same single shared file the
 // backend does. Must happen before anything below reads process.env.
-// Harmless no-op when started via the root `npm run dev` (scripts/dev.js
-// already loaded the same file and passed it down — dotenv never
-// overwrites a variable already present in process.env); this is what
-// actually finds it when running `cd frontend && npm run dev` directly.
-// Falls back to frontend/.env.local for an old-style per-app file.
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+const envPath = path.resolve(__dirname, '../.env');
+const envLocalPath = path.resolve(__dirname, '.env.local');
+
+if (typeof process.loadEnvFile === 'function') {
+  if (fs.existsSync(envPath)) {
+    try { process.loadEnvFile(envPath); } catch {}
+  }
+  if (fs.existsSync(envLocalPath)) {
+    try { process.loadEnvFile(envLocalPath); } catch {}
+  }
+} else {
+  try {
+    const dotenv = (await import('dotenv')).default;
+    dotenv.config({ path: envPath });
+    dotenv.config({ path: envLocalPath });
+  } catch {}
+}
 
 const isDev = process.env.NODE_ENV !== 'production';
 

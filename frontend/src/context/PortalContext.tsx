@@ -194,9 +194,9 @@ const DEFAULT_RECORDINGS = [
   }
 ];
 
-const PortalContext = createContext();
+const PortalContext = createContext<any>(null);
 
-export function PortalProvider({ children }) {
+export function PortalProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState(null); // mapped profile, or null
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -372,7 +372,7 @@ export function PortalProvider({ children }) {
     return mapped;
   };
 
-  const signUp = async (email, password, profileFields = {}) => {
+  const signUp = async (email: string, password: string, profileFields: any = {}) => {
     // Passed as signup metadata (not a follow-up PATCH) so the
     // on_auth_user_created trigger can save the full profile row
     // immediately — this must not depend on getting a session back,
@@ -488,7 +488,7 @@ export function PortalProvider({ children }) {
   const getPendingEvents = useCallback(() => events.filter(e => e.status === 'pending'), [events]);
 
   // ---- registrations ----
-  const isEventJoined = useCallback((eventId, email) => {
+  const isEventJoined = useCallback((eventId: any, email?: any) => {
     const targetEmail = (email || currentUser?.email || '').toLowerCase();
     if (!targetEmail) return false;
     return registrations.some(r => String(r.eventId) === String(eventId) && r.userEmail.toLowerCase() === targetEmail);

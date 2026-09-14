@@ -199,7 +199,7 @@ export default function AdminPortalPage() {
 
   const registeredStudentsForSelectedEvent = inspectEventId ? getRegisteredStudentsForEvent(inspectEventId) : [];
   const inspectEventObj = events.find(e => e.id === inspectEventId);
-  const memberList = Object.values(members);
+  const memberList = (Object.values(members || {}) as any[]);
   const notesList = notes || [];
 
   return (

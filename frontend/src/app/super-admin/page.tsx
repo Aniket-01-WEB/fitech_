@@ -52,7 +52,7 @@ export default function SuperAdminPortalPage() {
   const pendingAdminRequests = getPendingAdminRequests();
   const pendingNotes = getPendingNotes();
   const pendingRecordings = getPendingRecordings();
-  const memberList = Object.values(members).sort((a, b) => a.name.localeCompare(b.name));
+  const memberList = (Object.values(members || {}) as any[]).sort((a: any, b: any) => (a.name || '').localeCompare(b.name || ''));
   const memberCount = memberList.length;
 
   return (
