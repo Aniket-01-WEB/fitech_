@@ -26,6 +26,11 @@ export function sendError(res, error, fallbackStatus = 400) {
     return res.status(404).json({ error: 'Not found.' });
   }
 
+  if (error?.message?.includes('fetch failed') || error?.details?.includes('ENOTFOUND')) {
+    console.error('[db error] Supabase is unreachable (ENOTFOUND). If this project is on the Supabase free tier, it is likely paused. Please restore it in your Supabase dashboard.');
+    return res.status(503).json({ error: 'Database service unavailable. The Supabase project may be paused due to inactivity.' });
+  }
+
   console.error('[db error]', error);
   return res.status(fallbackStatus).json({ error: 'Request could not be completed.' });
 }

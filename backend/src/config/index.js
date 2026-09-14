@@ -7,9 +7,18 @@ const PORT = process.env.PORT || 4000;
 // "https://fitech.club,http://localhost:3000". Never a wildcard — this API
 // is credentialed (Authorization header), so the allowed origin list must
 // be explicit.
-const ALLOWED_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
+const defaultOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const configuredOrigins = (process.env.FRONTEND_ORIGIN || '')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
+
+const ALLOWED_ORIGINS = Array.from(
+  new Set([
+    ...(process.env.NODE_ENV === 'production' ? [] : defaultOrigins),
+    ...configuredOrigins,
+    ...(configuredOrigins.length === 0 ? defaultOrigins : []),
+  ])
+);
 
 export { PORT, ALLOWED_ORIGINS };

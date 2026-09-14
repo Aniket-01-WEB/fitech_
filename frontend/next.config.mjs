@@ -30,6 +30,8 @@ const connectSrc = [
   supabaseUrl,
   supabaseWsUrl,
   apiUrl,
+  'http://localhost:4000',
+  'http://127.0.0.1:4000',
   'https://*.r2.cloudflarestorage.com', // R2 presigned PUT/GET, called straight from the browser
   'https://script.google.com', // JoinModal's fire-and-forget backup-log webhook
 ].filter(Boolean).join(' ');
