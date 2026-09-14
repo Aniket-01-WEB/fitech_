@@ -3,46 +3,58 @@
 import React from 'react';
 import HeroSection from '@/components/home/HeroSection';
 import AboutSection from '@/components/home/AboutSection';
+import ShowcaseSection from '@/components/home/ShowcaseSection';
+import CommunitiesSection from '@/components/home/CommunitiesSection';
 import DomainsSection from '@/components/home/DomainsSection';
 import ActivitiesSection from '@/components/home/ActivitiesSection';
-import ShowcaseSection from '@/components/home/ShowcaseSection';
+import TrustedBySection from '@/components/home/TrustedBySection';
+import QuoteSection from '@/components/home/QuoteSection';
 import TeamSection from '@/components/home/TeamSection';
-import CommunitiesSection from '@/components/home/CommunitiesSection';
 import GallerySection from '@/components/home/GallerySection';
+import FaqSection from '@/components/home/FaqSection';
 import CtaSection from '@/components/home/CtaSection';
 import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
   return (
-    <div className="relative w-full bg-[#FFFFFF] text-[#111111] selection:bg-[#111111] selection:text-[#FFFFFF]">
-      {/* 01: Hero Section */}
+    <div className="relative w-full max-w-full overflow-x-hidden bg-[#FFFBF5] text-[#1E1E1E] selection:bg-[#1E1E1E] selection:text-[#FFFBF5]">
+      {/* 01: Hero Section (From code to capital. Expanding aperture.) */}
       <HeroSection />
 
-      {/* 02: Mandate & Foundational Thesis (About) */}
+      {/* 02: Mandate & Composition (A guild is a composition + 4 floating plates) */}
       <AboutSection />
 
-      {/* 03: Six Operational Dimensions (Domains Index Table) */}
-      <DomainsSection />
-
-      {/* 04: Research Bulletin & Schedule of Activities */}
-      <ActivitiesSection />
-
-      {/* 05: Applied Research & Lab Repositories (Lab Builds) */}
+      {/* 03: Flagship Systems (Apartment-style interactive codebases) */}
       <ShowcaseSection />
 
-      {/* 06: Personnel Index & Leadership Roster */}
-      <TeamSection />
-
-      {/* 07: Institutional Advantage & Guild Matrix */}
+      {/* 04: Controlled Delivery (4 large stat cards + 4 pillars) */}
       <CommunitiesSection />
 
-      {/* 08: Field Notes & Photographic Contact Sheet */}
+      {/* 05: Architectural Thinking (6 Operational disciplines) */}
+      <DomainsSection />
+
+      {/* 06: Symposia Bulletin & Calendar */}
+      <ActivitiesSection />
+
+      {/* 07: Consortium Marquee (Built together with) */}
+      <TrustedBySection />
+
+      {/* 08: Keynote Editorial Quote */}
+      <QuoteSection />
+
+      {/* 09: People Index & Leadership Directory */}
+      <TeamSection />
+
+      {/* 10: Moments from the Lab (Photographic archive) */}
       <GallerySection />
 
-      {/* 09: Typographic Accession Statement & Join CTA */}
+      {/* 11: Frequently Asked Questions (Stanzza accordion) */}
+      <FaqSection />
+
+      {/* 12: Accession & Conversation CTA (Start with a conversation) */}
       <CtaSection />
 
-      {/* 10: Editorial Colophon & Directory Footer */}
+      {/* 13: Editorial Colophon & Footer */}
       <Footer />
     </div>
   );

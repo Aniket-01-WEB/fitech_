@@ -2,114 +2,132 @@
 
 import React from 'react';
 
+const COMPOSITION_CARDS = [
+  {
+    num: '01',
+    title: 'High-Frequency Systems Lab',
+    tag: 'Low-Latency C++',
+    image: '/images/event-summit.jpg',
+    caption: 'Lock-free single-producer single-consumer ring buffers benchmarked under tick bursts.',
+    offset: 'md:translate-y-0',
+  },
+  {
+    num: '02',
+    title: 'Quantitative Research Keynote',
+    tag: 'Symposia & Keynotes',
+    image: '/images/team/aniket.jpeg',
+    caption: 'Student fellows presenting stochastic volatility and arbitrage pipelines to university faculty.',
+    offset: 'md:translate-y-8',
+  },
+  {
+    num: '03',
+    title: 'Financial Machine Learning',
+    tag: 'Time-Series AI',
+    image: '/images/team/pritesh.jpeg',
+    caption: 'Temporal fusion transformers and deep feature extraction from raw order book dynamics.',
+    offset: 'md:-translate-y-4',
+  },
+  {
+    num: '04',
+    title: 'Decentralized Protocol Deployments',
+    tag: 'Zero-Knowledge',
+    image: '/images/team/souvik.jpeg',
+    caption: 'Groth16 snark circuits and automated market maker invariant verification on testnet.',
+    offset: 'md:translate-y-6',
+  },
+];
+
 export default function AboutSection() {
   return (
-    <section id="about" className="relative w-full bg-[#FAFAF8] py-24 md:py-36 lg:py-44 border-b border-[#DCDCD8]">
+    <section 
+      id="composition" 
+      className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]"
+    >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
-        {/* Section Index Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DCDCD8] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
-          <span>[ SECTION 01 // MANDATE & FOUNDATIONAL THESIS ]</span>
-          <span>RESEARCH DIRECTIVE // 2026</span>
+        {/* Section Marker */}
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+          <span>01 / COMPOSITION & PHILOSOPHY</span>
+          <span>CAMPUS GUILD CHARTER // 2026</span>
         </div>
 
-        {/* Major Editorial Layout: Hierarchy (Header -> Big Statement -> Supporting Text) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-20 sm:mb-28">
+        {/* Major Editorial Layout: Stanzza Composition Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-24">
           
-          {/* Left Column: Section Title & Micro Metadata */}
+          {/* Left Column: Micro Title */}
           <div className="lg:col-span-4">
-            <span className="font-mono text-xs font-bold text-[#111111] uppercase tracking-wider block mb-2">
-              01 / MANDATE
+            <span className="px-3.5 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
+              01 // MANDATE
             </span>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-[#111111] tracking-tight uppercase leading-none">
-              ABOUT US
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+              Composed
+              <br />
+              <span className="italic">Execution.</span>
             </h2>
-            <div className="mt-6 pt-6 border-t border-[#ECECE8] font-mono text-xs text-[#555555] space-y-1.5">
+            <div className="mt-8 pt-6 border-t border-[#D8D6CB] font-mono text-xs text-[#5F5F5F] space-y-2">
               <div>INSTITUTION: ADAMAS UNIVERSITY</div>
-              <div>AFFILIATION: SCHOOL OF ENGINEERING & TECHNOLOGY</div>
-              <div>DOMAIN: QUANTITATIVE SYSTEMS & FINTECH</div>
+              <div>DEPARTMENT: SCHOOL OF ENGINEERING (SOET)</div>
+              <div>RESEARCH: COMPUTATIONAL FINANCE & SYSTEMS</div>
             </div>
           </div>
 
-          {/* Right Column: Big Statement followed by Supporting Text */}
+          {/* Right Column: Prominent Display Narrative */}
           <div className="lg:col-span-8">
-            {/* BIG STATEMENT */}
-            <blockquote className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#111111] leading-[1.12] tracking-tight">
-              &ldquo;We believe the future of finance will be built by people who understand technology, data, markets and human behavior.&rdquo;
-            </blockquote>
+            <div className="space-y-3 mb-10">
+              <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#1E1E1E] leading-[1.04] tracking-tight font-normal">
+                A guild is a composition.
+              </h3>
+              <h3 className="font-serif italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#1E1E1E]/80 leading-[1.04] tracking-tight font-normal">
+                Nothing in rigorous engineering is accidental.
+              </h3>
+            </div>
 
-            {/* Supporting Explanation - Unboxed, letting canvas breathe */}
-            <div className="mt-10 sm:mt-14 pt-8 border-t border-[#DCDCD8] grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 text-[#555555] font-sans text-sm sm:text-base leading-relaxed">
+            {/* Supporting Explanation - Generous Whitespace */}
+            <div className="pt-8 border-t border-[#D8D6CB] grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 text-[#5F5F5F] font-sans-body text-base leading-relaxed font-light">
               <p>
-                FITECH is an applied engineering society where students design, benchmark, and deploy real financial technology systems. We dissect modern market microstructures, model volatile derivatives, and formulate automated strategies.
+                In high-calibre engineering, nothing is accidental. Proportion sets the structure, mathematical curiosity sets the velocity, and execution shapes the trajectory. FiTech operates as an applied engineering guild where students design, benchmark, and deploy real financial technology systems.
               </p>
               <p>
-                By connecting academic computer science and mathematics with institutional trading practices, members gain hands-on proficiency in low-latency C++, decentralized protocol invariants, and quantitative research pipelines.
+                By connecting academic computer science and mathematics with institutional quantitative practices, members gain hands-on proficiency in low-latency C++, decentralized protocol invariants, and automated trading research pipelines.
               </p>
             </div>
           </div>
 
         </div>
 
-        {/* EDITORIAL STATISTICS: Large numbers + small labels + thin dividers (Research Report Style) */}
-        <div className="pt-12 border-t border-[#DCDCD8]">
-          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#DCDCD8]">
-            
-            {/* Statistic 1: 06 SPECIALIZED DOMAINS */}
-            <div className="py-8 sm:py-0 sm:px-8 first:pl-0">
-              <div className="font-mono text-[10px] text-[#707070] uppercase tracking-wider mb-2">
-                METRIC // 01
+        {/* STANZZA ASYMMETRICAL FLOATING COMPOSITION CARDS (100% VISIBLE & ROBUST) */}
+        <div className="my-10 sm:my-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {COMPOSITION_CARDS.map((card, idx) => (
+            <div
+              key={idx}
+              className={`group relative bg-[#F4F3EB] rounded-3xl p-4 border border-[#D8D6CB] hover:border-[#1E1E1E] transition-all duration-300 ${card.offset}`}
+              style={{ boxShadow: '0 12px 32px rgba(30,30,30,0.04)' }}
+            >
+              <div className="relative w-full aspect-[4/3.8] rounded-2xl overflow-hidden bg-[#1E1E1E] mb-4">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                />
+                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#1E1E1E]/80 text-[#FFFBF5] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">
+                  {card.tag}
+                </div>
               </div>
-              <div className="font-heading text-6xl sm:text-7xl lg:text-8xl font-black text-[#111111] leading-none tracking-tight">
-                06
-              </div>
-              <div className="mt-3 font-heading font-bold text-base sm:text-lg text-[#111111] uppercase tracking-wider leading-tight">
-                SPECIALIZED
-                <br />
-                DOMAINS
-              </div>
-              <p className="mt-3 font-sans text-xs text-[#555555] leading-relaxed max-w-xs">
-                Quantitative Systems, Algorithmic Markets, Financial AI, Stochastic Risk, Fintech Incubation, and Web3 Protocols.
-              </p>
-            </div>
 
-            {/* Statistic 2: 01 STUDENT COMMUNITY */}
-            <div className="py-8 sm:py-0 sm:px-8">
-              <div className="font-mono text-[10px] text-[#707070] uppercase tracking-wider mb-2">
-                METRIC // 02
+              <div className="px-2 pb-2">
+                <div className="flex items-center justify-between text-[#707070] font-mono text-[10px] uppercase mb-1.5">
+                  <span>PLATE {card.num}</span>
+                  <span>VERIFIED</span>
+                </div>
+                <h4 className="font-serif text-xl font-normal text-[#1E1E1E] leading-snug mb-2 group-hover:underline">
+                  {card.title}
+                </h4>
+                <p className="font-sans-body text-xs text-[#5F5F5F] leading-relaxed line-clamp-2">
+                  {card.caption}
+                </p>
               </div>
-              <div className="font-heading text-6xl sm:text-7xl lg:text-8xl font-black text-[#111111] leading-none tracking-tight">
-                01
-              </div>
-              <div className="mt-3 font-heading font-bold text-base sm:text-lg text-[#111111] uppercase tracking-wider leading-tight">
-                STUDENT
-                <br />
-                COMMUNITY
-              </div>
-              <p className="mt-3 font-sans text-xs text-[#555555] leading-relaxed max-w-xs">
-                Autonomous student leadership governing research symposia, hackathons, and institutional codebase repositories.
-              </p>
             </div>
-
-            {/* Statistic 3: ∞ ROOM TO BUILD */}
-            <div className="py-8 sm:py-0 sm:px-8 last:pr-0">
-              <div className="font-mono text-[10px] text-[#707070] uppercase tracking-wider mb-2">
-                METRIC // 03
-              </div>
-              <div className="font-heading text-6xl sm:text-7xl lg:text-8xl font-black text-[#111111] leading-none tracking-tight">
-                ∞
-              </div>
-              <div className="mt-3 font-heading font-bold text-base sm:text-lg text-[#111111] uppercase tracking-wider leading-tight">
-                ROOM TO
-                <br />
-                BUILD
-              </div>
-              <p className="mt-3 font-sans text-xs text-[#555555] leading-relaxed max-w-xs">
-                Zero gatekeeping for students driven by technical curiosity, mathematical rigor, and production financial engineering.
-              </p>
-            </div>
-
-          </div>
+          ))}
         </div>
 
       </div>

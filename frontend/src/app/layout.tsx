@@ -1,10 +1,34 @@
 import './globals.css';
+import { Instrument_Serif, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import { PortalProvider } from '@/context/PortalContext';
 import Navbar from '@/components/layout/Navbar';
 import PageLoader from '@/components/layout/PageLoader';
 import JoinModal from '@/components/modals/JoinModal';
 import EventDetailModal from '@/components/modals/EventDetailModal';
 import RecordingPlayerModal from '@/components/modals/RecordingPlayerModal';
+import SmoothScroll from '@/components/layout/SmoothScroll';
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'FITECH | Quantitative Finance & Financial Engineering Society',
@@ -19,17 +43,19 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={`${instrumentSerif.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}>
+      <body className="antialiased overflow-x-hidden">
         <PortalProvider>
-          <PageLoader />
-          <Navbar />
-          <main>{children}</main>
-          <JoinModal />
-          <EventDetailModal />
-          <RecordingPlayerModal />
+          <SmoothScroll>
+            <PageLoader />
+            <Navbar />
+            <main className="w-full overflow-x-hidden">{children}</main>
+            <JoinModal />
+            <EventDetailModal />
+            <RecordingPlayerModal />
+          </SmoothScroll>
         </PortalProvider>
       </body>
     </html>

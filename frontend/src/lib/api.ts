@@ -35,12 +35,10 @@ export async function apiFetch<T = any>(path: string, { method = 'GET', body }: 
   try {
     res = await fetchWithTimeout(url, fetchOptions);
   } catch (firstErr: any) {
-    console.warn(`[api] ${method} ${url} first attempt failed (${firstErr?.message || firstErr}), retrying once`);
     await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
     try {
       res = await fetchWithTimeout(url, fetchOptions);
     } catch (secondErr: any) {
-      console.warn(`[api] ${method} ${url} network failure after retry: ${secondErr?.message || secondErr}`);
       if (secondErr?.name === 'AbortError') {
         throw new Error('The server took too long to respond. Please try again.');
       }

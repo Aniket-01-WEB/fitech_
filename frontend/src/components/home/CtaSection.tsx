@@ -1,89 +1,74 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { usePortal } from '@/context/PortalContext';
 
 export default function CtaSection() {
   const { openJoinModal } = usePortal();
 
   return (
-    <section className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DCDCD8] overflow-hidden">
-      {/* Subtle blueprint grid watermark */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.02]"
-        style={{
-          backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
-
+    <section className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB] overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10">
         
-        {/* Layered Physical Framing with 2nd Offset Border for Tactile Depth */}
-        <div className="relative">
-          
-          {/* Layer 0: Second Offset Paper Border */}
-          <div 
-            className="absolute -inset-2 sm:-inset-4 border border-[#DCDCD8] bg-[#FAFAF8] pointer-events-none"
-            style={{
-              boxShadow: '6px 8px 0 rgba(0,0,0,0.06)'
-            }}
-          />
+        {/* Section Marker */}
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+          <span>09 / INTAKE & ADMISSIONS</span>
+          <span>CAMPUS GUILD CHAPTER // 2026</span>
+        </div>
 
-          {/* Layer 1: Primary Precision Bounded Frame */}
-          <div className="relative bg-[#FFFFFF] border-2 border-[#111111] p-10 sm:p-16 md:p-24 lg:p-28 text-center">
-            
-            {/* Registration Corner Marks */}
-            <span className="absolute top-2.5 left-2.5 font-mono text-xs text-[#111111] select-none">┼</span>
-            <span className="absolute top-2.5 right-2.5 font-mono text-xs text-[#111111] select-none">┼</span>
-            <span className="absolute bottom-2.5 left-2.5 font-mono text-xs text-[#111111] select-none">┼</span>
-            <span className="absolute bottom-2.5 right-2.5 font-mono text-xs text-[#111111] select-none">┼</span>
+        {/* Stanzza Floating Conversation Card */}
+        <div 
+          className="relative bg-[#F4F3EB] rounded-3xl border border-[#D8D6CB] p-10 sm:p-16 md:p-20 lg:p-24 text-center max-w-5xl mx-auto"
+          style={{ boxShadow: '0 24px 60px rgba(30,30,30,0.05)' }}
+        >
+          {/* Top Micro-Header */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFFBF5] border border-[#D8D6CB] font-mono text-[11px] text-[#1E1E1E] font-semibold uppercase tracking-wider mb-8 sm:mb-10">
+            <span className="w-1.5 h-1.5 bg-[#059669] rounded-full"></span>
+            <span>Annual Recruitment Cycle // Open</span>
+          </div>
 
-            {/* Top Micro-Header */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#F1F2F0] border border-[#DCDCD8] font-mono text-[11px] text-[#111111] font-semibold uppercase tracking-wider mb-8 sm:mb-12">
-              <span className="w-1.5 h-1.5 bg-[#059669] rounded-full"></span>
-              <span>ANNUAL RECRUITMENT INTAKE // 2026</span>
+          {/* Stanzza Serif Headline */}
+          <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-[#1E1E1E] leading-[0.92] tracking-tight max-w-4xl mx-auto mb-6 sm:mb-8">
+            Start with a
+            <br />
+            <span className="italic">Conversation.</span>
+          </h2>
+
+          <p className="font-sans-body text-base sm:text-xl text-[#5F5F5F] leading-relaxed max-w-2xl mx-auto font-light mb-10 sm:mb-12">
+            Whether you want to engineer low-latency matching cores, research stochastic volatility, or incubate a technical fintech startup, our laboratory doors are open.
+          </p>
+
+          {/* Stanzza Rounded Pill Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={openJoinModal}
+              className="stanzza-btn-pill stanzza-btn-dark px-10 py-5 text-xs tracking-[0.16em]"
+            >
+              <span>Join FiTech Fellowship</span>
+              <span>→</span>
+            </button>
+
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="stanzza-btn-pill stanzza-btn-light px-10 py-5 text-xs tracking-[0.16em]"
+            >
+              <span>Inspect Repositories</span>
+              <span>↗</span>
+            </a>
+          </div>
+
+          {/* Footnote Metadata */}
+          <div className="mt-14 pt-8 border-t border-[#D8D6CB] flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#707070]">
+            <div>
+              <span>TRACKS: QUANT DEVELOPER • DEFI RESEARCHER • AI / RISK FELLOW</span>
             </div>
-
-            {/* Huge Powerful Typography */}
-            <h2 className="font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#111111] uppercase tracking-[-0.03em] leading-[0.92] max-w-5xl mx-auto">
-              READY TO BUILD
-              <br />
-              <span className="underline decoration-2 underline-offset-8 decoration-[#DCDCD8]">
-                WHAT COMES NEXT?
-              </span>
-            </h2>
-
-            {/* Small Supporting Line */}
-            <p className="mt-8 sm:mt-10 max-w-2xl mx-auto font-sans text-base sm:text-lg text-[#555555] leading-relaxed">
-              Learn, build, and deploy real quantitative software at the intersection of computer systems and institutional financial markets.
-            </p>
-
-            {/* Tactile Pressed Button */}
-            <div className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={openJoinModal}
-                className="w-full sm:w-auto px-12 py-5 bg-[#111111] text-[#FFFFFF] font-mono text-sm font-bold tracking-wider uppercase border border-[#111111] shadow-[4px_4px_0px_#707070] hover:shadow-[6px_6px_0px_#111111] hover:-translate-y-0.5 active:translate-y-0.5 transition-all inline-flex items-center justify-center gap-3"
-              >
-                <span>[ JOIN FITECH → ]</span>
-              </button>
+            <div>
+              <span>ADAMAS UNIVERSITY • SOET CAMPUS</span>
             </div>
-
-            {/* Specification Footnote */}
-            <div className="mt-14 pt-8 border-t border-[#ECECE8] flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#707070]">
-              <div className="flex items-center gap-3">
-                <span>TRACKS: QUANT DEVELOPER</span>
-                <span className="text-[#DCDCD8]">│</span>
-                <span>DEFI RESEARCHER</span>
-                <span className="text-[#DCDCD8]">│</span>
-                <span>AI / RISK FELLOW</span>
-              </div>
-              <div>
-                <span>NO PRIOR INSTITUTIONAL EXPERIENCE REQUIRED</span>
-              </div>
-            </div>
-
           </div>
         </div>
 

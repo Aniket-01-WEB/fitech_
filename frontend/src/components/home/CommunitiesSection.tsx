@@ -2,154 +2,113 @@
 
 import React from 'react';
 
-const CREDENTIALS = [
+const STATS = [
+  { num: '06', label: 'Operational Domains', detail: 'Covering HFT C++, AI time-series, derivatives SVI, and decentralized protocols.' },
+  { num: '450+', label: 'Guild Builders', detail: 'Active student researchers, engineers, and faculty advisors at Adamas University.' },
+  { num: '12+', label: 'Production Builds', detail: 'Open-source and audited repositories deployed to public testnets and research archives.' },
+  { num: '₹15M+', label: 'Simulated Volume', detail: 'Order-flow backtested and live paper-traded through empirical microstructure pipelines.' },
+];
+
+const ADVANTAGES = [
   {
     num: '01',
     title: 'Institutional Quant Codebases',
     statement: 'Production-grade C++ matching engines, lock-free ring buffers, and Solidity audit frameworks.',
     detail: 'Members build, benchmark, and deploy real quantitative software using industry-grade development workflows rather than theoretical toy models.',
-    spec: 'REPOSITORIES: INTERNAL GUILD REPOS • VERIFIED C++20',
   },
   {
     num: '02',
-    title: 'Industry Research Grants & Data Feeds',
-    statement: 'Compute credits, Level 2 order book feeds, and research stipends for published technical whitepapers.',
-    detail: 'Direct access to nanosecond tick data feeds and dedicated GPU clusters for empirical market microstructure research.',
-    spec: 'DATASETS: NANOSECOND LOB TICKS • GPU CLUSTERS',
+    title: 'High-Frequency Data Feeds',
+    statement: 'Nanosecond Level 2 order book ticks, market feeds, and dedicated GPU compute credits.',
+    detail: 'Direct access to institutional tick historical archives and compute clusters for empirical market microstructure research.',
   },
   {
     num: '03',
-    title: 'Direct Placement Pipeline',
-    statement: 'Fast-track interview referrals to leading algorithmic trading desks, quant hedge funds, and DeFi protocols.',
-    detail: 'Direct mentorship from alumni practitioners and industry engineers working across quantitative finance.',
-    spec: 'NETWORK: QUANT DESKS & PROTOCOL TEAMS',
+    title: 'Industry Referral Pipeline',
+    statement: 'Direct technical mentorship and referral pipeline to leading algorithmic trading desks and venture labs.',
+    detail: 'Alumni practitioners and guest quants review student codebases and provide direct pathways into elite tech roles.',
   },
   {
     num: '04',
-    title: 'National Hackathon Incubator',
-    statement: 'High-caliber student engineering teams mentored by senior fintech founders and algorithmic strategists.',
-    detail: 'End-to-end guidance from initial mathematical formulation to high-throughput production deployment.',
-    spec: 'RECORD: MULTI-CHAMPIONSHIP SLATE',
+    title: 'National Hackathon Incubation',
+    statement: 'End-to-end technical incubation from initial mathematical formulation to live deployment.',
+    detail: 'Multi-championship track record across national Web3 and fintech hackathons with institutional support.',
   },
 ];
 
 export default function CommunitiesSection() {
   return (
-    <section id="communities" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DCDCD8]">
+    <section id="communities" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
-        {/* Section Index Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DCDCD8] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
-          <span>[ SECTION 06 // INSTITUTIONAL ADVANTAGE & ECOSYSTEM ]</span>
-          <span>CAMPUS GUILD CHARTER // 2026</span>
+        {/* Section Marker */}
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+          <span>03 / CONTROLLED ENGINEERING</span>
+          <span>EMPIRICAL PERFORMANCE RECORD // 2026</span>
         </div>
 
-        {/* Institutional Layout: Large Statements with Subtle Supporting Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20 sm:mb-28">
-          
-          {/* Left Column: Huge Institutional Statement */}
-          <div className="lg:col-span-4 lg:sticky lg:top-32">
-            <span className="font-mono text-xs font-bold text-[#111111] uppercase tracking-wider block mb-2">
-              06 / ADVANTAGE
+        {/* Section Heading (Stanzza Style) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-24 items-end">
+          <div className="lg:col-span-6">
+            <span className="px-3.5 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
+              03 // ADVANTAGE
             </span>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-[#111111] uppercase tracking-tight leading-[0.92]">
-              MORE THAN
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+              Controlled
               <br />
-              A COMMUNITY
+              <span className="italic">Delivery.</span>
             </h2>
-            <p className="mt-6 text-sm sm:text-base text-[#555555] font-sans leading-relaxed">
-              We operate as an applied research guild. Everything we do is structured around empirical rigor, production execution, and direct career mobility.
+          </div>
+          <div className="lg:col-span-6">
+            <p className="text-base sm:text-lg text-[#5F5F5F] font-sans-body leading-relaxed font-light">
+              We operate as an applied research guild. Everything we do is structured around empirical rigor, production execution, and direct technical career mobility into quantitative finance and high-throughput engineering.
             </p>
-
-            <div className="mt-8 pt-6 border-t border-[#ECECE8] font-mono text-xs text-[#707070] space-y-1">
-              <div>FOUNDATION: APPLIED RESEARCH</div>
-              <div>LOCATION: ADAMAS UNIVERSITY</div>
-              <div>VERIFICATION: SOET CHARTERED</div>
-            </div>
           </div>
-
-          {/* Right Column: 4 Research Credentials (Not SaaS feature cards) */}
-          <div className="lg:col-span-8 border-t border-[#DCDCD8]">
-            {CREDENTIALS.map((item) => (
-              <div
-                key={item.num}
-                className="py-10 sm:py-12 border-b border-[#DCDCD8] first:pt-0"
-              >
-                <div className="font-mono text-[10px] text-[#707070] uppercase tracking-wider mb-2">
-                  CREDENTIAL // {item.num}
-                </div>
-
-                <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] uppercase tracking-tight leading-tight">
-                  {item.title}
-                </h3>
-
-                <p className="mt-4 font-heading font-semibold text-base sm:text-lg text-[#111111] leading-snug">
-                  {item.statement}
-                </p>
-
-                <p className="mt-3 font-sans text-sm text-[#555555] leading-relaxed max-w-2xl">
-                  {item.detail}
-                </p>
-
-                <div className="mt-5 pt-3 border-t border-[#ECECE8] font-mono text-[11px] text-[#707070]">
-                  {item.spec}
-                </div>
-              </div>
-            ))}
-          </div>
-
         </div>
 
-        {/* Official Adamas University Chapter Charter Seal Plate */}
-        <div 
-          className="border border-[#DCDCD8] bg-[#FAFAF8] p-8 sm:p-12 relative"
-          style={{ boxShadow: '4px 6px 0 rgba(0,0,0,0.04)' }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            {/* Left: Technical Emblem Stamp */}
-            <div className="lg:col-span-4 flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 border-2 border-[#111111] flex flex-col items-center justify-center p-1 text-center font-mono relative bg-[#FFFFFF]">
-                <div className="border border-[#111111] w-full h-full flex flex-col items-center justify-center p-1">
-                  <span className="text-[8px] tracking-widest text-[#707070]">ADAMAS</span>
-                  <span className="font-black text-xs text-[#111111]">SOET</span>
-                  <span className="text-[7px] text-[#707070]">CHAPTER</span>
-                </div>
-                {/* 4 Corner tick marks */}
-                <span className="absolute -top-1 -left-1 text-[8px] text-[#111111]">┌</span>
-                <span className="absolute -top-1 -right-1 text-[8px] text-[#111111]">┐</span>
-                <span className="absolute -bottom-1 -left-1 text-[8px] text-[#111111]">└</span>
-                <span className="absolute -bottom-1 -right-1 text-[8px] text-[#111111]">┘</span>
-              </div>
-
-              <div>
-                <div className="font-heading font-black text-base text-[#111111] tracking-tight uppercase">
-                  ACADEMIC CHARTER
-                </div>
-                <div className="font-mono text-xs text-[#555555] mt-0.5">
-                  School of Engineering & Technology
-                </div>
-                <div className="font-mono text-[10px] text-[#707070] mt-0.5">
-                  Adamas University • Kolkata, West Bengal
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Charter Metadata */}
-            <div className="lg:col-span-8 lg:border-l lg:border-[#DCDCD8] lg:pl-10 font-mono text-xs text-[#555555] space-y-2">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[#111111] font-bold">
-                <span>CHAPTER SPECIFICATION: FT-SOET-2026</span>
-                <span className="text-[#059669] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
-                  OFFICIALLY RECOGNIZED CHAPTER
-                </span>
-              </div>
-              <p className="text-[11px] leading-relaxed text-[#707070]">
-                FITECH operates under institutional academic sanction to foster quantitative finance, low-latency software engineering, and decentralized systems innovation.
+        {/* 4 Large Editorial Stat Cards (100% VISIBLE) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 sm:mb-28">
+          {STATS.map((stat, idx) => (
+            <div
+              key={idx}
+              className="bg-[#F4F3EB] rounded-3xl p-8 border border-[#D8D6CB] hover:border-[#1E1E1E] transition-all duration-300 group"
+              style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
+            >
+              <span className="font-serif text-6xl sm:text-7xl font-normal text-[#1E1E1E] block mb-4 group-hover:translate-x-1 transition-transform">
+                {stat.num}
+              </span>
+              <h4 className="font-sans-body font-semibold text-sm text-[#1E1E1E] mb-2 uppercase tracking-wide">
+                {stat.label}
+              </h4>
+              <p className="font-sans-body text-xs text-[#5F5F5F] leading-relaxed font-light">
+                {stat.detail}
               </p>
             </div>
+          ))}
+        </div>
 
-          </div>
+        {/* 4 Pillars Grid (100% VISIBLE) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {ADVANTAGES.map((adv, idx) => (
+            <div
+              key={idx}
+              className="bg-[#FFFBF5] rounded-3xl p-8 sm:p-10 border border-[#D8D6CB] hover:bg-[#F4F3EB] transition-all duration-300"
+            >
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#D8D6CB] font-mono text-xs text-[#707070]">
+                <span className="font-bold text-[#1E1E1E]">{adv.num} {"//"} PILLAR</span>
+                <span>VERIFIED</span>
+              </div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#1E1E1E] mb-3">
+                {adv.title}
+              </h3>
+              <p className="font-sans-body text-sm text-[#1E1E1E] font-medium leading-relaxed mb-3">
+                {adv.statement}
+              </p>
+              <p className="font-sans-body text-xs sm:text-sm text-[#5F5F5F] leading-relaxed font-light">
+                {adv.detail}
+              </p>
+            </div>
+          ))}
         </div>
 
       </div>

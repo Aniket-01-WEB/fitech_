@@ -2,342 +2,203 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const TEAM_MEMBERS = [
+interface TeamMember {
+  num: string;
+  name: string;
+  role: string;
+  dept: string;
+  domain: string;
+  image: string | null;
+  linkedin?: string;
+  featured?: boolean;
+}
+
+const FEATURED_LEADERS: TeamMember[] = [
   {
     num: '01',
-    name: 'ARIJIT DEY',
-    role: 'PRESIDENT',
-    dept: 'EXECUTIVE',
-    domain: 'EXECUTIVE GOVERNANCE & STRATEGY',
-    image: null,
+    name: 'Pritesh Shrivastav',
+    role: 'V. President',
+    dept: 'Executive',
+    domain: 'Quantitative Development',
+    image: '/images/team/pritesh.jpeg',
     linkedin: 'https://linkedin.com',
-    featured: true,
   },
   {
     num: '02',
-    name: 'DIGANT MISHRA',
-    role: 'PRESIDENT',
-    dept: 'EXECUTIVE',
-    domain: 'RESEARCH FELLOWSHIPS & SYMPOSIA',
-    image: null,
+    name: 'Souvik Bandopadhyay',
+    role: 'Secretary',
+    dept: 'Executive',
+    domain: 'Institutional Administration',
+    image: '/images/team/souvik.jpeg',
     linkedin: 'https://linkedin.com',
-    featured: true,
   },
   {
     num: '03',
-    name: 'PRITESH SHRIVASTAV',
-    role: 'V. PRESIDENT',
-    dept: 'EXECUTIVE',
-    domain: 'QUANTITATIVE DEVELOPMENT',
-    image: '/images/team/pritesh.jpeg',
+    name: 'Aniket Dutta',
+    role: 'Tech Lead',
+    dept: 'Engineering',
+    domain: 'Systems & Infrastructure',
+    image: '/images/team/aniket.jpeg',
     linkedin: 'https://linkedin.com',
-    featured: false,
   },
   {
     num: '04',
-    name: 'SHIVAM JAISWAL',
-    role: 'V. PRESIDENT',
-    dept: 'EXECUTIVE',
-    domain: 'OPERATIONS & OUTREACH',
-    image: null,
+    name: 'Gourav Ghosh',
+    role: 'Design Lead',
+    dept: 'Creative',
+    domain: 'Visual Architecture & Design',
+    image: '/images/team/gourav.jpeg',
     linkedin: 'https://linkedin.com',
-    featured: false,
   },
   {
     num: '05',
-    name: 'SOUVIK BANDOPADHYA',
-    role: 'SECRETARY',
-    dept: 'EXECUTIVE',
-    domain: 'INSTITUTIONAL ADMINISTRATION',
-    image: '/images/team/souvik.jpeg',
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '06',
-    name: 'AVIRUP CHATTERJEE',
-    role: 'JT. SECRETARY',
-    dept: 'EXECUTIVE',
-    domain: 'ACADEMIC LIAISON',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '07',
-    name: 'ANIKET DUTTA',
-    role: 'TECH LEAD',
-    dept: 'TECH',
-    domain: 'SYSTEMS & INFRASTRUCTURE',
-    image: '/images/team/aniket.jpeg',
-    linkedin: 'https://linkedin.com',
-    featured: true,
-  },
-  {
-    num: '08',
-    name: 'SHORYA SINGH',
-    role: 'ASST. TECH',
-    dept: 'TECH',
-    domain: 'HFT & LOW-LATENCY C++',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '09',
-    name: 'AYUSH JAISWAL',
-    role: 'ASST. TECH',
-    dept: 'TECH',
-    domain: 'FINANCIAL AI & QUANT',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '10',
-    name: 'ARNAB MANDAL',
-    role: 'MEDIA LEAD',
-    dept: 'DESIGN_MEDIA',
-    domain: 'RESEARCH PUBLICATIONS & BROADCAST',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '11',
-    name: 'AZAD HUSSAIN',
-    role: 'ASST. MEDIA',
-    dept: 'DESIGN_MEDIA',
-    domain: 'DIGITAL MEDIA & COVERAGE',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '12',
-    name: 'GOURAV GHOSH',
-    role: 'DESIGN LEAD',
-    dept: 'DESIGN_MEDIA',
-    domain: 'VISUAL ARCHITECTURE & DESIGN',
-    image: '/images/team/gourav.jpeg',
-    linkedin: 'https://linkedin.com',
-    featured: true,
-  },
-  {
-    num: '13',
-    name: 'PRITAM BARAI',
-    role: 'ASST. DESIGN',
-    dept: 'DESIGN_MEDIA',
-    domain: 'EDITORIAL & TECHNICAL GRAPHICS',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '14',
-    name: 'SAYAN SHEIKH',
-    role: 'SOCIAL LEAD',
-    dept: 'OPERATIONS',
-    domain: 'COMMUNITY NETWORK & RELATIONS',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '15',
-    name: 'PRIYAM CHHETRI',
-    role: 'ASST. SOCIAL',
-    dept: 'OPERATIONS',
-    domain: 'EXTERNAL RELATIONS & SPONSORSHIPS',
-    image: null,
-    linkedin: 'https://linkedin.com',
-    featured: false,
-  },
-  {
-    num: '16',
-    name: 'DEBJIT MODAK',
-    role: 'DOCUMENTATION',
-    dept: 'OPERATIONS',
-    domain: 'ARCHIVAL RECORDS & MINUTES',
+    name: 'Debjit Modak',
+    role: 'Documentation Lead',
+    dept: 'Archive',
+    domain: 'Research Archives & Minutes',
     image: '/images/team/debjit.jpeg',
     linkedin: 'https://linkedin.com',
-    featured: false,
   },
 ];
 
-const FILTER_TAGS = [
-  { id: 'ALL', label: 'ALL PERSONNEL [16]' },
-  { id: 'EXECUTIVE', label: 'EXECUTIVE [06]' },
-  { id: 'TECH', label: 'TECH & LABS [03]' },
-  { id: 'DESIGN_MEDIA', label: 'DESIGN & MEDIA [04]' },
-  { id: 'OPERATIONS', label: 'OPERATIONS [03]' },
+const FULL_ROSTER: TeamMember[] = [
+  { num: '01', name: 'Arijit Dey', role: 'President', dept: 'Executive', domain: 'Executive Governance & Strategy', image: null },
+  { num: '02', name: 'Digant Mishra', role: 'President', dept: 'Executive', domain: 'Research Fellowships & Symposia', image: null },
+  { num: '03', name: 'Pritesh Shrivastav', role: 'V. President', dept: 'Executive', domain: 'Quantitative Development', image: '/images/team/pritesh.jpeg' },
+  { num: '04', name: 'Shivam Jaiswal', role: 'V. President', dept: 'Executive', domain: 'Operations & Outreach', image: null },
+  { num: '05', name: 'Souvik Bandopadhyay', role: 'Secretary', dept: 'Executive', domain: 'Institutional Administration', image: '/images/team/souvik.jpeg' },
+  { num: '06', name: 'Avirup Chatterjee', role: 'Jt. Secretary', dept: 'Executive', domain: 'Academic Liaison', image: null },
+  { num: '07', name: 'Aniket Dutta', role: 'Tech Lead', dept: 'Engineering', domain: 'Systems & Infrastructure', image: '/images/team/aniket.jpeg' },
+  { num: '08', name: 'Shorya Singh', role: 'Asst. Tech', dept: 'Engineering', domain: 'HFT & Low-Latency C++', image: null },
+  { num: '09', name: 'Ayush Jaiswal', role: 'Asst. Tech', dept: 'Engineering', domain: 'Financial AI & Quant', image: null },
+  { num: '10', name: 'Arnab Mandal', role: 'Media Lead', dept: 'Communications', domain: 'Research Publications & Broadcast', image: null },
+  { num: '11', name: 'Azad Hussain', role: 'Asst. Media', dept: 'Communications', domain: 'Digital Media & Coverage', image: null },
+  { num: '12', name: 'Gourav Ghosh', role: 'Design Lead', dept: 'Creative', domain: 'Visual Architecture & Design', image: '/images/team/gourav.jpeg' },
+  { num: '13', name: 'Priyanshu Verma', role: 'Asst. Design', dept: 'Creative', domain: 'Editorial & Technical Graphics', image: null },
+  { num: '14', name: 'Sayan Sheikh', role: 'Social Lead', dept: 'Community', domain: 'Community Network & Relations', image: null },
+  { num: '15', name: 'Priyom Chhetree', role: 'Asst. Social', dept: 'Community', domain: 'External Relations & Sponsorships', image: null },
+  { num: '16', name: 'Debjit Modak', role: 'Documentation', dept: 'Archive', domain: 'Archival Records & Minutes', image: '/images/team/debjit.jpeg' },
 ];
 
 export default function TeamSection() {
-  const [filter, setFilter] = useState('ALL');
-
-  const visibleMembers = filter === 'ALL'
-    ? TEAM_MEMBERS
-    : TEAM_MEMBERS.filter((m) => m.dept === filter);
+  const [showFullDirectory, setShowFullDirectory] = useState(false);
 
   return (
-    <section id="team" className="relative w-full bg-[#FAFAF8] py-24 md:py-36 lg:py-44 border-b border-[#DCDCD8]">
+    <section id="team" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
-        {/* Section Index Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DCDCD8] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
-          <span>[ SECTION 05 // LEADERSHIP ROSTER & GOVERNANCE ]</span>
-          <span>PEOPLE INDEX // 2026</span>
+        {/* Section Marker */}
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+          <span>06 / PEOPLE INDEX & GOVERNANCE</span>
+          <span>FELLOWSHIP DIRECTORY // 2026</span>
         </div>
 
-        {/* Section Header & Filters */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 sm:mb-20">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
           <div>
-            <span className="font-mono text-xs font-bold text-[#111111] uppercase tracking-wider block mb-2">
-              05 / ROSTER
+            <span className="px-3 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
+              06 // ROSTER
             </span>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-[#111111] uppercase tracking-tight leading-none">
-              PEOPLE INDEX
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+              Fellowship
+              <br />
+              <span className="italic">Directory.</span>
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-[#555555] font-sans max-w-lg leading-relaxed">
-              The student fellows governing engineering divisions, quantitative models, research publications, and guild operations.
-            </p>
           </div>
-
-          {/* Clean Editorial Filter Strip */}
-          <div className="flex flex-wrap gap-1.5 p-1 bg-[#FFFFFF] border border-[#DCDCD8]">
-            {FILTER_TAGS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setFilter(t.id)}
-                className={`px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-wider uppercase transition-all ${
-                  filter === t.id
-                    ? 'bg-[#111111] text-[#FFFFFF]'
-                    : 'text-[#555555] hover:text-[#111111] hover:bg-[#F1F2F0]'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <p className="text-sm sm:text-base text-[#5F5F5F] font-sans-body max-w-md leading-relaxed font-light">
+            The student fellows governing engineering divisions, quantitative models, research publications, and guild operations at Adamas University.
+          </p>
         </div>
 
-        {/* ASYMMETRIC EDITORIAL GRID: Creates rhythm with varying card weights */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8">
-          {visibleMembers.map((member, idx) => {
-            // Asymmetric column span: Featured members span 6 cols on lg, standard span 3 cols on lg
-            const isFeatured = member.featured && filter === 'ALL';
-            const colSpanClass = isFeatured ? 'lg:col-span-6' : 'lg:col-span-3';
-
-            return (
-              <div
-                key={member.num}
-                className={`${colSpanClass} relative bg-[#FFFFFF] border border-[#DCDCD8] p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1`}
-                style={{
-                  boxShadow: '4px 4px 0 rgba(0,0,0,0.05)'
-                }}
-              >
-                {/* Header Strip: Number + LinkedIn */}
-                <div className="flex items-center justify-between font-mono text-[10px] pb-2 mb-4 border-b border-[#ECECE8]">
-                  <span className="font-bold text-[#111111]">NO. {member.num} / 16</span>
-                  {member.linkedin && (
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#707070] hover:text-[#111111] flex items-center gap-1 font-semibold"
-                      title={`${member.name} on LinkedIn`}
-                    >
-                      <span>LN</span>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.25c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
-                      </svg>
-                    </a>
-                  )}
-                </div>
-
-                {/* Portrait Frame: Real Image or Neutral Technical Grid Placeholder */}
-                <div className="relative w-full aspect-[4/4.2] bg-[#F1F2F0] border border-[#DCDCD8] overflow-hidden mb-5 flex items-center justify-center">
-                  {member.image ? (
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover grayscale contrast-115 hover:grayscale-0 transition-all duration-300"
-                    />
-                  ) : (
-                    /* Intentional Neutral Technical Grid Placeholder */
-                    <div className="w-full h-full flex flex-col items-center justify-center relative p-4 text-center">
-                      <div
-                        className="absolute inset-0 opacity-15 pointer-events-none"
-                        style={{
-                          backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
-                          backgroundSize: '16px 16px',
-                        }}
-                      />
-                      <span className="font-mono text-[10px] text-[#707070] tracking-widest uppercase mb-1">
-                        RECORDED PERSONNEL
-                      </span>
-                      <span className="font-heading font-black text-3xl sm:text-4xl text-[#111111]">
-                        {member.name.charAt(0)}
-                      </span>
-                      <span className="font-mono text-[9px] text-[#707070] mt-1 border border-[#DCDCD8] px-2 py-0.5 bg-[#FFFFFF]">
-                        FT-{member.num}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Corner Tick Marks */}
-                  <span className="absolute top-1 left-1 font-mono text-[8px] text-[#999999] select-none">┌</span>
-                  <span className="absolute top-1 right-1 font-mono text-[8px] text-[#999999] select-none">┐</span>
-                  <span className="absolute bottom-1 left-1 font-mono text-[8px] text-[#999999] select-none">└</span>
-                  <span className="absolute bottom-1 right-1 font-mono text-[8px] text-[#999999] select-none">┘</span>
-                </div>
-
-                {/* Member Identity & Metadata */}
-                <div>
-                  <h3 className="font-heading font-black text-lg sm:text-xl text-[#111111] uppercase tracking-tight leading-snug">
-                    {member.name}
-                  </h3>
-
-                  <div className="flex items-center justify-between pt-2 mt-2 border-t border-[#ECECE8]">
-                    <span className="font-mono text-xs font-bold text-[#111111] uppercase">
-                      {member.role}
-                    </span>
-                  </div>
-
-                  <div className="font-mono text-[10px] text-[#707070] uppercase mt-1 leading-tight">
-                    {member.domain}
-                  </div>
-                </div>
-
-                {/* Bottom Card Annotation */}
-                <div className="mt-4 pt-2 border-t border-[#ECECE8] flex items-center justify-between font-mono text-[9px] text-[#707070]">
-                  <span>ADAMAS CHAPTER</span>
-                  <span>CONFIRMED</span>
+        {/* Stanzza 5-Column Editorial Portrait Grid (100% VISIBLE) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-16 sm:mb-20">
+          {FEATURED_LEADERS.map((leader, idx) => (
+            <div
+              key={idx}
+              className="group bg-[#F4F3EB] rounded-3xl p-4 border border-[#D8D6CB] hover:border-[#1E1E1E] transition-all duration-300"
+              style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
+            >
+              <div className="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-[#1E1E1E] mb-4 border border-[#D8D6CB]">
+                <img
+                  src={leader.image!}
+                  alt={leader.name}
+                  className="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                />
+                <div className="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-[#1E1E1E]/80 text-[#FFFBF5] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">
+                  {leader.role}
                 </div>
               </div>
-            );
-          })}
+
+              <div className="px-1">
+                <div className="font-mono text-[10px] text-[#707070] uppercase mb-1">
+                  NO. 0{idx + 1} {"//"} {leader.dept}
+                </div>
+                <h4 className="font-serif text-2xl font-normal text-[#1E1E1E] leading-snug group-hover:underline">
+                  {leader.name}
+                </h4>
+                <p className="font-sans-body text-xs text-[#5F5F5F] mt-1 font-light">
+                  {leader.domain}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Footer Roster Link */}
-        <div className="mt-14 p-6 bg-[#FFFFFF] border border-[#DCDCD8] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
-          <div className="flex items-center gap-3">
-            <span className="w-2 h-2 bg-[#111111]"></span>
-            <span className="font-bold text-[#111111]">
-              ADAMAS UNIVERSITY RESEARCH CHAPTER PERSONNEL ROSTER
-            </span>
-          </div>
-          <Link
-            href="/team"
-            className="font-bold text-[#111111] hover:underline inline-flex items-center gap-1.5 uppercase tracking-wider"
+        {/* Governance Directory Toggle */}
+        <div className="pt-8 border-t border-[#D8D6CB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <span className="font-mono text-xs text-[#707070] uppercase tracking-wider">
+            GOVERNANCE DIRECTORY & APPOINTMENTS (16 VERIFIED FELLOWS)
+          </span>
+
+          <button
+            type="button"
+            onClick={() => setShowFullDirectory(!showFullDirectory)}
+            className="stanzza-btn-pill stanzza-btn-light"
           >
-            <span>FULL GOVERNANCE ROSTER</span>
-            <span>→</span>
-          </Link>
+            <span>{showFullDirectory ? 'Hide Full Directory' : 'View Full 16-Fellow Ledger'}</span>
+            <span>{showFullDirectory ? '↑' : '↓'}</span>
+          </button>
         </div>
+
+        {/* Collapsible Directory Ledger */}
+        <AnimatePresence>
+          {showFullDirectory && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 overflow-hidden"
+            >
+              <div className="divide-y divide-[#D8D6CB] border-t border-b border-[#D8D6CB]">
+                {FULL_ROSTER.map((member, idx) => (
+                  <div
+                    key={idx}
+                    className="py-4 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#F4F3EB] rounded-xl transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono text-xs text-[#707070]">
+                        {member.num} {"//"}
+                      </span>
+                      <span className="font-serif text-xl text-[#1E1E1E]">
+                        {member.name}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[9px] uppercase">
+                        {member.role}
+                      </span>
+                    </div>
+
+                    <div className="font-sans-body text-xs text-[#5F5F5F] sm:text-right font-light">
+                      {member.domain}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </section>

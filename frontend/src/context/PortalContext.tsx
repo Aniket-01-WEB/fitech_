@@ -221,8 +221,7 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     try {
       const { profile } = await api.get('/api/profile');
       setCurrentUser(mapProfile(profile));
-    } catch (err) {
-      console.warn('Failed to load profile:', err.message);
+    } catch {
       setCurrentUser(null);
     }
   }, []);
@@ -255,23 +254,23 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
   // ---- data refreshers ----
   const refreshEvents = useCallback(async () => {
     try {
-      const { events } = await api.get('/api/events');
-      if (events && events.length > 0) {
-        setEvents(events.map(mapEvent));
+      const res = await api.get('/api/events');
+      if (res?.events && res.events.length > 0) {
+        setEvents(res.events.map(mapEvent));
       }
-    } catch (err) {
-      console.warn('Failed to load events:', err.message);
+    } catch {
+      // Gracefully maintain default approved events when server is offline
     }
   }, []);
 
   const refreshRecordings = useCallback(async () => {
     try {
-      const { recordings } = await api.get('/api/recordings');
-      if (recordings && recordings.length > 0) {
-        setRecordings(recordings.map(mapRecording));
+      const res = await api.get('/api/recordings');
+      if (res?.recordings && res.recordings.length > 0) {
+        setRecordings(res.recordings.map(mapRecording));
       }
-    } catch (err) {
-      console.warn('Failed to load recordings:', err.message);
+    } catch {
+      // Gracefully maintain default approved recordings
     }
   }, []);
 
@@ -280,8 +279,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     try {
       const { notes } = await api.get('/api/notes');
       setNotes(notes.map(mapNote));
-    } catch (err) {
-      console.warn('Failed to load notes:', err.message);
+    } catch {
+      // Server offline or not authenticated
     }
   }, []);
 
@@ -290,8 +289,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     try {
       const { registrations } = await api.get('/api/registrations');
       setRegistrations(registrations.map(mapRegistration));
-    } catch (err) {
-      console.warn('Failed to load registrations:', err.message);
+    } catch {
+      // Server offline or not authenticated
     }
   }, []);
 
@@ -302,8 +301,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
       const map = {};
       members.forEach(m => { map[m.email] = mapProfile(m); });
       setMembers(map);
-    } catch (err) {
-      console.warn('Failed to load members:', err.message);
+    } catch {
+      // Staff-only data unavailable
     }
   }, []);
 
@@ -312,8 +311,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     try {
       const { activity: row } = await api.get('/api/activity');
       setActivity(prev => ({ ...prev, [currentUserRef.current.email]: mapActivity(row) }));
-    } catch (err) {
-      console.warn('Failed to load activity:', err.message);
+    } catch {
+      // Activity unavailable
     }
   }, []);
 
@@ -322,8 +321,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     try {
       const { adminRequests } = await api.get('/api/admin-requests');
       setAdminRequests(adminRequests.map(mapAdminRequest));
-    } catch (err) {
-      console.warn('Failed to load admin requests:', err.message);
+    } catch {
+      // Admin requests unavailable
     }
   }, []);
 

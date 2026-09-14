@@ -1,39 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg: #ffffff;
-  --bg-2: #ffffff;
-  --bg-3: #ffffff;
-  --bg-4: #f8fafc;
-  --accent: #0f172a;
-  --accent-dim: rgba(15,23,42,0.06);
+  --bg: #FFFBF5;
+  --bg-2: #FFFBF5;
+  --bg-3: #F4F3EB;
+  --bg-4: #E5E4DC;
+  --stanzza-back: #FFFBF5;
+  --stanzza-paper: #F4F3EB;
+  --stanzza-main: #1E1E1E;
+  --stanzza-border: #D8D6CB;
+  --stanzza-milk: #E5E4DC;
+  --stanzza-hover: #DBD9D0;
+  --accent: #1E1E1E;
+  --accent-dim: rgba(30,30,30,0.06);
   --accent-glow: rgba(0,0,0,0.04);
-  --white: #0f172a;
-  --gray-1: #334155;
-  --gray-2: #64748b;
-  --gray-3: #94a3b8;
-  --gray-4: #cbd5e1;
-  --border: rgba(0,0,0,0.08);
-  --border-hover: rgba(0,0,0,0.18);
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-alt: 'Manrope', sans-serif;
-  --container: 1200px;
+  --white: #1E1E1E;
+  --gray-1: #3A3A3A;
+  --gray-2: #5F5F5F;
+  --gray-3: #8C8C8C;
+  --gray-4: #D8D6CB;
+  --border: #D8D6CB;
+  --font-serif: var(--font-serif, 'Instrument Serif'), Georgia, serif;
+  --font-heading: var(--font-serif, 'Instrument Serif'), Georgia, serif;
+  --font-body: var(--font-body, 'Plus Jakarta Sans'), system-ui, sans-serif;
+  --font-mono: var(--font-mono, 'JetBrains Mono'), monospace;
+  --font-alt: var(--font-body, 'Plus Jakarta Sans'), sans-serif;
+  --container: 1360px;
   --nav-h: 44px;
-  --section-py: clamp(80px, 10vw, 140px);
+  --section-py: clamp(96px, 10vw, 160px);
   --radius: 0px;
-  --transition: .3s cubic-bezier(.4,0,.2,1);
+  --transition: .35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.section, .container, .event-card, .event-category, .project-card-scatter,
-.project-scatter-preview, .project-scatter-tags span,
-.resource-card,
-.habito-showreel-box, .github-activity-card, .github-sq,
-.filter-btn, .search-input, .join-modal-container, .btn, .nav-cta, .tag-pill,
-.stat-item, .resource-category, .event-image, input, select {
-  border-radius: 0 !important;
+.font-serif {
+  font-family: var(--font-serif, 'Instrument Serif'), Georgia, serif !important;
+}
+
+.font-sans-body {
+  font-family: var(--font-body, 'Plus Jakarta Sans'), system-ui, sans-serif !important;
+}
+
+/* Stanzza Pill Button Base */
+.stanzza-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9999px !important;
+  font-family: var(--font-body), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 12px 24px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.stanzza-btn-dark {
+  background-color: #1E1E1E !important;
+  color: #FFFFFF !important;
+  border: 1px solid #1E1E1E !important;
+}
+.stanzza-btn-dark:hover {
+  background-color: #3A3A3A !important;
+  border-color: #3A3A3A !important;
+  transform: translateY(-1px);
+}
+
+.stanzza-btn-light {
+  background-color: #E5E4DC !important;
+  color: #1E1E1E !important;
+  border: 1px solid #D8D6CB !important;
+}
+.stanzza-btn-light:hover {
+  background-color: #DBD9D0 !important;
+  border-color: #1E1E1E !important;
+  transform: translateY(-1px);
 }
 
 /* Soft rounded corner overrides */
@@ -68,22 +112,75 @@
   border-radius: 50% !important;
 }
 
+/* Lenis smooth scrolling */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Stanzza Editorial Link Underline */
+.stanzza-link {
+  position: relative;
+  display: inline-block;
+}
+.stanzza-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 0%;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.stanzza-link:hover::after {
+  width: 100%;
+}
+
+/* Stanzza Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   scroll-padding-top: 80px;
-  overscroll-behavior: none !important;
-  overscroll-behavior-y: none !important;
-  background: #ffffff !important;
+  background: #FFFBF5 !important;
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
 }
 
 body {
-  font-family: var(--font-body);
-  background: #ffffff !important;
-  color: #0a0a0a;
+  font-family: var(--font-body, 'Plus Jakarta Sans'), sans-serif;
+  background: #FFFBF5 !important;
+  color: #1E1E1E;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
   overscroll-behavior: none !important;
   overscroll-behavior-y: none !important;
 }
