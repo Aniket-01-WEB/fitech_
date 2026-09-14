@@ -9,7 +9,7 @@ import { usePortal } from '@/context/PortalContext';
 const ROLE_HOME = {
   admin: '/admin-portal',
   superadmin: '/super-admin',
-  student: '/student-portal'
+  student: '/student-portal',
 };
 
 function getDashboardHref(role) {
@@ -21,11 +21,11 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, logout, openJoinModal } = usePortal();
+  const { currentUser, logout } = usePortal();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 25);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -40,11 +40,7 @@ export default function Navbar() {
   const toggleMobileMenu = () => {
     const nextState = !mobileMenuOpen;
     setMobileMenuOpen(nextState);
-    if (nextState) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = nextState ? 'hidden' : '';
   };
 
   const handleSignOut = () => {
@@ -54,50 +50,76 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`curved-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-        <nav className="curved-navbar">
-          {/* Left Brand */}
-          <Link href="/" className="curved-nav-brand" aria-label="FITECH Home">
-            <Image
-              src="/images/logo-alt.png"
-              alt="FITECH Club Logo"
-              width={34}
-              height={34}
-              className="curved-nav-logo"
-              priority
-            />
-            <span className="curved-nav-title">FITECH</span>
+      <header className={`sleek-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+        <nav className="sleek-navbar" role="navigation" aria-label="Main Navigation">
+          {/* Left Brand with Square White Badge */}
+          <Link href="/" className="sleek-nav-brand" aria-label="FITECH Home">
+            <div className="sleek-nav-logo-badge">
+              <Image
+                src="/images/logo-alt.png"
+                alt="FITECH"
+                width={22}
+                height={22}
+                className="sleek-nav-logo-img"
+                priority
+              />
+            </div>
+            <span className="sleek-nav-title">FITECH</span>
           </Link>
 
-          {/* Desktop Nav Links (shifted to right) */}
-          <ul className="curved-nav-links">
+          {/* Desktop Nav Links */}
+          <ul className="sleek-nav-links">
             <li>
-              <Link href="/#about" className={pathname === '/' ? 'active' : ''}>About</Link>
+              <Link href="/" className={pathname === '/' ? 'active' : ''}>
+                Home
+              </Link>
             </li>
             <li>
-              <Link href="/domain" className={pathname === '/domain' ? 'active' : ''}>Domains</Link>
+              <Link href="/domain" className={pathname === '/domain' ? 'active' : ''}>
+                Domains
+              </Link>
             </li>
             <li>
-              <Link href="/events" className={pathname === '/events' ? 'active' : ''}>Events</Link>
+              <Link href="/events" className={pathname === '/events' ? 'active' : ''}>
+                Events
+              </Link>
             </li>
             <li>
-              <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>Projects</Link>
+              <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>
+                Projects
+              </Link>
             </li>
             <li>
-              <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>Gallery</Link>
+              <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>
+                Gallery
+              </Link>
             </li>
             <li>
-              <Link href="/team" className={pathname === '/team' ? 'active' : ''}>Team</Link>
+              <Link href="/team" className={pathname === '/team' ? 'active' : ''}>
+                Team
+              </Link>
             </li>
             {currentUser ? (
-              <li>
-                <Link
-                  href={getDashboardHref(currentUser.role)}
-                  className={pathname.includes('portal') ? 'active' : ''}
-                >
-                  Dashboard
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    href={getDashboardHref(currentUser.role)}
+                    className={pathname.includes('portal') || pathname.includes('admin') ? 'active' : ''}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="sleek-signout-btn"
+                    title="Sign Out"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              </>
             ) : (
               <li>
                 <Link href="/login" className={pathname === '/login' ? 'active' : ''}>
@@ -107,94 +129,87 @@ export default function Navbar() {
             )}
           </ul>
 
-          {/* Right Actions for logged-in user or mobile hamburger */}
-          <div className="curved-nav-actions">
-            {currentUser ? (
-              <>
-                <Link href={getDashboardHref(currentUser.role)} className="curved-nav-login-btn">
-                  Dashboard ↵
-                </Link>
-                <button type="button" onClick={handleSignOut} className="curved-nav-signout">
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <Link href="/login" className="curved-nav-login-btn">
-                Login ↵
-              </Link>
-            )}
-
-            {/* Mobile Hamburger */}
-            <button
-              type="button"
-              className={`curved-nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
-              onClick={toggleMobileMenu}
-              aria-label="Toggle Navigation Menu"
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-          </div>
+          {/* Mobile Hamburger Button */}
+          <button
+            type="button"
+            className={`sleek-nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
+            onClick={toggleMobileMenu}
+            aria-label="Toggle Navigation Menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </nav>
       </header>
 
-      {/* Fullscreen Mobile Drawer */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <ul className="mobile-links">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/domain">Domains</Link>
-          </li>
-          <li>
-            <Link href="/events">Events</Link>
-          </li>
-          <li>
-            <Link href="/projects">Projects</Link>
-          </li>
-          <li>
-            <Link href="/gallery">Gallery</Link>
-          </li>
-          <li>
-            <Link href="/team">Team</Link>
-          </li>
-          {currentUser ? (
-            <>
+      {/* Sleek White Mobile Drawer */}
+      <div className={`sleek-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="sleek-mobile-content">
+          <ul className="sleek-mobile-links">
+            <li>
+              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/domain" onClick={() => setMobileMenuOpen(false)}>
+                Domains
+              </Link>
+            </li>
+            <li>
+              <Link href="/events" onClick={() => setMobileMenuOpen(false)}>
+                Events
+              </Link>
+            </li>
+            <li>
+              <Link href="/projects" onClick={() => setMobileMenuOpen(false)}>
+                Projects
+              </Link>
+            </li>
+            <li>
+              <Link href="/gallery" onClick={() => setMobileMenuOpen(false)}>
+                Gallery
+              </Link>
+            </li>
+            <li>
+              <Link href="/team" onClick={() => setMobileMenuOpen(false)}>
+                Team
+              </Link>
+            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link
+                    href={getDashboardHref(currentUser.role)}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Dashboard ({currentUser.role.toUpperCase()})
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleSignOut();
+                    }}
+                    className="sleek-mobile-signout"
+                  >
+                    SIGN OUT ({currentUser.email})
+                  </button>
+                </li>
+              </>
+            ) : (
               <li>
-                <Link href={getDashboardHref(currentUser.role)}>
-                  Dashboard ({currentUser.role.toUpperCase()})
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  Portal / Login
                 </Link>
               </li>
-              <li>
-                <button type="button" onClick={handleSignOut} className="nav-signout-btn">
-                  SIGN OUT ({currentUser.email})
-                </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link href="/login">Portal / Login</Link>
-              </li>
-              <li style={{ marginTop: '12px' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    document.body.style.overflow = '';
-                    openJoinModal();
-                  }}
-                  className="btn btn-primary"
-                  style={{ width: '100%', justifyContent: 'center' }}
-                >
-                  JOIN US <span className="arrow">→</span>
-                </button>
-              </li>
-            </>
-          )}
-        </ul>
+            )}
+          </ul>
+        </div>
       </div>
     </>
   );
