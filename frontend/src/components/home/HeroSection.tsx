@@ -15,7 +15,7 @@ export default function HeroSection() {
           From code to capital.
         </p>
 
-        <div className="w-full max-w-[960px]">
+        <div className="w-full max-w-[1080px]">
           <AsciiDollar />
         </div>
 

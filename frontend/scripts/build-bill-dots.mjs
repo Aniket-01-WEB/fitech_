@@ -1,7 +1,8 @@
-// Renders a photo of a banknote as dot-stipple ASCII: every cell is ' ',
-// '.' or ':' and all tone comes from dot density, like an engraved halftone.
+// Renders a photo of a banknote as fine-grid greyscale ASCII: every cell
+// is one glyph from a light-to-dark ramp, so at a few px per cell the
+// result reads like a halftone photograph.
 //
-//   node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma] [t1] [t2]
+//   node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma] [ramp] [contrast]
 //
 // Current render: the Series 2009+ note (blue ribbon, bell-in-inkwell),
 // public-domain scan from Wikimedia Commons:
@@ -19,10 +20,15 @@ const require = createRequire(import.meta.url);
 const jpeg = require('jpeg-js');
 
 const src = process.argv[2];
-const COLS = Number(process.argv[3] || 240);
+const COLS = Number(process.argv[3] || 360);
 const CHAR_ASPECT = 0.6; // monospace advance width / line height at line-height:1
-const RAMP = [' ', '.', ':'];
-const GAMMA = Number(process.argv[4] || 2.0);
+// Light -> dark. Each glyph is a grey level; at hero size the glyph shape
+// blurs away and only its ink coverage reads, so this behaves like a
+// 10-step greyscale.
+const RAMP = process.argv[5] || ' .:-=+*#%@';
+const GAMMA = Number(process.argv[4] || 1.6);
+// S-curve strength: >1 pushes paper towards white and ink towards black.
+const CONTRAST = Number(process.argv[6] || 2.4);
 
 if (!src) {
   console.error('usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]');
@@ -59,19 +65,30 @@ const lo = sorted[Math.floor(sorted.length * 0.02)];
 const hi = sorted[Math.floor(sorted.length * 0.97)];
 const ink = Float32Array.from(cell, (v) => {
   const t = Math.min(1, Math.max(0, (v - lo) / (hi - lo)));
-  return Math.pow(1 - t, GAMMA);
+  const g = Math.pow(1 - t, GAMMA);
+  const a = Math.pow(g, CONTRAST);
+  return a / (a + Math.pow(1 - g, CONTRAST));
 });
 
-// Quantize straight onto the ramp (no error diffusion — diffusion turns the
-// engraving into speckle; hard thresholds keep the line-work crisp).
-const T1 = Number(process.argv[5] || 0.22); // ink above this -> '.'
-const T2 = Number(process.argv[6] || 0.5); // ink above this -> ':'
+// Quantize onto the ramp with light error diffusion so smooth shading
+// (the portrait) doesn't band, while the high level count keeps the
+// engraving's line-work crisp.
+const N = RAMP.length - 1;
 const lines = [];
 for (let r = 0; r < ROWS; r++) {
   let line = '';
   for (let c = 0; c < COLS; c++) {
-    const v = ink[r * COLS + c];
-    line += v >= T2 ? RAMP[2] : v >= T1 ? RAMP[1] : RAMP[0];
+    const i = r * COLS + c;
+    const want = Math.min(1, Math.max(0, ink[i]));
+    const k = Math.round(want * N);
+    line += RAMP[k];
+    const err = (want - k / N) * 0.5;
+    if (c + 1 < COLS) ink[i + 1] += (err * 7) / 16;
+    if (r + 1 < ROWS) {
+      if (c > 0) ink[i + COLS - 1] += (err * 3) / 16;
+      ink[i + COLS] += (err * 5) / 16;
+      if (c + 1 < COLS) ink[i + COLS + 1] += (err * 1) / 16;
+    }
   }
   lines.push(line.replace(/\s+$/, ''));
 }
