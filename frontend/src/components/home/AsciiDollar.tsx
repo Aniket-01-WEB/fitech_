@@ -136,6 +136,21 @@ function crumple(rows: string[], a: number): string {
   return out.join('\n');
 }
 
+// The note is drawn as vertical strips (STRIP_COLS columns each) so a
+// phase-shifted CSS animation can bob each strip in Y — a wave travelling
+// along X, like a flag — using transforms only, with no text re-layout.
+const STRIP_COLS = 20;
+const STRIPS = Math.ceil(COLS / STRIP_COLS);
+function strips(text: string): string[] {
+  const lines = text.split('\n');
+  const out: string[] = [];
+  for (let s = 0; s < STRIPS; s++) {
+    const from = s * STRIP_COLS;
+    out.push(lines.map((l) => l.slice(from, from + STRIP_COLS)).join('\n'));
+  }
+  return out;
+}
+
 export default function AsciiDollar() {
   const [text, setText] = useState('');
 
@@ -226,7 +241,17 @@ export default function AsciiDollar() {
         style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}` }}
       >
         <div className="ascii-dollar-tilt">
-          <pre className="ascii-dollar-base" aria-hidden="true">{text}</pre>
+          <div className="ascii-dollar-base" aria-hidden="true">
+            {strips(text).map((strip, i) => (
+              <pre
+                key={i}
+                className="ascii-strip"
+                style={{ '--i': i, left: `${(i * 100) / STRIPS}%`, width: `${100 / STRIPS}%` } as React.CSSProperties}
+              >
+                {strip}
+              </pre>
+            ))}
+          </div>
           <div className="ascii-dollar-shine" aria-hidden="true" />
         </div>
       </div>

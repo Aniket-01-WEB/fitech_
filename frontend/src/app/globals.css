@@ -5055,7 +5055,7 @@ footer img { filter: brightness(0) invert(1); }
 .ascii-stage {
   perspective: 1400px;
   perspective-origin: 50% 40%;
-  margin-bottom: 26px;
+  margin-bottom: 14px;
   --tilt-x: 0deg;
   --tilt-y: 0deg;
 }
@@ -5075,20 +5075,8 @@ footer img { filter: brightness(0) invert(1); }
   transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-/* Soft ground shadow, pushed back so the note floats above it. */
-.ascii-dollar::after {
-  content: '';
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  bottom: -22px;
-  height: 34px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(10, 10, 10, 0.22), rgba(10, 10, 10, 0) 70%);
-  transform: translateZ(-60px);
-  pointer-events: none;
-}
-.ascii-dollar pre {
+.ascii-dollar pre,
+.ascii-dollar-base {
   position: absolute;
   inset: 0;
   margin: 0;
@@ -5104,12 +5092,29 @@ footer img { filter: brightness(0) invert(1); }
   backface-visibility: hidden;
   will-change: transform;
 }
-/* Extruded edge drawn as a shadow on the same layer — a second text layer
-   for the depth copy doubled the 3D compositing cost for no visible gain. */
+/* Wave along X: the note is drawn as vertical strips, each bobbing in Y
+   with a phase set by its index, so a ripple travels across the note like
+   a flag. Transform-only — the glyphs are never re-laid-out. */
 .ascii-dollar-base {
   transform: translateZ(0);
-  text-shadow: 3px 3px 0 #BDBDBD;
 }
+.ascii-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: visible;
+  will-change: transform;
+  animation: ascii-wave 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -125ms);
+}
+@keyframes ascii-wave {
+  0%, 100% { transform: translate3d(0, -4px, 0); }
+  50%      { transform: translate3d(0, 4px, 0); }
+}
+
+/* Extruded edge drawn as a shadow on the same layer — a second text layer
+   for the depth copy doubled the 3D compositing cost for no visible gain. */
+.ascii-strip { text-shadow: 3px 3px 0 #BDBDBD; }
 /* Light sweep: a translucent white band that slides across the note on
    the compositor (transform only — no repaint of the text layers). */
 .ascii-dollar-shine {
@@ -5136,6 +5141,7 @@ footer img { filter: brightness(0) invert(1); }
   .ascii-dollar { animation: none; transform: rotateX(5deg); }
   .ascii-dollar-tilt { transition: none; }
   .ascii-dollar-shine { display: none; }
+  .ascii-strip { animation: none; }
 }
 
 /* ==========================================================================
