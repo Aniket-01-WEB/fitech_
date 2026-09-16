@@ -143,11 +143,11 @@ export default function ShowcaseSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-10 md:p-14"
+            className="bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-5 sm:p-6 md:p-8"
             style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
           >
             {/* Top Info Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[#DADADA]">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-[#DADADA]">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-[#0A0A0A]">
                   SPEC REF: EXP-2026.0{activeIdx + 1}
@@ -171,7 +171,7 @@ export default function ShowcaseSection() {
             </div>
 
             {/* Title & Narrative */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mb-6">
               <div className="lg:col-span-7">
                 <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#0A0A0A] leading-tight mb-4">
                   {activeProject.title}
@@ -188,8 +188,8 @@ export default function ShowcaseSection() {
               </div>
 
               {/* Specs Cards */}
-              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
-                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+                <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
                   <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric1Label}
                   </span>
@@ -197,7 +197,7 @@ export default function ShowcaseSection() {
                     {activeProject.metric1Val}
                   </span>
                 </div>
-                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+                <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
                   <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric2Label}
                   </span>
@@ -205,7 +205,7 @@ export default function ShowcaseSection() {
                     {activeProject.metric2Val}
                   </span>
                 </div>
-                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+                <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
                   <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric3Label}
                   </span>
@@ -217,7 +217,7 @@ export default function ShowcaseSection() {
             </div>
 
             {/* Media Aperture & CTA */}
-            <div className="relative w-full aspect-[16/7] md:aspect-[21/8] rounded-2xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A]">
+            <div className="relative w-full aspect-[16/6] md:aspect-[21/6] rounded-2xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A]">
               <img
                 src={activeProject.image}
                 alt={activeProject.title}
