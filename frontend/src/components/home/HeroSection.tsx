@@ -16,21 +16,14 @@ const DOMAINS = [
 export default function HeroSection() {
   const { openJoinModal } = usePortal();
   const containerRef = useRef<HTMLElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
 
-  const { scrollYProgress: imgProgress } = useScroll({
-    target: heroImageRef,
-    offset: ['start end', 'end start'],
-  });
-
   // Stanzza-grade scroll choreography
   const yHeadline = useTransform(scrollYProgress, [0, 1], [0, -30]);
-  const scaleHeroImg = useTransform(imgProgress, [0, 1], [1.08, 1.0]);
 
   return (
     <section
@@ -90,15 +83,13 @@ export default function HeroSection() {
 
           {/* Full-Bleed Expanding Aperture Window (Stanzza .image-hero) */}
           <div 
-            ref={heroImageRef}
-            className="relative w-full aspect-[16/7.5] sm:aspect-[16/7] md:aspect-[21/9] rounded-3xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A] mb-8 sm:mb-10 group"
+            className="relative w-full aspect-[16/7.5] sm:aspect-[16/7] md:aspect-[21/9] rounded-3xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A] mb-8 sm:mb-10"
             style={{ boxShadow: '0 24px 60px rgba(30,30,30,0.07)' }}
           >
-            <motion.img
-              style={{ scale: scaleHeroImg }}
+            <img
               src="/images/Adamas-University_-Kolkata_k8826n.jpg"
               alt="Adamas University campus, Kolkata"
-              className="w-full h-full object-cover grayscale contrast-115 transition-all duration-700 will-change-transform"
+              className="w-full h-full object-cover"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#FFFFFF]/10">
               Plate 00 // Adamas University Campus • Kolkata
