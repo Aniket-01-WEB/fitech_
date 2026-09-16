@@ -59,10 +59,10 @@ export default function SuperAdminPortalPage() {
     <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
       <div className="container">
         {/* SUPER ADMIN HEADER */}
-        <div className="portal-header-card" style={{ background: 'linear-gradient(135deg, #1e1033, #4c1d95)', color: '#ffffff', padding: '32px', borderRadius: '16px', marginBottom: '32px', border: '1px solid #6d28d9' }}>
+        <div className="portal-header-card" style={{ background: '#0A0A0A', color: '#ffffff', padding: '32px', borderRadius: '16px', marginBottom: '32px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
             <div>
-              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#c4b5fd' }}>
+              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#8A8A8A' }}>
                 SUPER ADMIN OVERSIGHT CONSOLE
               </span>
               <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: '900', margin: '8px 0' }}>
@@ -76,23 +76,23 @@ export default function SuperAdminPortalPage() {
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingEvents.length}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Awaiting Review</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Awaiting Review</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingAdminRequests.length}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Admin Requests</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Admin Requests</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{events.length}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Total Events</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Total Events</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{pendingNotes.length + pendingRecordings.length}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Pending Content</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Pending Content</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.12)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{memberCount}</span>
-                <span style={{ fontSize: '11px', color: '#c4b5fd', textTransform: 'uppercase' }}>Club Members</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Club Members</span>
               </div>
             </div>
           </div>

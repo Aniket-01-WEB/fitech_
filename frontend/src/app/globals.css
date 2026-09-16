@@ -5277,6 +5277,17 @@ button:disabled:active { transform: none !important; }
 .portal-page .btn { padding: 10px 18px; font-size: 12px; }
 .portal-page .btn.btn-lg { padding: 12px 22px; font-size: 13px; }
 
+/* Buttons inside tables stay flat — the hard offset shadow reads as
+   clutter when they're stacked in rows. */
+.portal-page table .btn,
+.portal-page table .stanzza-btn-pill,
+.portal-page table .admin-btn {
+  box-shadow: none !important;
+  padding: 7px 14px;
+  font-size: 11px;
+}
+.portal-page table .btn:active { transform: scale(0.95) !important; box-shadow: none !important; }
+
 /* Empty state: was a 680px-tall slab */
 .portal-page .empty-events-box {
   min-height: 220px;
