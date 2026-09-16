@@ -30,7 +30,7 @@ export default function Footer() {
       </div>
 
       {/* Main Minimal Directory Grid */}
-      <div className="max-w-[1360px] mx-auto px-5 sm:px-8 py-16 sm:py-20 lg:py-24">
+      <div className="max-w-[1360px] mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           
           {/* Brand & Manifesto Block */}

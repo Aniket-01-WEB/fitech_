@@ -28,17 +28,17 @@ export default function ActivitiesSection() {
   const secondaryUpcoming = upcomingEvents.slice(1);
 
   return (
-    <section id="events" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
+    <section id="events" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>05 / RESEARCH BULLETIN & CALENDAR</span>
           <span>SYMPOSIA SCHEDULE // 2026</span>
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 sm:mb-8">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               05 // BULLETIN
@@ -57,7 +57,7 @@ export default function ActivitiesSection() {
         {/* Featured Upcoming Symposium Plate */}
         {featuredUpcoming ? (
           <div 
-            className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-10 md:p-12 mb-14 overflow-hidden group"
+            className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-10 md:p-12 mb-8 overflow-hidden group"
             style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
           >
             <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-6 border-b border-[#DADADA] font-mono text-xs text-[#6B6B6B]">
@@ -129,7 +129,7 @@ export default function ActivitiesSection() {
 
         {/* Secondary Sessions List */}
         {secondaryUpcoming.length > 0 && (
-          <div className="space-y-4 mb-14">
+          <div className="space-y-4 mb-8">
             <h4 className="font-mono text-xs font-bold text-[#6B6B6B] uppercase tracking-wider mb-4">
               ADDITIONAL SCHEDULED SESSIONS
             </h4>

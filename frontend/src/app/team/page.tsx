@@ -213,7 +213,7 @@ export default function TeamPage() {
   const membersWithPhotos = visibleMembers.filter((m) => m.image !== null);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#F2F2F2] text-[#0A0A0A] pt-32 pb-24 md:pt-40 md:pb-36 selection:bg-[#0A0A0A] selection:text-[#FFFFFF]">
+    <div className="relative w-full min-h-screen bg-[#F2F2F2] text-[#0A0A0A] pt-32 pb-16 md:pt-32 md:pb-20 selection:bg-[#0A0A0A] selection:text-[#FFFFFF]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Navigation Breadcrumb */}
@@ -226,7 +226,7 @@ export default function TeamPage() {
         </div>
 
         {/* Header Block */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14 sm:mb-18">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 sm:mb-10">
           <div>
             <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-2">
               05 / PERSONNEL
@@ -260,7 +260,7 @@ export default function TeamPage() {
 
         {/* 01: FEATURED PHOTOGRAPHIC PORTRAITS */}
         {membersWithPhotos.length > 0 && (
-          <div className="mb-16 sm:mb-20">
+          <div className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between font-mono text-[10px] text-[#6B6B6B] uppercase tracking-wider pb-2 mb-6 border-b border-[#F2F2F2]">
               <span className="font-bold text-[#0A0A0A]">EXECUTIVE FELLOWS // PHOTOGRAPHIC ARCHIVE</span>
               <span>PLATE REF: FT-ROSTER.PH</span>

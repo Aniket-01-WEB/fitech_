@@ -40,7 +40,7 @@
   --font-alt: var(--font-body, 'Plus Jakarta Sans'), sans-serif;
   --container: 1360px;
   --nav-h: 44px;
-  --section-py: clamp(96px, 10vw, 160px);
+  --section-py: clamp(56px, 6vw, 96px);
   --radius: 16px;
   --transition: .35s cubic-bezier(0.16, 1, 0.3, 1);
 }

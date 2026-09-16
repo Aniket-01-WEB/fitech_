@@ -15,17 +15,17 @@ export default function GallerySection() {
   const scaleImage = useTransform(scrollYProgress, [0, 1], [1.08, 1.0]);
 
   return (
-    <section id="gallery" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
+    <section id="gallery" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>07 / FIELD NOTES & ARCHIVE</span>
           <span>PHOTOGRAPHIC LOG // 2026</span>
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 sm:mb-8">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               07 // GALLERY
@@ -44,7 +44,7 @@ export default function GallerySection() {
         {/* Master Photo Plate */}
         <div 
           ref={masterImageRef}
-          className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-8 md:p-10 mb-12 overflow-hidden"
+          className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-8 md:p-10 mb-8 overflow-hidden"
           style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
         >
           <div className="relative w-full aspect-[16/8] md:aspect-[21/9] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-6 border border-[#DADADA]">
@@ -83,7 +83,7 @@ export default function GallerySection() {
         </div>
 
         {/* 2 Staggered Plates */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className="bg-[#F2F2F2] rounded-3xl p-6 border border-[#DADADA]">
             <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-4 border border-[#DADADA]">
               <img

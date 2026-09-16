@@ -8,11 +8,11 @@ export default function CtaSection() {
   const { openJoinModal } = usePortal();
 
   return (
-    <section className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA] overflow-hidden">
+    <section className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA] overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>09 / INTAKE & ADMISSIONS</span>
           <span>CAMPUS GUILD CHAPTER // 2026</span>
         </div>
@@ -35,7 +35,7 @@ export default function CtaSection() {
             <span className="italic">Conversation.</span>
           </h2>
 
-          <p className="font-sans-body text-base sm:text-xl text-[#4A4A4A] leading-relaxed max-w-2xl mx-auto font-light mb-10 sm:mb-12">
+          <p className="font-sans-body text-base sm:text-xl text-[#4A4A4A] leading-relaxed max-w-2xl mx-auto font-light mb-6 sm:mb-8">
             Whether you want to engineer low-latency matching cores, research stochastic volatility, or incubate a technical fintech startup, our laboratory doors are open.
           </p>
 
@@ -62,7 +62,7 @@ export default function CtaSection() {
           </div>
 
           {/* Footnote Metadata */}
-          <div className="mt-14 pt-8 border-t border-[#DADADA] flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#6B6B6B]">
+          <div className="mt-8 pt-8 border-t border-[#DADADA] flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#6B6B6B]">
             <div>
               <span>TRACKS: QUANT DEVELOPER • DEFI RESEARCHER • AI / RISK FELLOW</span>
             </div>

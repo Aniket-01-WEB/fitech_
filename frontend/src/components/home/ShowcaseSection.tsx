@@ -87,17 +87,17 @@ export default function ShowcaseSection() {
   const activeProject = PROJECTS[activeIdx];
 
   return (
-    <section id="projects" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
+    <section id="projects" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>02 / FLAGSHIP CODEBASES</span>
           <span>APPLIED ENGINEERING ARCHIVE // 2026</span>
         </div>
 
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-10">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               02 // LAB BUILDS

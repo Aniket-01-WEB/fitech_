@@ -15,7 +15,7 @@ const PARTNERS = [
 
 export default function TrustedBySection() {
   return (
-    <section className="relative w-full max-w-full bg-[#FFFFFF] py-16 sm:py-20 border-b border-[#DADADA] overflow-hidden">
+    <section className="relative w-full max-w-full bg-[#FFFFFF] py-10 sm:py-12 border-b border-[#DADADA] overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 mb-8 flex items-center justify-between font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
         <span>BUILT TOGETHER WITH</span>
         <span>ACADEMIC & INDUSTRY CONSORTIUM</span>

@@ -35,12 +35,12 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full max-w-full bg-[#FFFFFF] pt-32 pb-16 sm:pt-40 sm:pb-24 lg:pt-44 lg:pb-28 border-b border-[#DADADA] overflow-hidden"
+      className="relative w-full max-w-full bg-[#FFFFFF] pt-28 pb-12 sm:pt-32 sm:pb-14 lg:pt-36 lg:pb-16 border-b border-[#DADADA] overflow-hidden"
     >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10">
         
         {/* Top Micro Telemetry Strip (Stanzza Style) */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-8 sm:mb-12 border-b border-[#DADADA] font-mono text-[11px] text-[#4A4A4A]">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-6 sm:mb-8 border-b border-[#DADADA] font-mono text-[11px] text-[#4A4A4A]">
           <div className="flex items-center gap-3">
             <span className="inline-block w-2 h-2 rounded-full bg-[#0A0A0A]"></span>
             <span className="font-bold text-[#0A0A0A] tracking-wider">FITECH</span>
@@ -79,7 +79,7 @@ export default function HeroSection() {
           </div>
 
           {/* Stanzza Scaled Headline with Harmonious Proportion */}
-          <motion.div style={{ y: yHeadline }} className="mb-10 sm:mb-12">
+          <motion.div style={{ y: yHeadline }} className="mb-6 sm:mb-8">
             <h1 className="font-serif text-[clamp(44px,7.5vw,98px)] font-normal text-[#0A0A0A] leading-[0.92] tracking-[-0.03em] max-w-5xl">
               From code to capital.
             </h1>
@@ -91,7 +91,7 @@ export default function HeroSection() {
           {/* Full-Bleed Expanding Aperture Window (Stanzza .image-hero) */}
           <div 
             ref={heroImageRef}
-            className="relative w-full aspect-[16/7.5] sm:aspect-[16/7] md:aspect-[21/9] rounded-3xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A] mb-12 sm:mb-16 group"
+            className="relative w-full aspect-[16/7.5] sm:aspect-[16/7] md:aspect-[21/9] rounded-3xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A] mb-8 sm:mb-10 group"
             style={{ boxShadow: '0 24px 60px rgba(30,30,30,0.07)' }}
           >
             <motion.img
@@ -142,7 +142,7 @@ export default function HeroSection() {
           </div>
 
           {/* Floating Pill Domain Ticker */}
-          <div className="mt-12 pt-6 border-t border-[#EAEAEA] flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="font-mono text-[10px] text-[#6B6B6B] uppercase tracking-widest mr-2">
               DISCIPLINES:
             </span>

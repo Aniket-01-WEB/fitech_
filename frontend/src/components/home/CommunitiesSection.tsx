@@ -38,17 +38,17 @@ const ADVANTAGES = [
 
 export default function CommunitiesSection() {
   return (
-    <section id="communities" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
+    <section id="communities" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>03 / CONTROLLED ENGINEERING</span>
           <span>EMPIRICAL PERFORMANCE RECORD // 2026</span>
         </div>
 
         {/* Section Heading (Stanzza Style) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-24 items-end">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-10 sm:mb-14 items-end">
           <div className="lg:col-span-6">
             <span className="px-3.5 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
               03 // ADVANTAGE
@@ -67,7 +67,7 @@ export default function CommunitiesSection() {
         </div>
 
         {/* 4 Large Editorial Stat Cards (100% VISIBLE) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 sm:mb-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 sm:mb-10">
           {STATS.map((stat, idx) => (
             <div
               key={idx}

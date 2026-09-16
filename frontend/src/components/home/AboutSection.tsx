@@ -41,18 +41,18 @@ export default function AboutSection() {
   return (
     <section 
       id="composition" 
-      className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]"
+      className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]"
     >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>01 / COMPOSITION & PHILOSOPHY</span>
           <span>CAMPUS GUILD CHARTER // 2026</span>
         </div>
 
         {/* Major Editorial Layout: Stanzza Composition Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-10 sm:mb-14">
           
           {/* Left Column: Micro Title */}
           <div className="lg:col-span-4">
