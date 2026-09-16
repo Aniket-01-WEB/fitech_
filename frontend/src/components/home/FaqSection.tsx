@@ -71,30 +71,28 @@ export default function FaqSection() {
                 key={idx}
                 className="py-8 sm:py-10 transition-colors"
               >
-                <button
-                  type="button"
-                  onClick={() => toggle(idx)}
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${idx}`}
-                  className="faq-toggle w-full flex items-start justify-between gap-6 text-left cursor-pointer group"
-                >
+                <div className="w-full flex items-start justify-between gap-6 text-left">
                   <div className="flex items-baseline gap-4 sm:gap-6">
                     <span className="font-mono text-xs text-[#6B6B6B] pt-1">
                       0{idx + 1} {"//"}
                     </span>
-                    <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A] group-hover:underline">
+                    <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A]">
                       {item.q}
                     </h3>
                   </div>
 
-                  <span
-                    aria-hidden="true"
-                    className={`faq-icon w-9 h-9 rounded-full border-[1.5px] border-[#0A0A0A] flex items-center justify-center shrink-0 ${isOpen ? 'is-open' : ''}`}
+                  <button
+                    type="button"
+                    onClick={() => toggle(idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${idx}`}
+                    aria-label={isOpen ? 'Collapse answer' : 'Expand answer'}
+                    className={`faq-toggle faq-icon w-9 h-9 rounded-full border-[1.5px] border-[#0A0A0A] flex items-center justify-center shrink-0 cursor-pointer ${isOpen ? 'is-open' : ''}`}
                   >
                     <span className="faq-icon-bar" />
                     <span className="faq-icon-bar faq-icon-bar--v" />
-                  </span>
-                </button>
+                  </button>
+                </div>
 
                 <AnimatePresence>
                   {isOpen && (

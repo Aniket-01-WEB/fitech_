@@ -5414,5 +5414,4 @@ html.js-reveal [data-reveal].in-view {
 .faq-icon.is-open .faq-icon-bar { background: var(--mono-white); }
 .faq-icon.is-open .faq-icon-bar--v { transform: rotate(180deg); opacity: 0; }
 .faq-toggle:active .faq-icon { transform: scale(0.92); }
-.faq-toggle:focus-visible { outline: none; }
-.faq-toggle:focus-visible h3 { text-decoration: underline; }
+.faq-toggle:focus-visible { outline: 2px solid var(--mono-ink); outline-offset: 3px; }
