@@ -1,10 +1,47 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Set the moment the loader begins to fade out; shown once per session.
 export const LOADER_SESSION_KEY = 'fitech_stanzza_loader';
+
+// One odometer column: a reel of 0-9 plus a trailing 0 so a 9 -> 0 wrap
+// rolls forward into the spare slot, then snaps back to the real 0 with
+// the transition switched off — reels never spin backwards.
+const SLOTS = 11;
+function Reel({ value }: { value: number }) {
+  const [idx, setIdx] = useState(value);
+  const [snap, setSnap] = useState(false);
+  const prev = useRef(value);
+
+  useEffect(() => {
+    if (value === prev.current) return;
+    const wrapped = prev.current === 9 && value === 0;
+    prev.current = value;
+    setSnap(false);
+    setIdx(wrapped ? 10 : value);
+    if (!wrapped) return;
+    const t = window.setTimeout(() => {
+      setSnap(true);
+      setIdx(0);
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [value]);
+
+  return (
+    <div className="loader-col">
+      <div
+        className="loader-reel"
+        style={{ transform: `translate3d(0, ${(-idx * 100) / SLOTS}%, 0)`, transition: snap ? 'none' : undefined }}
+      >
+        {Array.from({ length: SLOTS }, (_, n) => (
+          <span key={n} className="loader-digit">{n % 10}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function PageLoader() {
   const [progress, setProgress] = useState(0);
@@ -23,28 +60,35 @@ export default function PageLoader() {
     }
 
     const startTime = performance.now();
-    const duration = 1200;
+    const duration = 1600; // 000 -> 100
+    const holdAt100 = 550; // let "100" land and be read before the site opens
 
     let animationFrameId: number;
+    let holdTimer = 0;
 
     const updateProgress = (currentTime: number) => {
       const elapsed = currentTime - startTime;
-      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(pct);
+      // Ease-out so the last digits slow down and settle on 100 rather
+      // than blurring past it.
+      const t = Math.min(1, elapsed / duration);
+      const eased = 1 - Math.pow(1 - t, 2.2);
+      setProgress(Math.round(eased * 100));
 
-      if (elapsed < duration) {
+      if (t < 1) {
         animationFrameId = requestAnimationFrame(updateProgress);
       } else {
         setProgress(100);
-        setIsDone(true);
-        try {
-          sessionStorage.setItem(LOADER_SESSION_KEY, 'true');
-        } catch {
-          // ignore
-        }
-        setTimeout(() => {
-          setShouldRender(false);
-        }, 600);
+        holdTimer = window.setTimeout(() => {
+          setIsDone(true);
+          try {
+            sessionStorage.setItem(LOADER_SESSION_KEY, 'true');
+          } catch {
+            // ignore
+          }
+          setTimeout(() => {
+            setShouldRender(false);
+          }, 600);
+        }, holdAt100);
       }
     };
 
@@ -54,6 +98,7 @@ export default function PageLoader() {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
+      window.clearTimeout(holdTimer);
     };
   }, []);
 
@@ -84,15 +129,9 @@ export default function PageLoader() {
           {/* Giant three-column odometer: hundreds / tens / units, each digit
               rolling like a slot as the count runs 0 -> 100. */}
           <div className="loader-odometer flex-1 min-h-0 my-4" aria-label={`Loading ${progress}%`}>
-            {[Math.floor(progress / 100), Math.floor(progress / 10) % 10, progress % 10].map((d, col) => (
-              <div key={col} className="loader-col">
-                <div className="loader-reel" style={{ transform: `translate3d(0, ${-d * 10}%, 0)` }}>
-                  {Array.from({ length: 10 }, (_, n) => (
-                    <span key={n} className="loader-digit">{n}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <Reel value={Math.floor(progress / 100)} />
+            <Reel value={Math.floor(progress / 10) % 10} />
+            <Reel value={progress % 10} />
           </div>
 
           {/* Bottom Telemetry Counter Strip */}

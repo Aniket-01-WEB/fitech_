@@ -5427,19 +5427,19 @@ html.js-reveal [data-reveal].in-view {
   overflow: hidden;
 }
 .loader-col:last-child { border-right: 1px solid var(--mono-ink); }
-/* Ten slots, each exactly one column tall, stacked top-down; the reel is
-   moved up by d slots to bring digit d into view. */
+/* Eleven slots (0-9 and a wrap 0), each exactly one column tall, stacked
+   top-down; the reel is moved up by d slots to bring digit d into view. */
 .loader-reel {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 1000%;
+  height: 1100%;
   display: flex;
   flex-direction: column;
   transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
 .loader-digit {
-  flex: 0 0 10%;
+  flex: 0 0 calc(100% / 11);
   display: flex;
   align-items: flex-end;
   justify-content: center;
