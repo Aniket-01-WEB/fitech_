@@ -37,20 +37,47 @@ if (!src) {
 const here = path.dirname(fileURLToPath(import.meta.url));
 const out = path.resolve(here, '../public/intro/bill-dots.json');
 
-const { width, height, data } = jpeg.decode(fs.readFileSync(src), { useTArray: true, formatAsRGBA: true });
+const { width: imgW, height: imgH, data } = jpeg.decode(fs.readFileSync(src), { useTArray: true, formatAsRGBA: true });
+const lumAt = (x, y) => {
+  const i = (y * imgW + x) * 4;
+  return 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+};
+
+// Auto-crop to the note's printed frame: scans have a blank paper margin
+// that the security ribbon runs across, which otherwise renders as a strip
+// poking out past the top and bottom of the note. The frame is the first
+// row/column (from each side) whose mean darkness jumps well above the
+// margin's.
+function frameEdge(count, other, darkAt, step) {
+  const base = [];
+  for (let i = 0; i < 4; i++) base.push(darkAt(step > 0 ? i : count - 1 - i));
+  const margin = Math.max(...base);
+  let i = step > 0 ? 0 : count - 1;
+  for (; i >= 0 && i < count; i += step) if (darkAt(i) > margin + 25) break;
+  return i;
+}
+const rowDark = (y) => { let s = 0; for (let x = 0; x < imgW; x++) s += 255 - lumAt(x, y); return s / imgW; };
+const colDark = (x) => { let s = 0; for (let y = 0; y < imgH; y++) s += 255 - lumAt(x, y); return s / imgH; };
+const top = frameEdge(imgH, imgW, rowDark, 1);
+const bottom = frameEdge(imgH, imgW, rowDark, -1) + 1;
+const left = frameEdge(imgW, imgH, colDark, 1);
+const right = frameEdge(imgW, imgH, colDark, -1) + 1;
+const width = right - left;
+const height = bottom - top;
+console.log(`frame crop: x ${left}..${right}, y ${top}..${bottom} of ${imgW}x${imgH}`);
+
 const ROWS = Math.round((COLS * CHAR_ASPECT * height) / width);
 
 // Box-average luminance into the character grid.
 const cell = new Float32Array(COLS * ROWS);
 for (let r = 0; r < ROWS; r++) {
-  const y0 = Math.floor((r * height) / ROWS), y1 = Math.floor(((r + 1) * height) / ROWS);
+  const y0 = top + Math.floor((r * height) / ROWS), y1 = top + Math.floor(((r + 1) * height) / ROWS);
   for (let c = 0; c < COLS; c++) {
-    const x0 = Math.floor((c * width) / COLS), x1 = Math.floor(((c + 1) * width) / COLS);
+    const x0 = left + Math.floor((c * width) / COLS), x1 = left + Math.floor(((c + 1) * width) / COLS);
     let sum = 0, n = 0;
     for (let y = y0; y < y1; y++) {
       for (let x = x0; x < x1; x++) {
-        const i = (y * width + x) * 4;
-        sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+        sum += lumAt(x, y);
         n++;
       }
     }
