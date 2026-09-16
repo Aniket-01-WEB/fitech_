@@ -7,6 +7,7 @@ import JoinModal from '@/components/modals/JoinModal';
 import EventDetailModal from '@/components/modals/EventDetailModal';
 import RecordingPlayerModal from '@/components/modals/RecordingPlayerModal';
 import SmoothScroll from '@/components/layout/SmoothScroll';
+import ScrollReveal from '@/components/layout/ScrollReveal';
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PortalProvider>
           <SmoothScroll>
             <PageLoader />
+            <ScrollReveal />
             <Navbar />
             <main className="w-full overflow-x-hidden">{children}</main>
             <JoinModal />
