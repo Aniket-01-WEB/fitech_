@@ -5045,3 +5045,41 @@ footer img { filter: brightness(0) invert(1); }
   border-radius: 24px !important;
   box-shadow: var(--mono-shadow) !important;
 }
+
+/* ---- ASCII $100 note (landing hero) ---- */
+.ascii-dollar {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+  overflow: hidden;
+}
+.ascii-dollar pre {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  /* 228 columns at a 0.6em advance width fill the container exactly */
+  font-size: calc(100cqw / 136.8); /* 228 cols x 0.6em */
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  color: #0A0A0A;
+}
+/* Same text stacked on top in light grey, revealed through a moving band
+   mask — a light sweeping across the note that loops forever. */
+.ascii-dollar-shine {
+  color: #B5B5B5;
+  -webkit-mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
+  mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  animation: ascii-shine 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes ascii-shine {
+  from { -webkit-mask-position: 150% 0; mask-position: 150% 0; }
+  to   { -webkit-mask-position: -150% 0; mask-position: -150% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ascii-dollar-shine { display: none; }
+}

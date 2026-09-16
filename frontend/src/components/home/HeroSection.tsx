@@ -3,15 +3,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { usePortal } from '@/context/PortalContext';
-
-const DOMAINS = [
-  'Quantitative Systems',
-  'Statistical Arbitrage',
-  'Financial Transformers',
-  'Stochastic Volatility',
-  'Venture Incubation',
-  'Decentralized Protocols',
-];
+import AsciiDollar from './AsciiDollar';
 
 export default function HeroSection() {
   const { openJoinModal } = usePortal();
@@ -53,98 +45,49 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* STANZZA HERO COMPOSITION: Graceful Editorial Serif Typography */}
-        <div className="relative my-4 sm:my-6">
-          
-          {/* Micro Category Slogan */}
-          <div className="flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#6B6B6B] uppercase tracking-widest mb-6 sm:mb-8">
-            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
-              ENGINEERING
-            </span>
-            <span>•</span>
-            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
-              RESEARCH
-            </span>
-            <span>•</span>
-            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
-              CAPITAL
-            </span>
-          </div>
+        {/* Two-column hero: headline left, ASCII $100 note right */}
+        <div className="relative my-4 sm:my-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
 
-          {/* Stanzza Scaled Headline with Harmonious Proportion */}
-          <motion.div style={{ y: yHeadline }} className="mb-6 sm:mb-8">
-            <h1 className="font-serif text-[clamp(44px,7.5vw,98px)] font-normal text-[#0A0A0A] leading-[0.92] tracking-[-0.03em] max-w-5xl">
-              From code to capital.
-            </h1>
-            <h2 className="font-serif italic text-[clamp(36px,6.2vw,84px)] font-normal text-[#0A0A0A]/85 leading-[0.96] tracking-[-0.03em] mt-1 sm:mt-2 max-w-5xl">
-              Composed with institutional precision.
-            </h2>
-          </motion.div>
-
-          {/* Full-Bleed Expanding Aperture Window (Stanzza .image-hero) */}
-          <div 
-            className="relative w-full aspect-[16/7.5] sm:aspect-[16/7] md:aspect-[21/9] rounded-3xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A] mb-8 sm:mb-10"
-            style={{ boxShadow: '0 24px 60px rgba(30,30,30,0.07)' }}
-          >
-            <img
-              src="/images/Adamas-University_-Kolkata_k8826n.jpg"
-              alt="Adamas University campus, Kolkata"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#FFFFFF]/10">
-              Plate 00 // Adamas University Campus • Kolkata
-            </div>
-            <div className="absolute bottom-4 right-4 px-3.5 py-1.5 rounded-full bg-[#FFFFFF]/90 text-[#0A0A0A] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#DADADA]">
-              Adamas University • SOET Chapter
-            </div>
-          </div>
-
-          {/* Editorial Subtitle & Balanced Stanzza Pill Action Buttons */}
-          <div className="pt-8 sm:pt-10 border-t border-[#DADADA] flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="max-w-2xl">
-              <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A] leading-snug tracking-tight mb-3">
-                A student-governed engineering society bridging academia and institutional quantitative finance.
-              </h3>
-
-              <p className="font-sans-body text-sm sm:text-base text-[#4A4A4A] leading-relaxed font-light">
-                We engineer high-throughput order matching engines, calibrate stochastic volatility surfaces, deploy zero-knowledge protocol invariants, and incubate technical founders at the academic frontier.
-              </p>
-            </div>
-
-            {/* Stanzza Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5 shrink-0">
-              <button
-                type="button"
-                onClick={openJoinModal}
-                className="stanzza-btn-pill stanzza-btn-dark px-8 py-4 text-xs font-semibold uppercase tracking-[0.14em]"
-              >
-                <span>Join The Guild</span>
-                <span className="transition-transform duration-200">→</span>
-              </button>
-
-              <a
-                href="#composition"
-                className="stanzza-btn-pill stanzza-btn-light px-8 py-4 text-xs font-semibold uppercase tracking-[0.14em]"
-              >
-                <span>Philosophy</span>
-                <span className="text-[#6B6B6B]">↓</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Floating Pill Domain Ticker */}
-          <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex flex-wrap items-center gap-2 sm:gap-3">
-            <span className="font-mono text-[10px] text-[#6B6B6B] uppercase tracking-widest mr-2">
-              DISCIPLINES:
-            </span>
-            {DOMAINS.map((domain, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 rounded-full bg-[#F2F2F2] border border-[#DADADA] font-mono text-[10px] text-[#4A4A4A] hover:border-[#0A0A0A] transition-colors"
-              >
-                {domain}
+          <div>
+            {/* Micro Category Slogan */}
+            <div className="flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#6B6B6B] uppercase tracking-widest mb-6 sm:mb-8">
+              <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
+                ENGINEERING
               </span>
-            ))}
+              <span>•</span>
+              <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
+                RESEARCH
+              </span>
+              <span>•</span>
+              <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-semibold">
+                CAPITAL
+              </span>
+            </div>
+
+            <motion.div style={{ y: yHeadline }}>
+              <h1 className="font-serif text-[clamp(44px,7.5vw,98px)] font-normal text-[#0A0A0A] leading-[0.92] tracking-[-0.03em] max-w-5xl">
+                From code to capital.
+              </h1>
+              <h2 className="font-serif italic text-[clamp(36px,6.2vw,84px)] font-normal text-[#0A0A0A]/85 leading-[0.96] tracking-[-0.03em] mt-1 sm:mt-2 max-w-5xl">
+                Composed with institutional precision.
+              </h2>
+            </motion.div>
+          </div>
+
+          <div className="lg:pt-2">
+            <p className="font-mono text-sm sm:text-base uppercase tracking-wide text-[#0A0A0A] mb-5">
+              Quantitative Currency Analysis //<br />ASCII Representation
+            </p>
+
+            <AsciiDollar />
+
+            <button
+              type="button"
+              onClick={openJoinModal}
+              className="stanzza-btn-pill stanzza-btn-dark mt-8 px-8 py-4 text-xs font-semibold uppercase tracking-[0.14em]"
+            >
+              <span>Join Us</span>
+            </button>
           </div>
 
         </div>
