@@ -96,12 +96,12 @@ export default function HeroSection() {
           >
             <motion.img
               style={{ scale: scaleHeroImg }}
-              src="/images/event-summit.jpg"
-              alt="Fitech Quantitative Systems Lab"
+              src="/images/Adamas-University_-Kolkata_k8826n.jpg"
+              alt="Adamas University campus, Kolkata"
               className="w-full h-full object-cover grayscale contrast-115 group-hover:grayscale-0 transition-all duration-700 will-change-transform"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#FFFFFF]/10">
-              Plate 00 // Flagship Research Symposium • Main Auditorium
+              Plate 00 // Adamas University Campus • Kolkata
             </div>
             <div className="absolute bottom-4 right-4 px-3.5 py-1.5 rounded-full bg-[#FFFFFF]/90 text-[#0A0A0A] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#DADADA]">
               Adamas University • SOET Chapter
