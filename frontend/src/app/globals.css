@@ -5411,3 +5411,46 @@ html.js-reveal [data-reveal].in-view {
 .faq-icon.is-open .faq-icon-bar--v { transform: rotate(180deg); opacity: 0; }
 .faq-toggle:active .faq-icon { transform: scale(0.92); }
 .faq-toggle:focus-visible { outline: 2px solid var(--mono-ink); outline-offset: 3px; }
+
+/* ---- Page loader odometer: three full-height columns split by hairlines,
+   one giant digit each, bottom-aligned; each column is a reel of 0-9 that
+   slides to the current digit. ---- */
+.loader-odometer {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  pointer-events: none;
+}
+.loader-col {
+  position: relative;
+  border-left: 1px solid var(--mono-ink);
+  overflow: hidden;
+}
+.loader-col:last-child { border-right: 1px solid var(--mono-ink); }
+/* Ten slots, each exactly one column tall, stacked top-down; the reel is
+   moved up by d slots to bring digit d into view. */
+.loader-reel {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1000%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+.loader-digit {
+  flex: 0 0 10%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 2vh;
+  font-family: var(--font-body), 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(120px, 30vw, 520px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: var(--mono-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader-reel { transition: none; }
+}
