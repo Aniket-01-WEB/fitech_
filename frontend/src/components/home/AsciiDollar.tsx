@@ -9,8 +9,8 @@ type Dots = { cols: number; rows: number; text: string };
 const COLS = 240;
 const ROWS = 61;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
-const SETTLE_MS = 1600;
-const NOISE = ' ..:';
+const DECODE_MS = 1800;
+const GLYPHS = '$#%&@*+=-:.0123456789';
 
 export default function AsciiDollar() {
   const [text, setText] = useState('');
@@ -23,9 +23,11 @@ export default function AsciiDollar() {
       .then((data: Dots) => {
         if (cancelled) return;
         const target = data.text;
-        // Every dot locks into place at its own random moment, so the note
-        // settles out of a field of scattered dots rather than wiping in.
-        const lockAt = Array.from(target, (ch) => (ch === '\n' ? 0 : Math.random() * SETTLE_MS));
+        // Each character locks in at its own random moment so the note
+        // "resolves" out of glyph noise rather than typing in left-to-right.
+        const lockAt = Array.from(target, (ch) =>
+          ch === '\n' || ch === ' ' ? 0 : Math.random() * DECODE_MS,
+        );
         const start = performance.now();
         const tick = (now: number) => {
           const t = now - start;
@@ -36,7 +38,7 @@ export default function AsciiDollar() {
               out += target[i];
             } else {
               done = false;
-              out += NOISE[(Math.random() * NOISE.length) | 0];
+              out += GLYPHS[(Math.random() * GLYPHS.length) | 0];
             }
           }
           setText(out);
