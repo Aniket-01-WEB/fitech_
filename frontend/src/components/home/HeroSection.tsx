@@ -11,7 +11,7 @@ export default function HeroSection() {
     <section className="relative w-full max-w-full bg-[#FFFFFF] pt-20 pb-8 sm:pt-24 sm:pb-10 lg:pt-24 lg:pb-10 border-b border-[#DADADA] overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10 flex flex-col items-center text-center">
 
-        <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A] leading-snug tracking-tight mb-2 sm:mb-3">
+        <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#0A0A0A] leading-snug tracking-tight mb-2 sm:mb-3">
           From code to capital.
         </p>
 
