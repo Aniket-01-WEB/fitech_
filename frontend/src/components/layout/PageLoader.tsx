@@ -60,8 +60,8 @@ export default function PageLoader() {
     }
 
     const startTime = performance.now();
-    const duration = 1600; // 000 -> 100
-    const holdAt100 = 550; // let "100" land and be read before the site opens
+    const duration = 2600; // 000 -> 100
+    const holdAt100 = 400; // ~3 s on screen in total before the slide-up
 
     let animationFrameId: number;
     let holdTimer = 0;
@@ -87,7 +87,7 @@ export default function PageLoader() {
           }
           setTimeout(() => {
             setShouldRender(false);
-          }, 600);
+          }, 900);
         }, holdAt100);
       }
     };
@@ -108,9 +108,9 @@ export default function PageLoader() {
     <AnimatePresence>
       {!isDone && (
         <motion.div
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ y: 0 }}
+          exit={{ y: '-100%' }}
+          transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[99999] bg-[#FFFFFF] flex flex-col justify-between p-8 sm:p-14 select-none pointer-events-auto overflow-hidden"
         >
           {/* Top Archival Header */}
