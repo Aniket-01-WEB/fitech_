@@ -98,7 +98,7 @@ export default function HeroSection() {
               style={{ scale: scaleHeroImg }}
               src="/images/Adamas-University_-Kolkata_k8826n.jpg"
               alt="Adamas University campus, Kolkata"
-              className="w-full h-full object-cover grayscale contrast-115 group-hover:grayscale-0 transition-all duration-700 will-change-transform"
+              className="w-full h-full object-cover grayscale contrast-115 transition-all duration-700 will-change-transform"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] backdrop-blur-md font-mono text-[10px] uppercase tracking-wider border border-[#FFFFFF]/10">
               Plate 00 // Adamas University Campus • Kolkata
@@ -128,7 +128,7 @@ export default function HeroSection() {
                 className="stanzza-btn-pill stanzza-btn-dark px-8 py-4 text-xs font-semibold uppercase tracking-[0.14em]"
               >
                 <span>Join The Guild</span>
-                <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                <span className="transition-transform duration-200">→</span>
               </button>
 
               <a

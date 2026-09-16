@@ -79,7 +79,7 @@ export default function ActivitiesSection() {
                 style={{ scale: imageScale }}
                 src={featuredUpcoming.image || '/images/event-summit.jpg'}
                 alt={featuredUpcoming.title}
-                className="w-full h-full object-cover grayscale contrast-115 group-hover:grayscale-0 transition-all duration-700"
+                className="w-full h-full object-cover grayscale contrast-115 transition-all duration-700"
               />
               <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md">
                 {featuredUpcoming.category || 'Quantitative Summit'}
@@ -148,7 +148,7 @@ export default function ActivitiesSection() {
                       {event.title}
                     </h5>
                   </div>
-                  <span className="font-mono text-xs text-[#0A0A0A] font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span className="font-mono text-xs text-[#0A0A0A] font-semibold flex items-center gap-1 transition-transform">
                     <span>VIEW DETAILS</span>
                     <span>→</span>
                   </span>

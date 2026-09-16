@@ -4920,11 +4920,6 @@ canvas{display:block}
   border-radius: 24px !important;
   box-shadow: var(--mono-shadow) !important;
 }
-.rounded-3xl.bg-\[\#F2F2F2\]:hover,
-.rounded-3xl.bg-\[\#FFFFFF\]:hover {
-  border-color: var(--mono-ink) !important;
-  box-shadow: 10px 10px 0 0 var(--mono-ink) !important;
-}
 
 /* Alternate tiles inside a grid between white and light grey so a row of
    cards reads as a set of stickers rather than one flat surface. */
@@ -5044,11 +5039,6 @@ footer img { filter: brightness(0) invert(1); }
   border: 1.5px solid var(--mono-ink) !important;
   border-radius: 24px !important;
   box-shadow: var(--mono-shadow) !important;
-}
-.simple-event-card:hover, .simple-card:hover, .admin-card:hover, .admin-event-card:hover,
-.lab-card:hover, .lab-build-card:hover, .habito-card:hover, .benefit-card:hover {
-  border-color: var(--mono-ink) !important;
-  box-shadow: 10px 10px 0 0 var(--mono-ink) !important;
 }
 .projects-reveal-card {
   border: 1.5px solid var(--mono-ink) !important;

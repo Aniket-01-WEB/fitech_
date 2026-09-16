@@ -74,7 +74,7 @@ export default function CommunitiesSection() {
               className="bg-[#F2F2F2] rounded-3xl p-8 border border-[#DADADA] hover:border-[#0A0A0A] transition-all duration-300 group"
               style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
             >
-              <span className="font-serif text-6xl sm:text-7xl font-normal text-[#0A0A0A] block mb-4 group-hover:translate-x-1 transition-transform">
+              <span className="font-serif text-6xl sm:text-7xl font-normal text-[#0A0A0A] block mb-4 transition-transform">
                 {stat.num}
               </span>
               <h4 className="font-sans-body font-semibold text-sm text-[#0A0A0A] mb-2 uppercase tracking-wide">
