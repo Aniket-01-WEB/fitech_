@@ -279,7 +279,7 @@ export default function AdminPortalPage() {
         </div>
 
         {/* TABS - MONOCHROME SWITCHER */}
-        <div className="portal-role-switch" style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', gap: '8px', background: '#F2F2F2', padding: '6px', borderRadius: '10px', border: '1px solid #DADADA' }}>
+        <div className="portal-role-switch" style={{ marginBottom: '32px' }}>
           <button
             type="button"
             className={`portal-role-tab ${activeTab === 'events' ? 'active' : ''}`}
@@ -477,7 +477,7 @@ export default function AdminPortalPage() {
                 <div key={evt.id} className="admin-event-card">
                   <div className="admin-card-top-content">
                     <span className={`status-pill ${evt.status || 'approved'}`}>{STATUS_LABEL[evt.status || 'approved']}</span>
-                    <span className="admin-badge-type" style={{ display: 'block', marginTop: '8px' }}>{evt.type}</span>
+                    <span className="admin-badge-type" style={{ marginTop: '8px' }}>{evt.type}</span>
                     <h3 className="admin-event-title">{evt.title}</h3>
                     <p className="admin-event-desc">{evt.description}</p>
                   </div>
