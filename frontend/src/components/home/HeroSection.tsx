@@ -19,7 +19,7 @@ export default function HeroSection() {
           <AsciiDollar />
         </div>
 
-        <h1 className="font-serif text-[clamp(26px,3.2vw,44px)] font-normal text-[#0A0A0A] leading-snug tracking-tight max-w-4xl mt-2 sm:mt-3">
+        <h1 className="font-serif text-[clamp(26px,3.2vw,44px)] font-normal text-[#0A0A0A] leading-[1.15] tracking-tight max-w-4xl mt-2 sm:mt-3">
           A student-governed engineering society bridging academia
           <br className="hidden sm:block" />
           {' '}and institutional quantitative finance.
