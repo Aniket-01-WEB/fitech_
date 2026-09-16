@@ -2,7 +2,7 @@
 // is one glyph from a light-to-dark ramp, so at a few px per cell the
 // result reads like a halftone photograph.
 //
-//   node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma] [ramp] [contrast]
+//   node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma] [ramp] [contrast] [sharpen]
 //
 // Current render: the Series 2009+ note (blue ribbon, bell-in-inkwell),
 // public-domain scan from Wikimedia Commons:
@@ -20,15 +20,18 @@ const require = createRequire(import.meta.url);
 const jpeg = require('jpeg-js');
 
 const src = process.argv[2];
-const COLS = Number(process.argv[3] || 360);
+const COLS = Number(process.argv[3] || 440);
 const CHAR_ASPECT = 0.6; // monospace advance width / line height at line-height:1
 // Light -> dark. Each glyph is a grey level; at hero size the glyph shape
 // blurs away and only its ink coverage reads, so this behaves like a
 // 10-step greyscale.
 const RAMP = process.argv[5] || ' .:-=+*#%@';
-const GAMMA = Number(process.argv[4] || 1.6);
+const GAMMA = Number(process.argv[4] || 1.35);
 // S-curve strength: >1 pushes paper towards white and ink towards black.
 const CONTRAST = Number(process.argv[6] || 2.4);
+// Unsharp mask amount applied to the cell grid before quantising — brings
+// out edges (hair, lettering, the frame) that box-averaging softens.
+const SHARPEN = Number(process.argv[7] || 1.2);
 
 if (!src) {
   console.error('usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]');
@@ -83,6 +86,26 @@ for (let r = 0; r < ROWS; r++) {
     }
     cell[r * COLS + c] = sum / n / 255;
   }
+}
+
+// Unsharp mask: cell - SHARPEN * (blur(cell) - cell), 3x3 box blur.
+if (SHARPEN > 0) {
+  const blur = new Float32Array(cell.length);
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      let s = 0, n = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const rr = r + dr, cc = c + dc;
+          if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) continue;
+          s += cell[rr * COLS + cc];
+          n++;
+        }
+      }
+      blur[r * COLS + c] = s / n;
+    }
+  }
+  for (let i = 0; i < cell.length; i++) cell[i] = Math.min(1, Math.max(0, cell[i] + SHARPEN * (cell[i] - blur[i])));
 }
 
 // Stretch contrast so the paper goes fully white and ink fully dark, then

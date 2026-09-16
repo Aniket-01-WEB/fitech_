@@ -5094,8 +5094,8 @@ footer img { filter: brightness(0) invert(1); }
   inset: 0;
   margin: 0;
   font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
-  /* 360 columns at a 0.6em advance width fill the container exactly */
-  font-size: calc(100cqw / 216); /* 360 cols x 0.6em */
+  /* 440 columns at a 0.6em advance width fill the container exactly */
+  font-size: calc(100cqw / 264); /* 440 cols x 0.6em */
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0;

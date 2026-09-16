@@ -7,8 +7,8 @@ type Dots = { cols: number; rows: number; text: string };
 
 // Sized from the dot grid so the box holds its shape before the data
 // arrives (no layout shift), and the font scales with the container width.
-const COLS = 360;
-const ROWS = 86;
+const COLS = 440;
+const ROWS = 105;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
 
 const UNFOLD_MS = 4200;
@@ -67,6 +67,12 @@ function crumple(rows: string[], a: number): string {
       const nx = ux / sxScale;
       const ny = uy / syScale;
 
+      // Cheap reject before the facet search: anything outside the ball's
+      // widest possible rim (and, as it opens, the note rectangle) is blank.
+      const rectD = Math.max(Math.abs(nx) / halfW, Math.abs(ny) / halfH);
+      const radial = Math.hypot(ux, uy) / ballR;
+      if (a * radial / 1.1 + (1 - a) * rectD >= 1) { line += ' '; continue; }
+
       // Silhouette: blend a jagged circle (ball) with the note rectangle.
       let best = 0, second = 1, d1 = Infinity, d2 = Infinity;
       for (let k = 0; k < FACETS; k++) {
@@ -75,8 +81,7 @@ function crumple(rows: string[], a: number): string {
         if (d < d1) { d2 = d1; second = best; d1 = d; best = k; } else if (d < d2) { d2 = d; second = k; }
       }
       const seed = SEEDS[best];
-      const rectD = Math.max(Math.abs(nx) / halfW, Math.abs(ny) / halfH);
-      const circD = Math.hypot(ux, uy) / (ballR * seed.rim);
+      const circD = radial / seed.rim;
       const inside = a * circD + (1 - a) * rectD < 1;
       if (!inside) { line += ' '; continue; }
 
