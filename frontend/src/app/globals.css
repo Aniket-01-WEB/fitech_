@@ -5277,16 +5277,27 @@ button:disabled:active { transform: none !important; }
 .portal-page .btn { padding: 10px 18px; font-size: 12px; }
 .portal-page .btn.btn-lg { padding: 12px 22px; font-size: 13px; }
 
-/* Buttons inside tables stay flat — the hard offset shadow reads as
-   clutter when they're stacked in rows. */
+/* Buttons inside tables get a slimmer 2px shadow — the full 4px offset
+   reads as clutter in rows — and visibly sink into it when pressed. */
 .portal-page table .btn,
 .portal-page table .stanzza-btn-pill,
 .portal-page table .admin-btn {
-  box-shadow: none !important;
+  box-shadow: 2px 2px 0 0 var(--mono-ink) !important;
   padding: 7px 14px;
   font-size: 11px;
 }
-.portal-page table .btn:active { transform: scale(0.95) !important; box-shadow: none !important; }
+.portal-page table .btn:active,
+.portal-page table .stanzza-btn-pill:active,
+.portal-page table .admin-btn:active {
+  transform: translate(2px, 2px) scale(0.96) !important;
+  box-shadow: 0 0 0 0 var(--mono-ink) !important;
+}
+
+/* Tab pills and outline buttons also tint while held so the press reads
+   even where there's no shadow to sink into. */
+.portal-page .portal-role-tab:active:not(.active) { background: var(--mono-paper) !important; }
+.portal-page .btn-secondary:active,
+.portal-page .admin-btn-edit:active { background: var(--mono-paper) !important; }
 
 /* Empty state: was a 680px-tall slab */
 .portal-page .empty-events-box {
