@@ -8,61 +8,95 @@ type Dots = { cols: number; rows: number; text: string };
 // Sized from the dot grid so the box holds its shape before the data
 // arrives (no layout shift), and the font scales with the container width.
 const COLS = 240;
-const ROWS = 61;
+const ROWS = 60;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
 
-const UNFOLD_MS = 2800;
-const PANELS = 7; // accordion folds across the note
-const CREASE = '|/\\';
-const CRUMPLE = '/\\<>^v~';
+const UNFOLD_MS = 4200;
+const FACETS = 26;
+const EDGE = '|/-\\';
 
-// Deterministic per-cell noise so crumple texture doesn't flicker frame to frame.
-function hash(r: number, c: number) {
-  let h = (r * 73856093) ^ (c * 19349663);
+// Deterministic noise so facet layout and crumple texture don't flicker.
+function hash(a: number, b: number) {
+  let h = (a * 73856093) ^ (b * 19349663);
   h = Math.imul(h ^ (h >>> 13), 0x5bd1e995);
   return ((h ^ (h >>> 15)) >>> 0) / 4294967296;
 }
 
-// Samples the flat note through a displacement field whose strength `a`
-// runs 1 -> 0: accordion panels alternately squeezed and stretched, a
-// wrinkle wobble on both axes, dark crease lines at panel edges and stray
-// crumple glyphs. At a = 0 the output is exactly the flat note.
+// Facets of the crumpled ball: each is a Voronoi cell in note space that
+// shows a shifted fragment of the note, with a jagged silhouette radius.
+// Coordinates are in "pixel" space (cols x CHAR_ASPECT, rows) so that
+// distances and the ball are visually round.
+const SEEDS = Array.from({ length: FACETS }, (_, k) => ({
+  x: (hash(k, 1) - 0.5) * COLS * CHAR_ASPECT,
+  y: (hash(k, 2) - 0.5) * ROWS,
+  dx: (hash(k, 3) - 0.5) * 70, // fragment shift (px), scaled by crumple
+  dy: (hash(k, 4) - 0.5) * 30,
+  rim: 0.88 + hash(k, 5) * 0.22, // silhouette bump for this facet
+}));
+
+// Samples the flat note through a crumple field of strength `a` (1 -> 0):
+// the note is squeezed into a rough ball, its surface broken into shifted
+// facets with dark crease edges, tilted mid-way through, and everything
+// relaxes to exactly the flat note at a = 0.
 function crumple(rows: string[], a: number): string {
   if (a <= 0) return rows.join('\n');
   const cx = COLS / 2;
   const cy = ROWS / 2;
-  const widthScale = 1 - 0.42 * a; // folded note is narrower
-  const panelW = COLS / PANELS;
+  const halfW = cx * CHAR_ASPECT; // px
+  const halfH = cy;
+  const ballR = halfH * 0.74;
+  // Overall scale from ball to full sheet, per axis (px).
+  const sxScale = ballR / halfW + (1 - ballR / halfW) * (1 - a);
+  const syScale = ballR / halfH + (1 - ballR / halfH) * (1 - a);
+  // Tilt peaks mid-unfold and is zero at both ends, like the tumble in
+  // the reference clip.
+  const tilt = a * (1 - a) * 1.1;
+  const cosT = Math.cos(tilt);
+  const sinT = Math.sin(tilt);
+  const edgeW = 0.55 * a;
+
   const out: string[] = [];
   for (let r = 0; r < ROWS; r++) {
     let line = '';
     for (let c = 0; c < COLS; c++) {
-      // Accordion: triangle wave over panels squeezes one side of each fold
-      // and stretches the other.
-      const u = (c / panelW) % 1;
-      const tri = u < 0.5 ? u * 2 : 2 - u * 2;
-      const accordion = (tri - 0.5) * panelW * 0.9;
-      const wrinkleX = 5 * Math.sin(r * 0.23 + c * 0.05) + 2.5 * Math.sin(r * 0.61 - c * 0.13);
-      const wrinkleY = 2.6 * Math.sin(c * 0.11 + 0.8) + 1.4 * Math.sin(c * 0.29 + r * 0.17);
+      // Output cell -> px, undo tilt, undo scale -> note-space px.
+      const px = (c - cx) * CHAR_ASPECT;
+      const py = r - cy;
+      const ux = px * cosT + py * sinT;
+      const uy = -px * sinT + py * cosT;
+      const nx = ux / sxScale;
+      const ny = uy / syScale;
 
-      const sx = cx + (c - cx) / widthScale + a * (accordion + wrinkleX);
-      const sy = cy + (r - cy) + a * wrinkleY;
+      // Silhouette: blend a jagged circle (ball) with the note rectangle.
+      let best = 0, second = 1, d1 = Infinity, d2 = Infinity;
+      for (let k = 0; k < FACETS; k++) {
+        const s = SEEDS[k];
+        const d = (nx - s.x) * (nx - s.x) + (ny - s.y) * (ny - s.y);
+        if (d < d1) { d2 = d1; second = best; d1 = d; best = k; } else if (d < d2) { d2 = d; second = k; }
+      }
+      const seed = SEEDS[best];
+      const rectD = Math.max(Math.abs(nx) / halfW, Math.abs(ny) / halfH);
+      const circD = Math.hypot(ux, uy) / (ballR * seed.rim);
+      const inside = a * circD + (1 - a) * rectD < 1;
+      if (!inside) { line += ' '; continue; }
 
-      const rr = Math.round(sy);
-      const cc = Math.round(sx);
+      // Facet shows a shifted fragment of the note.
+      const fx = nx + a * seed.dx;
+      const fy = ny + a * seed.dy;
+      const cc = Math.round(fx / CHAR_ASPECT + cx);
+      const rr = Math.round(fy + cy);
       let ch = ' ';
       if (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS) ch = rows[rr][cc] ?? ' ';
 
-      // Only draw folds/crumple where the note actually is.
-      const inside = Math.abs(sx - cx) < cx && Math.abs(sy - cy) < cy;
-      if (inside) {
-        const n = hash(r, c);
-        const edge = Math.min(u, 1 - u) * panelW; // distance to nearest panel edge
-        if (edge < 0.6 && n < a * 1.2) {
-          ch = CREASE[(r + Math.floor(c / panelW)) % CREASE.length];
-        } else if (n < a * a * 0.16) {
-          ch = CRUMPLE[Math.floor(hash(c, r) * CRUMPLE.length)];
-        }
+      // Crease where two facets meet, oriented along the boundary.
+      const gap = Math.sqrt(d2) - Math.sqrt(d1);
+      if (gap < edgeW) {
+        const o = SEEDS[second];
+        const ang = Math.atan2(seed.y - o.y, seed.x - o.x) + Math.PI / 2;
+        const q = Math.round(((ang % Math.PI) + Math.PI) % Math.PI / (Math.PI / 4)) % 4;
+        ch = EDGE[[1, 0, 3, 2][q]];
+      } else if (a > 0.15 && hash(r, c) < a * a * 0.03) {
+        ch = EDGE[Math.floor(hash(c, r) * EDGE.length)];
       }
       line += ch;
     }
@@ -108,11 +142,10 @@ export default function AsciiDollar() {
             return;
           }
           const t = Math.min(1, (now - start) / UNFOLD_MS);
-          // Ease-out with a small tremor early on, like fingers working
-          // the creases out, settling to perfectly flat.
-          const eased = 1 - Math.pow(1 - t, 3);
-          const tremor = (1 - t) * 0.08 * Math.sin(t * 40);
-          const a = Math.max(0, 1 - eased + tremor);
+          // Slow start (the ball loosening), fast middle (the note
+          // springing open), gentle settle to perfectly flat.
+          const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+          const a = Math.max(0, 1 - eased);
           setText(crumple(rows, t >= 1 ? 0 : a));
           if (t < 1) raf = requestAnimationFrame(tick);
         };
