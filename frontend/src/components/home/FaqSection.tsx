@@ -74,7 +74,9 @@ export default function FaqSection() {
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full flex items-start justify-between gap-6 text-left cursor-pointer group"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${idx}`}
+                  className="faq-toggle w-full flex items-start justify-between gap-6 text-left cursor-pointer group"
                 >
                   <div className="flex items-baseline gap-4 sm:gap-6">
                     <span className="font-mono text-xs text-[#6B6B6B] pt-1">
@@ -85,14 +87,19 @@ export default function FaqSection() {
                     </h3>
                   </div>
 
-                  <span className="w-8 h-8 rounded-full bg-[#F2F2F2] border border-[#DADADA] flex items-center justify-center font-serif text-xl text-[#0A0A0A] shrink-0 transition-transform duration-300">
-                    {isOpen ? '−' : '+'}
+                  <span
+                    aria-hidden="true"
+                    className={`faq-icon w-9 h-9 rounded-full border-[1.5px] border-[#0A0A0A] flex items-center justify-center shrink-0 ${isOpen ? 'is-open' : ''}`}
+                  >
+                    <span className="faq-icon-bar" />
+                    <span className="faq-icon-bar faq-icon-bar--v" />
                   </span>
                 </button>
 
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div
+                      id={`faq-answer-${idx}`}
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}

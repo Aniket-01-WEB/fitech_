@@ -5387,3 +5387,32 @@ html.js-reveal [data-reveal].in-view {
 @media (prefers-reduced-motion: reduce) {
   html.js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
+
+/* ---- FAQ toggles: the round +/× icon is drawn from two bars so it can
+   animate — the vertical bar rotates away when open — and the whole icon
+   inverts on hover / while open so the control reads as clickable. ---- */
+.faq-toggle { -webkit-tap-highlight-color: transparent; }
+.faq-icon {
+  position: relative;
+  background: var(--mono-white);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+.faq-icon-bar {
+  position: absolute;
+  width: 14px;
+  height: 1.5px;
+  background: var(--mono-ink);
+  border-radius: 1px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+}
+.faq-icon-bar--v { transform: rotate(90deg); }
+.faq-toggle:hover .faq-icon,
+.faq-toggle:focus-visible .faq-icon { background: var(--mono-ink); transform: scale(1.08); }
+.faq-toggle:hover .faq-icon-bar,
+.faq-toggle:focus-visible .faq-icon-bar { background: var(--mono-white); }
+.faq-icon.is-open { background: var(--mono-ink); }
+.faq-icon.is-open .faq-icon-bar { background: var(--mono-white); }
+.faq-icon.is-open .faq-icon-bar--v { transform: rotate(180deg); opacity: 0; }
+.faq-toggle:active .faq-icon { transform: scale(0.92); }
+.faq-toggle:focus-visible { outline: none; }
+.faq-toggle:focus-visible h3 { text-decoration: underline; }
