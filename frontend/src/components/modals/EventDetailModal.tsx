@@ -31,7 +31,7 @@ export default function EventDetailModal() {
       <div className="portal-detail-dialog" style={{ borderRadius: '16px', overflow: 'hidden' }}>
         <div
           className="portal-detail-banner"
-          style={{ background: activeDetailEvent.banner || 'linear-gradient(135deg, #0f172a, #1e293b)' }}
+          style={{ background: activeDetailEvent.banner || 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' }}
         >
           <span className="event-category" style={{ position: 'static' }}>
             {activeDetailEvent.type || 'Event'}

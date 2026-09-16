@@ -173,7 +173,7 @@ const DEFAULT_RECORDINGS = [
     duration_seconds: 6300,
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     speaker: 'Aniket Dutta (Tech Lead)',
-    banner: 'linear-gradient(135deg, #0f172a, #1e293b)',
+    banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)',
     description: 'Cache-friendly data structures, ring buffers, and SIMD vectorization techniques for high-throughput quantitative engines.',
     takeaways: ['Ring buffer lock-free queues', 'L1/L2 cache locality patterns', 'Kernel bypass networking basics'],
     status: 'approved'

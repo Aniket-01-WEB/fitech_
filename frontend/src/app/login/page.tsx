@@ -254,7 +254,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={goToForgotPassword}
-                    style={{ font: 'inherit', fontSize: '12px', color: '#0f172a', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                    style={{ font: 'inherit', fontSize: '12px', color: '#0A0A0A', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                   >
                     Forgot password?
                   </button>
@@ -378,7 +378,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleRequestOtp}
                 disabled={isSubmitting}
-                style={{ font: 'inherit', fontSize: '13px', color: '#0f172a', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{ font: 'inherit', fontSize: '13px', color: '#0A0A0A', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 Resend code
               </button>

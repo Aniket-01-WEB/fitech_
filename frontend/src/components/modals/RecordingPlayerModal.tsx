@@ -66,7 +66,7 @@ export default function RecordingPlayerModal() {
           className="portal-detail-banner"
           style={{
             height: '240px',
-            background: activeRecordingPlayer.banner || 'linear-gradient(135deg, #090d16, #1e293b)',
+            background: activeRecordingPlayer.banner || 'linear-gradient(135deg, #090d16, #0A0A0A)',
             position: 'relative',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -146,7 +146,7 @@ export default function RecordingPlayerModal() {
 
         <div className="portal-detail-body">
           <h3 className="portal-detail-title" style={{ fontSize: '24px' }}>{activeRecordingPlayer.title}</h3>
-          <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '13px', marginBottom: '12px' }}>
+          <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '13px', marginBottom: '12px' }}>
             🎙 {activeRecordingPlayer.speaker}
           </p>
 
@@ -158,14 +158,14 @@ export default function RecordingPlayerModal() {
           <p className="portal-detail-desc">{activeRecordingPlayer.description}</p>
 
           {activeRecordingPlayer.takeaways && activeRecordingPlayer.takeaways.length > 0 && (
-            <div style={{ marginTop: '20px', background: '#f8fafc', padding: '18px', border: '1px solid #e2e8f0' }}>
-              <strong style={{ display: 'block', fontSize: '13px', color: '#0f172a', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ marginTop: '20px', background: '#F2F2F2', padding: '18px', border: '1px solid #DADADA' }}>
+              <strong style={{ display: 'block', fontSize: '13px', color: '#0A0A0A', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Key Technical Takeaways
               </strong>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '0', fontSize: '13.5px', color: '#475569' }}>
                 {activeRecordingPlayer.takeaways.map((takeaway, idx) => (
                   <li key={idx} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#0f172a' }}>✦</span>
+                    <span style={{ color: '#0A0A0A' }}>✦</span>
                     <span>{takeaway}</span>
                   </li>
                 ))}

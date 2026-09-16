@@ -44,7 +44,7 @@ export default function AdminPortalPage() {
     time: '',
     venue: '',
     description: '',
-    banner: 'linear-gradient(135deg, #0f172a, #1e293b)'
+    banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)'
   });
 
   // Notes Modal state
@@ -113,7 +113,7 @@ export default function AdminPortalPage() {
     }
     setShowEventForm(false);
     setEditingEventId(null);
-    setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0f172a, #1e293b)' });
+    setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' });
   };
 
   const handleEditEventClick = (evt) => {
@@ -124,7 +124,7 @@ export default function AdminPortalPage() {
       time: evt.time,
       venue: evt.venue,
       description: evt.description,
-      banner: evt.banner || 'linear-gradient(135deg, #0f172a, #1e293b)'
+      banner: evt.banner || 'linear-gradient(135deg, #0A0A0A, #0A0A0A)'
     });
     setShowEventForm(true);
   };
@@ -209,7 +209,7 @@ export default function AdminPortalPage() {
         <div
           className="portal-header-card"
           style={{
-            background: '#0a0a0a',
+            background: '#0A0A0A',
             color: '#ffffff',
             padding: '36px 32px',
             borderRadius: '16px',
@@ -238,11 +238,11 @@ export default function AdminPortalPage() {
                 type="button"
                 onClick={() => {
                   setEditingEventId(null);
-                  setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0f172a, #1e293b)' });
+                  setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' });
                   setShowEventForm(true);
                 }}
                 className="admin-btn admin-btn-edit"
-                style={{ padding: '12px 20px', fontSize: '12px', background: '#ffffff', color: '#000000', border: '1.5px solid #ffffff' }}
+                style={{ padding: '12px 20px', fontSize: '12px', background: '#ffffff', color: '#0A0A0A', border: '1.5px solid #ffffff' }}
               >
                 + CREATE NEW EVENT
               </button>
@@ -279,12 +279,12 @@ export default function AdminPortalPage() {
         </div>
 
         {/* TABS - MONOCHROME SWITCHER */}
-        <div className="portal-role-switch" style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', gap: '8px', background: '#f8fafc', padding: '6px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+        <div className="portal-role-switch" style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', gap: '8px', background: '#F2F2F2', padding: '6px', borderRadius: '10px', border: '1px solid #DADADA' }}>
           <button
             type="button"
             className={`portal-role-tab ${activeTab === 'events' ? 'active' : ''}`}
             onClick={() => setActiveTab('events')}
-            style={activeTab === 'events' ? { background: '#0a0a0a', color: '#ffffff' } : { color: '#0f172a' }}
+            style={activeTab === 'events' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
           >
             EVENTS MANAGEMENT ({events.length})
           </button>
@@ -292,7 +292,7 @@ export default function AdminPortalPage() {
             type="button"
             className={`portal-role-tab ${activeTab === 'notes' ? 'active' : ''}`}
             onClick={() => setActiveTab('notes')}
-            style={activeTab === 'notes' ? { background: '#0a0a0a', color: '#ffffff' } : { color: '#0f172a' }}
+            style={activeTab === 'notes' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
           >
             NOTES & STUDY MATERIAL ({notesList.length})
           </button>
@@ -300,7 +300,7 @@ export default function AdminPortalPage() {
             type="button"
             className={`portal-role-tab ${activeTab === 'inspector' ? 'active' : ''}`}
             onClick={() => setActiveTab('inspector')}
-            style={activeTab === 'inspector' ? { background: '#0a0a0a', color: '#ffffff' } : { color: '#0f172a' }}
+            style={activeTab === 'inspector' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
           >
             STUDENT REGISTRATION INSPECTOR
           </button>
@@ -308,7 +308,7 @@ export default function AdminPortalPage() {
             type="button"
             className={`portal-role-tab ${activeTab === 'members' ? 'active' : ''}`}
             onClick={() => setActiveTab('members')}
-            style={activeTab === 'members' ? { background: '#0a0a0a', color: '#ffffff' } : { color: '#0f172a' }}
+            style={activeTab === 'members' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
           >
             MEMBER DIRECTORY ({memberList.length})
           </button>
@@ -316,7 +316,7 @@ export default function AdminPortalPage() {
             type="button"
             className={`portal-role-tab ${activeTab === 'recordings' ? 'active' : ''}`}
             onClick={() => setActiveTab('recordings')}
-            style={activeTab === 'recordings' ? { background: '#0a0a0a', color: '#ffffff' } : { color: '#0f172a' }}
+            style={activeTab === 'recordings' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
           >
             RECORDINGS ({recordings.length})
           </button>
@@ -325,9 +325,9 @@ export default function AdminPortalPage() {
         {/* CREATE / EDIT EVENT FORM MODAL */}
         {showEventForm && (
           <div className="portal-detail-backdrop active" onClick={(e) => { if (e.target === e.currentTarget) setShowEventForm(false); }}>
-            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #000000', background: '#ffffff' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #000000', paddingBottom: '12px' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#000000' }}>
+            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #0A0A0A', background: '#ffffff' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #0A0A0A', paddingBottom: '12px' }}>
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
                   {editingEventId ? 'EDIT EVENT DETAILS' : 'CREATE NEW CLUB EVENT'}
                 </h3>
                 <button type="button" onClick={() => setShowEventForm(false)} className="join-modal-close">×</button>
@@ -335,11 +335,11 @@ export default function AdminPortalPage() {
 
               <form onSubmit={handleSaveEvent} className="form-grid">
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Event Title</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Event Title</label>
                   <input type="text" value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} required />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Category / Type</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Category / Type</label>
                   <select value={eventForm.type} onChange={(e) => setEventForm({ ...eventForm, type: e.target.value })}>
                     <option value="Summit">Summit</option>
                     <option value="Workshop">Workshop</option>
@@ -350,15 +350,15 @@ export default function AdminPortalPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Date & Time</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Date & Time</label>
                   <input type="text" value={eventForm.time} onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })} placeholder="Mar 20, 2026 • 3:00 PM" required />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Venue / Location</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Venue / Location</label>
                   <input type="text" value={eventForm.venue} onChange={(e) => setEventForm({ ...eventForm, venue: e.target.value })} placeholder="Auditorium B / Lab 301" required />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Full Description</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Full Description</label>
                   <textarea rows={4} value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} required />
                 </div>
                 <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '16px' }}>
@@ -374,9 +374,9 @@ export default function AdminPortalPage() {
         {/* UPLOAD NOTES MODAL */}
         {showNoteModal && (
           <div className="portal-detail-backdrop active" onClick={(e) => { if (e.target === e.currentTarget) setShowNoteModal(false); }}>
-            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #000000', background: '#ffffff' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #000000', paddingBottom: '12px' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#000000' }}>
+            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #0A0A0A', background: '#ffffff' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #0A0A0A', paddingBottom: '12px' }}>
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
                   UPLOAD CLUB NOTES & STUDY MATERIAL
                 </h3>
                 <button type="button" onClick={() => setShowNoteModal(false)} className="join-modal-close">×</button>
@@ -384,7 +384,7 @@ export default function AdminPortalPage() {
 
               <form onSubmit={handleSaveNoteSubmit} className="form-grid">
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Document / Notes Title</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Document / Notes Title</label>
                   <input
                     type="text"
                     value={noteForm.title}
@@ -395,7 +395,7 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Academic Domain</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Academic Domain</label>
                   <select value={noteForm.domain} onChange={(e) => setNoteForm({ ...noteForm, domain: e.target.value })}>
                     <option value="Quantitative Finance & Algo Trading">Quantitative Finance & Algo Trading</option>
                     <option value="DeFi & Blockchain Infrastructure">DeFi & Blockchain Infrastructure</option>
@@ -407,7 +407,7 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Format / File Type</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Format / File Type</label>
                   <select value={noteForm.fileType} onChange={(e) => setNoteForm({ ...noteForm, fileType: e.target.value })}>
                     <option value="PDF / Mathematical Guide">PDF / Mathematical Guide</option>
                     <option value="Formula Sheet / Cheat Sheet">Formula Sheet / Cheat Sheet</option>
@@ -417,7 +417,7 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Author / Instructor Name</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Author / Instructor Name</label>
                   <input
                     type="text"
                     value={noteForm.author}
@@ -428,7 +428,7 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Key Topics Covered (Comma separated)</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Key Topics Covered (Comma separated)</label>
                   <input
                     type="text"
                     value={noteForm.topicsStr}
@@ -438,18 +438,18 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Upload File (PDF, DOC, image…)</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Upload File (PDF, DOC, image…)</label>
                   <input type="file" onChange={handleNoteFileChange} />
-                  {noteForm.fileName && <span style={{ fontSize: '12px', color: '#0f172a', marginTop: '4px', display: 'block' }}>Attached: {noteForm.fileName}</span>}
+                  {noteForm.fileName && <span style={{ fontSize: '12px', color: '#0A0A0A', marginTop: '4px', display: 'block' }}>Attached: {noteForm.fileName}</span>}
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Or External Link (Google Drive / URL — optional if a file is attached)</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Or External Link (Google Drive / URL — optional if a file is attached)</label>
                   <input type="url" value={noteForm.link} onChange={(e) => setNoteForm({ ...noteForm, link: e.target.value })} placeholder="https://drive.google.com/..." />
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Notes Summary & Key Formulas</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Notes Summary & Key Formulas</label>
                   <textarea
                     rows={4}
                     value={noteForm.description}
@@ -536,10 +536,10 @@ export default function AdminPortalPage() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
               <div>
-                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', margin: 0, color: '#0f172a' }}>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
                   STUDY MATERIAL & QUANTITATIVE NOTES REPOSITORY
                 </h2>
-                <p style={{ color: '#64748b', fontSize: '13px', margin: '4px 0 0 0' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '13px', margin: '4px 0 0 0' }}>
                   Manage and publish mathematical guides, formula sheets, and code notes for club members.
                 </p>
               </div>
@@ -576,10 +576,10 @@ export default function AdminPortalPage() {
                     </div>
                     <div className="admin-note-header" style={{ marginTop: '6px' }}>
                       <span className="admin-badge-type">{note.domain}</span>
-                      <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b' }}>{note.fileType}</span>
+                      <span style={{ fontSize: '11px', fontWeight: '700', color: '#8A8A8A' }}>{note.fileType}</span>
                     </div>
 
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 8px 0', lineHeight: '1.3' }}>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#0A0A0A', margin: '0 0 8px 0', lineHeight: '1.3' }}>
                       {note.title}
                     </h3>
                     <p style={{ fontSize: '12px', fontWeight: '700', color: '#334155', margin: '0 0 10px 0' }}>
@@ -596,7 +596,7 @@ export default function AdminPortalPage() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #DADADA' }}>
                     <button
                       type="button"
                       onClick={() => {
@@ -644,13 +644,13 @@ export default function AdminPortalPage() {
         {activeTab === 'inspector' && (
           <div>
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#0A0A0A', marginBottom: '8px' }}>
                 SELECT EVENT TO INSPECT REGISTERED MEMBERS:
               </label>
               <select
                 value={inspectEventId || ''}
                 onChange={(e) => setInspectEventId(e.target.value)}
-                style={{ width: '100%', maxWidth: '480px', padding: '12px', borderRadius: '8px', border: '1.5px solid #0f172a', fontFamily: 'inherit', fontWeight: '600', background: '#ffffff', color: '#000000' }}
+                style={{ width: '100%', maxWidth: '480px', padding: '12px', borderRadius: '8px', border: '1.5px solid #0A0A0A', fontFamily: 'inherit', fontWeight: '600', background: '#ffffff', color: '#0A0A0A' }}
               >
                 <option value="">-- Choose Event --</option>
                 {events.map(evt => (
@@ -660,21 +660,21 @@ export default function AdminPortalPage() {
             </div>
 
             {inspectEventObj ? (
-              <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0f172a' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '4px', color: '#0f172a' }}>
+              <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A' }}>
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '4px', color: '#0A0A0A' }}>
                   {inspectEventObj.title}
                 </h3>
-                <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '20px' }}>
-                  Total Registered Students: <strong style={{ color: '#0f172a' }}>{registeredStudentsForSelectedEvent.length}</strong>
+                <p style={{ color: '#8A8A8A', fontSize: '13px', marginBottom: '20px' }}>
+                  Total Registered Students: <strong style={{ color: '#0A0A0A' }}>{registeredStudentsForSelectedEvent.length}</strong>
                 </p>
 
                 {registeredStudentsForSelectedEvent.length === 0 ? (
-                  <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No students registered for this event yet.</p>
+                  <p style={{ color: '#8A8A8A', fontStyle: 'italic' }}>No students registered for this event yet.</p>
                 ) : (
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
                       <thead>
-                        <tr style={{ background: '#0f172a', color: '#ffffff', borderBottom: '2px solid #0f172a' }}>
+                        <tr style={{ background: '#0A0A0A', color: '#ffffff', borderBottom: '2px solid #0A0A0A' }}>
                           <th style={{ padding: '12px' }}>NAME</th>
                           <th style={{ padding: '12px' }}>ROLL NO.</th>
                           <th style={{ padding: '12px' }}>REG NO.</th>
@@ -685,8 +685,8 @@ export default function AdminPortalPage() {
                       </thead>
                       <tbody>
                         {registeredStudentsForSelectedEvent.map((st, idx) => (
-                          <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
-                            <td style={{ padding: '12px', fontWeight: '700', color: '#0f172a' }}>{st.name}</td>
+                          <tr key={idx} style={{ borderBottom: '1px solid #DADADA', background: idx % 2 === 0 ? '#ffffff' : '#F2F2F2' }}>
+                            <td style={{ padding: '12px', fontWeight: '700', color: '#0A0A0A' }}>{st.name}</td>
                             <td style={{ padding: '12px' }}>{st.rollNumber}</td>
                             <td style={{ padding: '12px' }}>{st.regNumber}</td>
                             <td style={{ padding: '12px' }}>{st.department} ({st.currentYear})</td>
@@ -700,21 +700,21 @@ export default function AdminPortalPage() {
                 )}
               </div>
             ) : (
-              <p style={{ color: '#64748b' }}>Select an event above to inspect student details.</p>
+              <p style={{ color: '#8A8A8A' }}>Select an event above to inspect student details.</p>
             )}
           </div>
         )}
 
         {/* TAB 4: MEMBER DIRECTORY */}
         {activeTab === 'members' && (
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0f172a' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px', color: '#0f172a' }}>
+          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px', color: '#0A0A0A' }}>
               REGISTERED MEMBERS DIRECTORY
             </h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ background: '#0f172a', color: '#ffffff', borderBottom: '2px solid #0f172a' }}>
+                  <tr style={{ background: '#0A0A0A', color: '#ffffff', borderBottom: '2px solid #0A0A0A' }}>
                     <th style={{ padding: '12px' }}>NAME</th>
                     <th style={{ padding: '12px' }}>ROLL / REG NO.</th>
                     <th style={{ padding: '12px' }}>SCHOOL / DEPT</th>
@@ -724,8 +724,8 @@ export default function AdminPortalPage() {
                 </thead>
                 <tbody>
                   {memberList.map((m, idx) => (
-                    <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
-                      <td style={{ padding: '12px', fontWeight: '700', color: '#0f172a' }}>{m.name}</td>
+                    <tr key={idx} style={{ borderBottom: '1px solid #DADADA', background: idx % 2 === 0 ? '#ffffff' : '#F2F2F2' }}>
+                      <td style={{ padding: '12px', fontWeight: '700', color: '#0A0A0A' }}>{m.name}</td>
                       <td style={{ padding: '12px' }}>{m.rollNumber} / {m.regNumber}</td>
                       <td style={{ padding: '12px' }}>{m.department}</td>
                       <td style={{ padding: '12px' }}>{m.interestedDomain}</td>
@@ -742,7 +742,7 @@ export default function AdminPortalPage() {
         {activeTab === 'recordings' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0f172a' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
                 RECORDED MASTERCLASSES MANAGEMENT
               </h3>
               <button
@@ -756,30 +756,30 @@ export default function AdminPortalPage() {
             </div>
 
             {showRecForm && (
-              <form onSubmit={handleSaveRec} className="form-grid" style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0f172a', marginBottom: '24px' }}>
+              <form onSubmit={handleSaveRec} className="form-grid" style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A', marginBottom: '24px' }}>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Masterclass Title</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Masterclass Title</label>
                   <input type="text" value={recForm.title} onChange={(e) => setRecForm({ ...recForm, title: e.target.value })} required />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Speaker / Instructor</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Speaker / Instructor</label>
                   <input type="text" value={recForm.speaker} onChange={(e) => setRecForm({ ...recForm, speaker: e.target.value })} required />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Date & Duration</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Date & Duration</label>
                   <input type="text" value={recForm.date} onChange={(e) => setRecForm({ ...recForm, date: e.target.value })} placeholder="Feb 10, 2026 • 54m" required />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Description</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Description</label>
                   <textarea rows={3} value={recForm.description} onChange={(e) => setRecForm({ ...recForm, description: e.target.value })} required />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Upload Video File</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Upload Video File</label>
                   <input type="file" accept="video/*" onChange={handleRecFileChange} />
-                  {recForm.fileName && <span style={{ fontSize: '12px', color: '#0f172a', marginTop: '4px', display: 'block' }}>Attached: {recForm.fileName}</span>}
+                  {recForm.fileName && <span style={{ fontSize: '12px', color: '#0A0A0A', marginTop: '4px', display: 'block' }}>Attached: {recForm.fileName}</span>}
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#000000' }}>Or External Video Link (YouTube / Drive — optional if a file is attached)</label>
+                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Or External Video Link (YouTube / Drive — optional if a file is attached)</label>
                   <input type="url" value={recForm.videoUrl} onChange={(e) => setRecForm({ ...recForm, videoUrl: e.target.value })} placeholder="https://youtube.com/..." />
                 </div>
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '8px' }}>
@@ -798,7 +798,7 @@ export default function AdminPortalPage() {
                     <span className={`status-pill ${rec.status || 'approved'}`}>{STATUS_LABEL[rec.status || 'approved']}</span>
                     <span className="admin-badge-type" style={{ display: 'block', marginTop: '8px' }}>{rec.type}</span>
                     <h3 className="admin-event-title">{rec.title}</h3>
-                    <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '13px', margin: '4px 0' }}>🎙 {rec.speaker}</p>
+                    <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '13px', margin: '4px 0' }}>🎙 {rec.speaker}</p>
                     <p className="admin-event-desc">{rec.description}</p>
                   </div>
                   <div className="admin-card-bottom-section">

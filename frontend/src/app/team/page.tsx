@@ -213,12 +213,12 @@ export default function TeamPage() {
   const membersWithPhotos = visibleMembers.filter((m) => m.image !== null);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#FAFAF8] text-[#111111] pt-32 pb-24 md:pt-40 md:pb-36 selection:bg-[#111111] selection:text-[#FFFFFF]">
+    <div className="relative w-full min-h-screen bg-[#F2F2F2] text-[#0A0A0A] pt-32 pb-24 md:pt-40 md:pb-36 selection:bg-[#0A0A0A] selection:text-[#FFFFFF]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center justify-between pb-4 mb-10 sm:mb-14 border-b border-[#DCDCD8] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
-          <Link href="/" className="hover:text-[#111111] inline-flex items-center gap-2">
+        <div className="flex items-center justify-between pb-4 mb-10 sm:mb-14 border-b border-[#F2F2F2] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
+          <Link href="/" className="hover:text-[#0A0A0A] inline-flex items-center gap-2">
             <span>←</span>
             <span>RETURN TO REPOSITORY HOME</span>
           </Link>
@@ -228,19 +228,19 @@ export default function TeamPage() {
         {/* Header Block */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14 sm:mb-18">
           <div>
-            <span className="font-mono text-xs font-bold text-[#111111] uppercase tracking-wider block mb-2">
+            <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-2">
               05 / PERSONNEL
             </span>
-            <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-black text-[#111111] uppercase tracking-tight leading-none">
+            <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-black text-[#0A0A0A] uppercase tracking-tight leading-none">
               GOVERNANCE ROSTER
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-[#555555] font-sans max-w-2xl leading-relaxed">
+            <p className="mt-4 text-sm sm:text-base text-[#4A4A4A] font-sans max-w-2xl leading-relaxed">
               Complete archival register of student fellows, research coordinators, and operational officers at Adamas University School of Engineering & Technology.
             </p>
           </div>
 
           {/* Filter Tags */}
-          <div className="flex flex-wrap gap-1.5 p-1 bg-[#FFFFFF] border border-[#DCDCD8] shadow-[2px_2px_0px_rgba(0,0,0,0.04)]">
+          <div className="flex flex-wrap gap-1.5 p-1 bg-[#FFFFFF] border border-[#F2F2F2] shadow-[2px_2px_0px_rgba(0,0,0,0.04)]">
             {FILTER_TAGS.map((t) => (
               <button
                 key={t.id}
@@ -248,8 +248,8 @@ export default function TeamPage() {
                 onClick={() => setFilter(t.id)}
                 className={`px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-wider uppercase transition-all cursor-pointer ${
                   filter === t.id
-                    ? 'bg-[#111111] text-[#FFFFFF]'
-                    : 'text-[#555555] hover:text-[#111111] hover:bg-[#F1F2F0]'
+                    ? 'bg-[#0A0A0A] text-[#FFFFFF]'
+                    : 'text-[#4A4A4A] hover:text-[#0A0A0A] hover:bg-[#F1F2F0]'
                 }`}
               >
                 {t.label}
@@ -261,8 +261,8 @@ export default function TeamPage() {
         {/* 01: FEATURED PHOTOGRAPHIC PORTRAITS */}
         {membersWithPhotos.length > 0 && (
           <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-between font-mono text-[10px] text-[#707070] uppercase tracking-wider pb-2 mb-6 border-b border-[#ECECE8]">
-              <span className="font-bold text-[#111111]">EXECUTIVE FELLOWS // PHOTOGRAPHIC ARCHIVE</span>
+            <div className="flex items-center justify-between font-mono text-[10px] text-[#6B6B6B] uppercase tracking-wider pb-2 mb-6 border-b border-[#F2F2F2]">
+              <span className="font-bold text-[#0A0A0A]">EXECUTIVE FELLOWS // PHOTOGRAPHIC ARCHIVE</span>
               <span>PLATE REF: FT-ROSTER.PH</span>
             </div>
 
@@ -276,23 +276,23 @@ export default function TeamPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.3 }}
-                    className="relative bg-[#FFFFFF] border border-[#DCDCD8] p-4 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1"
+                    className="relative bg-[#FFFFFF] border border-[#F2F2F2] p-4 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1"
                     style={{ boxShadow: '0 6px 20px rgba(0,0,0,0.04)' }}
                   >
-                    <span className="absolute top-1.5 left-1.5 font-mono text-[9px] text-[#999999] select-none">┌</span>
-                    <span className="absolute top-1.5 right-1.5 font-mono text-[9px] text-[#999999] select-none">┐</span>
-                    <span className="absolute bottom-1.5 left-1.5 font-mono text-[9px] text-[#999999] select-none">└</span>
-                    <span className="absolute bottom-1.5 right-1.5 font-mono text-[9px] text-[#999999] select-none">┘</span>
+                    <span className="absolute top-1.5 left-1.5 font-mono text-[9px] text-[#8A8A8A] select-none">┌</span>
+                    <span className="absolute top-1.5 right-1.5 font-mono text-[9px] text-[#8A8A8A] select-none">┐</span>
+                    <span className="absolute bottom-1.5 left-1.5 font-mono text-[9px] text-[#8A8A8A] select-none">└</span>
+                    <span className="absolute bottom-1.5 right-1.5 font-mono text-[9px] text-[#8A8A8A] select-none">┘</span>
 
                     <div>
-                      <div className="flex items-center justify-between font-mono text-[10px] pb-2 mb-3 border-b border-[#ECECE8]">
-                        <span className="font-bold text-[#111111]">NO. {member.num} / 16</span>
+                      <div className="flex items-center justify-between font-mono text-[10px] pb-2 mb-3 border-b border-[#F2F2F2]">
+                        <span className="font-bold text-[#0A0A0A]">NO. {member.num} / 16</span>
                         {member.linkedin && (
                           <a
                             href={member.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#707070] hover:text-[#111111] font-semibold flex items-center gap-1"
+                            className="text-[#6B6B6B] hover:text-[#0A0A0A] font-semibold flex items-center gap-1"
                           >
                             <span>LN</span>
                             <span className="text-[9px]">↗</span>
@@ -300,32 +300,32 @@ export default function TeamPage() {
                         )}
                       </div>
 
-                      <div className="relative w-full aspect-[4/4.5] bg-[#111111] border border-[#DCDCD8] overflow-hidden mb-4">
+                      <div className="relative w-full aspect-[4/4.5] bg-[#0A0A0A] border border-[#F2F2F2] overflow-hidden mb-4">
                         <img
                           src={member.image!}
                           alt={member.name}
                           className="w-full h-full object-cover grayscale contrast-115 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 will-change-transform"
                         />
-                        <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#111111]/85 text-[#FFFFFF] font-mono text-[8px] uppercase tracking-wider backdrop-blur-sm">
+                        <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#0A0A0A]/85 text-[#FFFFFF] font-mono text-[8px] uppercase tracking-wider backdrop-blur-sm">
                           FELLOW FT-{member.num}
                         </div>
                       </div>
 
-                      <h3 className="font-heading font-black text-base sm:text-lg text-[#111111] uppercase tracking-tight leading-snug">
+                      <h3 className="font-heading font-black text-base sm:text-lg text-[#0A0A0A] uppercase tracking-tight leading-snug">
                         {member.name}
                       </h3>
 
-                      <div className="mt-1.5 pt-1.5 border-t border-[#ECECE8]">
-                        <span className="font-mono text-[11px] font-bold text-[#111111] uppercase block">
+                      <div className="mt-1.5 pt-1.5 border-t border-[#F2F2F2]">
+                        <span className="font-mono text-[11px] font-bold text-[#0A0A0A] uppercase block">
                           {member.role}
                         </span>
-                        <span className="font-mono text-[9px] text-[#707070] uppercase block mt-0.5 leading-snug">
+                        <span className="font-mono text-[9px] text-[#6B6B6B] uppercase block mt-0.5 leading-snug">
                           {member.domain}
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-2 border-t border-[#ECECE8] flex items-center justify-between font-mono text-[9px] text-[#707070]">
+                    <div className="mt-4 pt-2 border-t border-[#F2F2F2] flex items-center justify-between font-mono text-[9px] text-[#6B6B6B]">
                       <span>SOET CHAPTER</span>
                       <span className="font-semibold text-[#059669]">CONFIRMED</span>
                     </div>
@@ -337,64 +337,64 @@ export default function TeamPage() {
         )}
 
         {/* 02: COMPLETE DIRECTORY TABLE */}
-        <div className="bg-[#FFFFFF] border border-[#DCDCD8] p-6 sm:p-8 md:p-10" style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 mb-6 border-b border-[#ECECE8]">
+        <div className="bg-[#FFFFFF] border border-[#F2F2F2] p-6 sm:p-8 md:p-10" style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 mb-6 border-b border-[#F2F2F2]">
             <div>
-              <h2 className="font-heading font-black text-xl sm:text-2xl text-[#111111] uppercase tracking-tight">
+              <h2 className="font-heading font-black text-xl sm:text-2xl text-[#0A0A0A] uppercase tracking-tight">
                 FULL GUILD GOVERNANCE LEDGER
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#555555] mt-0.5">
+              <p className="font-sans text-xs sm:text-sm text-[#4A4A4A] mt-0.5">
                 Official registry of student fellows, research coordinators, and operational officers.
               </p>
             </div>
-            <div className="font-mono text-xs text-[#707070] shrink-0">
-              <span className="font-bold text-[#111111]">{visibleMembers.length}</span> REGISTERED FELLOWS
+            <div className="font-mono text-xs text-[#6B6B6B] shrink-0">
+              <span className="font-bold text-[#0A0A0A]">{visibleMembers.length}</span> REGISTERED FELLOWS
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left font-mono text-xs">
               <thead>
-                <tr className="border-b-2 border-[#111111] text-[10px] text-[#707070] uppercase tracking-wider">
-                  <th className="py-3 pr-4 font-bold text-[#111111]">INDEX</th>
-                  <th className="py-3 px-4 font-bold text-[#111111]">FELLOW IDENTITY</th>
-                  <th className="py-3 px-4 font-bold text-[#111111]">GOVERNANCE ROLE</th>
-                  <th className="py-3 px-4 font-bold text-[#111111] hidden md:table-cell">DOMAIN & MANDATE</th>
-                  <th className="py-3 px-4 font-bold text-[#111111] hidden sm:table-cell">CHAPTER</th>
-                  <th className="py-3 pl-4 text-right font-bold text-[#111111]">RECORD</th>
+                <tr className="border-b-2 border-[#0A0A0A] text-[10px] text-[#6B6B6B] uppercase tracking-wider">
+                  <th className="py-3 pr-4 font-bold text-[#0A0A0A]">INDEX</th>
+                  <th className="py-3 px-4 font-bold text-[#0A0A0A]">FELLOW IDENTITY</th>
+                  <th className="py-3 px-4 font-bold text-[#0A0A0A]">GOVERNANCE ROLE</th>
+                  <th className="py-3 px-4 font-bold text-[#0A0A0A] hidden md:table-cell">DOMAIN & MANDATE</th>
+                  <th className="py-3 px-4 font-bold text-[#0A0A0A] hidden sm:table-cell">CHAPTER</th>
+                  <th className="py-3 pl-4 text-right font-bold text-[#0A0A0A]">RECORD</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#ECECE8]">
+              <tbody className="divide-y divide-[#F2F2F2]">
                 {visibleMembers.map((member) => (
                   <tr
                     key={member.num}
-                    className="hover:bg-[#FAFAF8] transition-colors group cursor-default"
+                    className="hover:bg-[#F2F2F2] transition-colors group cursor-default"
                   >
-                    <td className="py-4 pr-4 text-[#707070] font-medium whitespace-nowrap">
+                    <td className="py-4 pr-4 text-[#6B6B6B] font-medium whitespace-nowrap">
                       NO. {member.num}
                     </td>
 
                     <td className="py-4 px-4 whitespace-nowrap">
-                      <div className="font-heading font-black text-sm text-[#111111] uppercase tracking-tight group-hover:underline">
+                      <div className="font-heading font-black text-sm text-[#0A0A0A] uppercase tracking-tight group-hover:underline">
                         {member.name}
                       </div>
-                      <div className="text-[10px] text-[#707070] md:hidden font-mono mt-0.5">
+                      <div className="text-[10px] text-[#6B6B6B] md:hidden font-mono mt-0.5">
                         {member.domain}
                       </div>
                     </td>
 
                     <td className="py-4 px-4 whitespace-nowrap">
-                      <span className="px-2 py-0.5 bg-[#F1F2F0] border border-[#DCDCD8] text-[10px] font-bold text-[#111111]">
+                      <span className="px-2 py-0.5 bg-[#F1F2F0] border border-[#F2F2F2] text-[10px] font-bold text-[#0A0A0A]">
                         {member.role}
                       </span>
                     </td>
 
-                    <td className="py-4 px-4 hidden md:table-cell text-[#555555] text-[11px] leading-snug">
-                      <div className="font-semibold text-[#111111]">{member.domain}</div>
-                      <div className="text-[#707070] text-[10px] mt-0.5 max-w-md">{member.bio}</div>
+                    <td className="py-4 px-4 hidden md:table-cell text-[#4A4A4A] text-[11px] leading-snug">
+                      <div className="font-semibold text-[#0A0A0A]">{member.domain}</div>
+                      <div className="text-[#6B6B6B] text-[10px] mt-0.5 max-w-md">{member.bio}</div>
                     </td>
 
-                    <td className="py-4 px-4 hidden sm:table-cell whitespace-nowrap text-[#707070] text-[10px]">
+                    <td className="py-4 px-4 hidden sm:table-cell whitespace-nowrap text-[#6B6B6B] text-[10px]">
                       <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#059669] mr-1.5"></span>
                       SOET CONFIRMED
                     </td>
@@ -405,13 +405,13 @@ export default function TeamPage() {
                           href={member.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-bold text-[#111111] hover:underline inline-flex items-center gap-1 uppercase tracking-wider text-[11px]"
+                          className="font-bold text-[#0A0A0A] hover:underline inline-flex items-center gap-1 uppercase tracking-wider text-[11px]"
                         >
                           <span>CONNECT</span>
                           <span className="transition-transform group-hover:translate-x-0.5">→</span>
                         </a>
                       ) : (
-                        <span className="text-[#999999] text-[10px]">INTERNAL</span>
+                        <span className="text-[#8A8A8A] text-[10px]">INTERNAL</span>
                       )}
                     </td>
                   </tr>

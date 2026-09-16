@@ -17,7 +17,7 @@ import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
   return (
-    <div className="relative w-full max-w-full overflow-x-hidden bg-[#FFFBF5] text-[#1E1E1E] selection:bg-[#1E1E1E] selection:text-[#FFFBF5]">
+    <div className="relative w-full max-w-full overflow-x-hidden bg-[#FFFFFF] text-[#0A0A0A] selection:bg-[#0A0A0A] selection:text-[#FFFFFF]">
       {/* 01: Hero Section (From code to capital. Expanding aperture.) */}
       <HeroSection />
 

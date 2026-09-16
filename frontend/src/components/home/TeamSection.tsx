@@ -86,11 +86,11 @@ export default function TeamSection() {
   const [showFullDirectory, setShowFullDirectory] = useState(false);
 
   return (
-    <section id="team" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
+    <section id="team" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>06 / PEOPLE INDEX & GOVERNANCE</span>
           <span>FELLOWSHIP DIRECTORY // 2026</span>
         </div>
@@ -98,16 +98,16 @@ export default function TeamSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
           <div>
-            <span className="px-3 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
+            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               06 // ROSTER
             </span>
-            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Fellowship
               <br />
               <span className="italic">Directory.</span>
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-[#5F5F5F] font-sans-body max-w-md leading-relaxed font-light">
+          <p className="text-sm sm:text-base text-[#4A4A4A] font-sans-body max-w-md leading-relaxed font-light">
             The student fellows governing engineering divisions, quantitative models, research publications, and guild operations at Adamas University.
           </p>
         </div>
@@ -117,28 +117,28 @@ export default function TeamSection() {
           {FEATURED_LEADERS.map((leader, idx) => (
             <div
               key={idx}
-              className="group bg-[#F4F3EB] rounded-3xl p-4 border border-[#D8D6CB] hover:border-[#1E1E1E] transition-all duration-300"
+              className="group bg-[#F2F2F2] rounded-3xl p-4 border border-[#DADADA] hover:border-[#0A0A0A] transition-all duration-300"
               style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
             >
-              <div className="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-[#1E1E1E] mb-4 border border-[#D8D6CB]">
+              <div className="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-4 border border-[#DADADA]">
                 <img
                   src={leader.image!}
                   alt={leader.name}
                   className="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                 />
-                <div className="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-[#1E1E1E]/80 text-[#FFFBF5] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">
+                <div className="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">
                   {leader.role}
                 </div>
               </div>
 
               <div className="px-1">
-                <div className="font-mono text-[10px] text-[#707070] uppercase mb-1">
+                <div className="font-mono text-[10px] text-[#6B6B6B] uppercase mb-1">
                   NO. 0{idx + 1} {"//"} {leader.dept}
                 </div>
-                <h4 className="font-serif text-2xl font-normal text-[#1E1E1E] leading-snug group-hover:underline">
+                <h4 className="font-serif text-2xl font-normal text-[#0A0A0A] leading-snug group-hover:underline">
                   {leader.name}
                 </h4>
-                <p className="font-sans-body text-xs text-[#5F5F5F] mt-1 font-light">
+                <p className="font-sans-body text-xs text-[#4A4A4A] mt-1 font-light">
                   {leader.domain}
                 </p>
               </div>
@@ -147,8 +147,8 @@ export default function TeamSection() {
         </div>
 
         {/* Governance Directory Toggle */}
-        <div className="pt-8 border-t border-[#D8D6CB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <span className="font-mono text-xs text-[#707070] uppercase tracking-wider">
+        <div className="pt-8 border-t border-[#DADADA] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <span className="font-mono text-xs text-[#6B6B6B] uppercase tracking-wider">
             GOVERNANCE DIRECTORY & APPOINTMENTS (16 VERIFIED FELLOWS)
           </span>
 
@@ -172,25 +172,25 @@ export default function TeamSection() {
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="mt-8 overflow-hidden"
             >
-              <div className="divide-y divide-[#D8D6CB] border-t border-b border-[#D8D6CB]">
+              <div className="divide-y divide-[#DADADA] border-t border-b border-[#DADADA]">
                 {FULL_ROSTER.map((member, idx) => (
                   <div
                     key={idx}
-                    className="py-4 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#F4F3EB] rounded-xl transition-colors"
+                    className="py-4 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#F2F2F2] rounded-xl transition-colors"
                   >
                     <div className="flex items-center gap-4">
-                      <span className="font-mono text-xs text-[#707070]">
+                      <span className="font-mono text-xs text-[#6B6B6B]">
                         {member.num} {"//"}
                       </span>
-                      <span className="font-serif text-xl text-[#1E1E1E]">
+                      <span className="font-serif text-xl text-[#0A0A0A]">
                         {member.name}
                       </span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[9px] uppercase">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[9px] uppercase">
                         {member.role}
                       </span>
                     </div>
 
-                    <div className="font-sans-body text-xs text-[#5F5F5F] sm:text-right font-light">
+                    <div className="font-sans-body text-xs text-[#4A4A4A] sm:text-right font-light">
                       {member.domain}
                     </div>
                   </div>

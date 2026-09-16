@@ -9,13 +9,13 @@ export default function GlobalError({ error, reset }) {
       alignItems: 'center',
       justifyContent: 'center',
       background: '#0a0a0f',
-      color: '#e2e8f0',
+      color: '#DADADA',
       fontFamily: 'system-ui, sans-serif',
       padding: '2rem',
       textAlign: 'center'
     }}>
       <h1 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#f87171' }}>Something went wrong</h1>
-      <p style={{ color: '#94a3b8', marginBottom: '2rem', maxWidth: '400px' }}>
+      <p style={{ color: '#8A8A8A', marginBottom: '2rem', maxWidth: '400px' }}>
         {error?.message || 'An unexpected error occurred. Please try again.'}
       </p>
       <button

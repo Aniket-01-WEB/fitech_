@@ -148,8 +148,8 @@ export default function SuperAdminPortalPage() {
         {activeTab === 'pending' && (
           <div>
             {pendingEvents.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending event requests. New events created by an Admin will show up here for approval.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No pending event requests. New events created by an Admin will show up here for approval.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
@@ -195,14 +195,14 @@ export default function SuperAdminPortalPage() {
 
         {/* TAB 2: ALL EVENTS OVERSIGHT */}
         {activeTab === 'all' && (
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #DADADA' }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px' }}>
               ALL CLUB EVENTS
             </h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                  <tr style={{ background: '#F2F2F2', borderBottom: '2px solid #DADADA' }}>
                     <th style={{ padding: '12px' }}>EVENT</th>
                     <th style={{ padding: '12px' }}>REQUESTED BY</th>
                     <th style={{ padding: '12px' }}>STATUS</th>
@@ -211,10 +211,10 @@ export default function SuperAdminPortalPage() {
                 </thead>
                 <tbody>
                   {events.map(evt => (
-                    <tr key={evt.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <tr key={evt.id} style={{ borderBottom: '1px solid #F2F2F2' }}>
                       <td style={{ padding: '12px' }}>
                         <strong style={{ display: 'block' }}>{evt.title}</strong>
-                        <span style={{ color: '#64748b', fontSize: '12px' }}>{evt.time} • {evt.venue}</span>
+                        <span style={{ color: '#8A8A8A', fontSize: '12px' }}>{evt.time} • {evt.venue}</span>
                       </td>
                       <td style={{ padding: '12px' }}>{evt.createdBy}</td>
                       <td style={{ padding: '12px' }}>
@@ -245,8 +245,8 @@ export default function SuperAdminPortalPage() {
         {activeTab === 'admin-requests' && (
           <div>
             {pendingAdminRequests.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending admin access requests. Members who apply for admin access from their Student Portal will show up here for approval.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No pending admin access requests. Members who apply for admin access from their Student Portal will show up here for approval.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
@@ -292,17 +292,17 @@ export default function SuperAdminPortalPage() {
 
         {/* TAB 4: MEMBER DIRECTORY */}
         {activeTab === 'directory' && (
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1px solid #DADADA' }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px' }}>
               CLUB MEMBER DIRECTORY
             </h3>
             {memberList.length === 0 ? (
-              <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No members yet.</p>
+              <p style={{ color: '#8A8A8A', fontStyle: 'italic' }}>No members yet.</p>
             ) : (
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                    <tr style={{ background: '#F2F2F2', borderBottom: '2px solid #DADADA' }}>
                       <th style={{ padding: '12px' }}>NAME</th>
                       <th style={{ padding: '12px' }}>ROLL / REG NO.</th>
                       <th style={{ padding: '12px' }}>DEPARTMENT / YEAR</th>
@@ -313,13 +313,13 @@ export default function SuperAdminPortalPage() {
                   </thead>
                   <tbody>
                     {memberList.map((m, idx) => (
-                      <tr key={m.id || idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <tr key={m.id || idx} style={{ borderBottom: '1px solid #F2F2F2' }}>
                         <td style={{ padding: '12px', fontWeight: '700' }}>{m.name}</td>
                         <td style={{ padding: '12px' }}>{m.rollNumber || '—'} / {m.regNumber || '—'}</td>
                         <td style={{ padding: '12px' }}>{m.department || '—'} {m.currentYear ? `(${m.currentYear})` : ''}</td>
                         <td style={{ padding: '12px' }}>{m.interestedDomain || '—'}</td>
                         <td style={{ padding: '12px' }}>
-                          <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: m.role === 'superadmin' ? '#6d28d9' : m.role === 'admin' ? '#0f172a' : '#64748b' }}>
+                          <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: m.role === 'superadmin' ? '#6d28d9' : m.role === 'admin' ? '#0A0A0A' : '#8A8A8A' }}>
                             {m.role}
                           </span>
                         </td>
@@ -337,8 +337,8 @@ export default function SuperAdminPortalPage() {
         {activeTab === 'notes' && (
           <div>
             {pendingNotes.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending notes. Notes an Admin uploads will show up here for approval.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No pending notes. Notes an Admin uploads will show up here for approval.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
@@ -390,8 +390,8 @@ export default function SuperAdminPortalPage() {
         {activeTab === 'recordings' && (
           <div>
             {pendingRecordings.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No pending recordings. Masterclasses an Admin uploads will show up here for approval.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No pending recordings. Masterclasses an Admin uploads will show up here for approval.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
@@ -401,7 +401,7 @@ export default function SuperAdminPortalPage() {
                       <span className="status-pill pending">⏳ PENDING REVIEW</span>
                       <span className="simple-card-category" style={{ display: 'block', marginTop: '8px' }}>{rec.type}</span>
                       <h3 className="simple-card-title">{rec.title}</h3>
-                      <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
+                      <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
                       <p className="simple-card-desc">{rec.description}</p>
                     </div>
                     <div className="simple-card-bottom">

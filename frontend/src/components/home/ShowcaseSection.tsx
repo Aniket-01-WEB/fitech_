@@ -87,11 +87,11 @@ export default function ShowcaseSection() {
   const activeProject = PROJECTS[activeIdx];
 
   return (
-    <section id="projects" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
+    <section id="projects" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>02 / FLAGSHIP CODEBASES</span>
           <span>APPLIED ENGINEERING ARCHIVE // 2026</span>
         </div>
@@ -99,22 +99,22 @@ export default function ShowcaseSection() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
           <div>
-            <span className="px-3 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
+            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               02 // LAB BUILDS
             </span>
-            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Flagship
               <br />
               <span className="italic">Systems.</span>
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-[#5F5F5F] font-sans-body max-w-md leading-relaxed font-light">
+          <p className="text-sm sm:text-base text-[#4A4A4A] font-sans-body max-w-md leading-relaxed font-light">
             Proprietary matching architectures, stochastic risk calibrators, and cryptographic verifiers engineered by student research fellows.
           </p>
         </div>
 
         {/* Stanzza-Style Project Switcher Tabs (Rounded Pills) */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-10 sm:mb-14 pb-6 border-b border-[#D8D6CB]">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-10 sm:mb-14 pb-6 border-b border-[#DADADA]">
           {PROJECTS.map((proj, idx) => {
             const isActive = activeIdx === idx;
             return (
@@ -143,17 +143,17 @@ export default function ShowcaseSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-[#F4F3EB] rounded-3xl border border-[#D8D6CB] p-6 sm:p-10 md:p-14"
+            className="bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-10 md:p-14"
             style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
           >
             {/* Top Info Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[#D8D6CB]">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[#DADADA]">
               <div className="flex items-center gap-3">
-                <span className="font-mono text-xs font-bold text-[#1E1E1E]">
+                <span className="font-mono text-xs font-bold text-[#0A0A0A]">
                   SPEC REF: EXP-2026.0{activeIdx + 1}
                 </span>
-                <span className="text-[#D8D6CB]">│</span>
-                <span className="font-mono text-xs text-[#5F5F5F] uppercase">
+                <span className="text-[#DADADA]">│</span>
+                <span className="font-mono text-xs text-[#4A4A4A] uppercase">
                   {activeProject.domain}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export default function ShowcaseSection() {
                 {activeProject.tags.map((tag, tIdx) => (
                   <span
                     key={tIdx}
-                    className="px-3 py-1 rounded-full bg-[#E5E4DC] border border-[#D8D6CB] font-mono text-[10px] text-[#1E1E1E] font-medium"
+                    className="px-3 py-1 rounded-full bg-[#EAEAEA] border border-[#DADADA] font-mono text-[10px] text-[#0A0A0A] font-medium"
                   >
                     {tag}
                   </span>
@@ -173,14 +173,14 @@ export default function ShowcaseSection() {
             {/* Title & Narrative */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-10">
               <div className="lg:col-span-7">
-                <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#1E1E1E] leading-tight mb-4">
+                <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#0A0A0A] leading-tight mb-4">
                   {activeProject.title}
                 </h3>
-                <p className="font-sans-body text-base text-[#3A3A3A] leading-relaxed mb-4">
+                <p className="font-sans-body text-base text-[#4A4A4A] leading-relaxed mb-4">
                   {activeProject.description}
                 </p>
-                <div className="p-4 rounded-2xl bg-[#FFFBF5] border border-[#D8D6CB] text-xs font-sans-body text-[#5F5F5F] leading-relaxed">
-                  <span className="font-mono font-bold text-[#1E1E1E] block mb-1 uppercase tracking-wider text-[10px]">
+                <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#DADADA] text-xs font-sans-body text-[#4A4A4A] leading-relaxed">
+                  <span className="font-mono font-bold text-[#0A0A0A] block mb-1 uppercase tracking-wider text-[10px]">
                     Technical Implementation:
                   </span>
                   {activeProject.architecture}
@@ -189,27 +189,27 @@ export default function ShowcaseSection() {
 
               {/* Specs Cards */}
               <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
-                <div className="p-5 rounded-2xl bg-[#FFFBF5] border border-[#D8D6CB]">
-                  <span className="font-mono text-[10px] text-[#707070] uppercase block mb-1">
+                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+                  <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric1Label}
                   </span>
-                  <span className="font-serif text-3xl font-normal text-[#1E1E1E]">
+                  <span className="font-serif text-3xl font-normal text-[#0A0A0A]">
                     {activeProject.metric1Val}
                   </span>
                 </div>
-                <div className="p-5 rounded-2xl bg-[#FFFBF5] border border-[#D8D6CB]">
-                  <span className="font-mono text-[10px] text-[#707070] uppercase block mb-1">
+                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+                  <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric2Label}
                   </span>
-                  <span className="font-serif text-3xl font-normal text-[#1E1E1E]">
+                  <span className="font-serif text-3xl font-normal text-[#0A0A0A]">
                     {activeProject.metric2Val}
                   </span>
                 </div>
-                <div className="p-5 rounded-2xl bg-[#FFFBF5] border border-[#D8D6CB]">
-                  <span className="font-mono text-[10px] text-[#707070] uppercase block mb-1">
+                <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DADADA]">
+                  <span className="font-mono text-[10px] text-[#6B6B6B] uppercase block mb-1">
                     {activeProject.metric3Label}
                   </span>
-                  <span className="font-serif text-3xl font-normal text-[#1E1E1E]">
+                  <span className="font-serif text-3xl font-normal text-[#0A0A0A]">
                     {activeProject.metric3Val}
                   </span>
                 </div>
@@ -217,7 +217,7 @@ export default function ShowcaseSection() {
             </div>
 
             {/* Media Aperture & CTA */}
-            <div className="relative w-full aspect-[16/7] md:aspect-[21/8] rounded-2xl overflow-hidden border border-[#D8D6CB] bg-[#1E1E1E]">
+            <div className="relative w-full aspect-[16/7] md:aspect-[21/8] rounded-2xl overflow-hidden border border-[#DADADA] bg-[#0A0A0A]">
               <img
                 src={activeProject.image}
                 alt={activeProject.title}

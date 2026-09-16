@@ -9,7 +9,7 @@ export default function NotFound() {
       alignItems: 'center',
       justifyContent: 'center',
       background: '#0a0a0f',
-      color: '#e2e8f0',
+      color: '#DADADA',
       fontFamily: 'system-ui, sans-serif',
       padding: '2rem',
       textAlign: 'center'
@@ -23,7 +23,7 @@ export default function NotFound() {
         margin: 0,
         lineHeight: 1
       }}>404</h1>
-      <p style={{ fontSize: '1.25rem', color: '#94a3b8', marginTop: '1rem', marginBottom: '2rem' }}>
+      <p style={{ fontSize: '1.25rem', color: '#8A8A8A', marginTop: '1rem', marginBottom: '2rem' }}>
         This page doesn&apos;t exist.
       </p>
       <Link href="/" style={{

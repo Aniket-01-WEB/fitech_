@@ -38,11 +38,11 @@ const ADVANTAGES = [
 
 export default function CommunitiesSection() {
   return (
-    <section id="communities" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
+    <section id="communities" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>03 / CONTROLLED ENGINEERING</span>
           <span>EMPIRICAL PERFORMANCE RECORD // 2026</span>
         </div>
@@ -50,17 +50,17 @@ export default function CommunitiesSection() {
         {/* Section Heading (Stanzza Style) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-24 items-end">
           <div className="lg:col-span-6">
-            <span className="px-3.5 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
+            <span className="px-3.5 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
               03 // ADVANTAGE
             </span>
-            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Controlled
               <br />
               <span className="italic">Delivery.</span>
             </h2>
           </div>
           <div className="lg:col-span-6">
-            <p className="text-base sm:text-lg text-[#5F5F5F] font-sans-body leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-[#4A4A4A] font-sans-body leading-relaxed font-light">
               We operate as an applied research guild. Everything we do is structured around empirical rigor, production execution, and direct technical career mobility into quantitative finance and high-throughput engineering.
             </p>
           </div>
@@ -71,16 +71,16 @@ export default function CommunitiesSection() {
           {STATS.map((stat, idx) => (
             <div
               key={idx}
-              className="bg-[#F4F3EB] rounded-3xl p-8 border border-[#D8D6CB] hover:border-[#1E1E1E] transition-all duration-300 group"
+              className="bg-[#F2F2F2] rounded-3xl p-8 border border-[#DADADA] hover:border-[#0A0A0A] transition-all duration-300 group"
               style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
             >
-              <span className="font-serif text-6xl sm:text-7xl font-normal text-[#1E1E1E] block mb-4 group-hover:translate-x-1 transition-transform">
+              <span className="font-serif text-6xl sm:text-7xl font-normal text-[#0A0A0A] block mb-4 group-hover:translate-x-1 transition-transform">
                 {stat.num}
               </span>
-              <h4 className="font-sans-body font-semibold text-sm text-[#1E1E1E] mb-2 uppercase tracking-wide">
+              <h4 className="font-sans-body font-semibold text-sm text-[#0A0A0A] mb-2 uppercase tracking-wide">
                 {stat.label}
               </h4>
-              <p className="font-sans-body text-xs text-[#5F5F5F] leading-relaxed font-light">
+              <p className="font-sans-body text-xs text-[#4A4A4A] leading-relaxed font-light">
                 {stat.detail}
               </p>
             </div>
@@ -92,19 +92,19 @@ export default function CommunitiesSection() {
           {ADVANTAGES.map((adv, idx) => (
             <div
               key={idx}
-              className="bg-[#FFFBF5] rounded-3xl p-8 sm:p-10 border border-[#D8D6CB] hover:bg-[#F4F3EB] transition-all duration-300"
+              className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#DADADA] hover:bg-[#F2F2F2] transition-all duration-300"
             >
-              <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#D8D6CB] font-mono text-xs text-[#707070]">
-                <span className="font-bold text-[#1E1E1E]">{adv.num} {"//"} PILLAR</span>
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#DADADA] font-mono text-xs text-[#6B6B6B]">
+                <span className="font-bold text-[#0A0A0A]">{adv.num} {"//"} PILLAR</span>
                 <span>VERIFIED</span>
               </div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#1E1E1E] mb-3">
+              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#0A0A0A] mb-3">
                 {adv.title}
               </h3>
-              <p className="font-sans-body text-sm text-[#1E1E1E] font-medium leading-relaxed mb-3">
+              <p className="font-sans-body text-sm text-[#0A0A0A] font-medium leading-relaxed mb-3">
                 {adv.statement}
               </p>
-              <p className="font-sans-body text-xs sm:text-sm text-[#5F5F5F] leading-relaxed font-light">
+              <p className="font-sans-body text-xs sm:text-sm text-[#4A4A4A] leading-relaxed font-light">
                 {adv.detail}
               </p>
             </div>

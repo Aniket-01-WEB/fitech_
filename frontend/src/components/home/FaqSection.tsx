@@ -34,11 +34,11 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="relative w-full bg-[#FFFBF5] py-24 md:py-36 lg:py-44 border-b border-[#D8D6CB]">
+    <section id="faq" className="relative w-full bg-[#FFFFFF] py-24 md:py-36 lg:py-44 border-b border-[#DADADA]">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
         
         {/* Section Marker */}
-        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#D8D6CB] font-mono text-[11px] text-[#707070] tracking-wider uppercase">
+        <div className="flex items-center justify-between pb-4 mb-14 sm:mb-20 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>08 / FREQUENTLY ASKED QUESTIONS</span>
           <span>ADMISSIONS & INTAKE // 2026</span>
         </div>
@@ -46,24 +46,24 @@ export default function FaqSection() {
         {/* Section Heading */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-16 sm:mb-20 items-end">
           <div className="lg:col-span-6">
-            <span className="px-3 py-1 rounded-full bg-[#E5E4DC] text-[#1E1E1E] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
+            <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
               08 // FAQS
             </span>
-            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#1E1E1E] tracking-tight leading-[0.92]">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Questions prospective
               <br />
               <span className="italic">Fellows ask.</span>
             </h2>
           </div>
           <div className="lg:col-span-6">
-            <p className="text-base sm:text-lg text-[#5F5F5F] font-sans-body leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-[#4A4A4A] font-sans-body leading-relaxed font-light">
               Clear answers regarding intake criteria, research commitments, laboratory access, and career pathways through the FiTech ecosystem.
             </p>
           </div>
         </div>
 
         {/* Stanzza Accordion List */}
-        <div className="divide-y divide-[#D8D6CB] border-t border-b border-[#D8D6CB]">
+        <div className="divide-y divide-[#DADADA] border-t border-b border-[#DADADA]">
           {FAQS.map((item, idx) => {
             const isOpen = openIdx === idx;
             return (
@@ -77,15 +77,15 @@ export default function FaqSection() {
                   className="w-full flex items-start justify-between gap-6 text-left cursor-pointer group"
                 >
                   <div className="flex items-baseline gap-4 sm:gap-6">
-                    <span className="font-mono text-xs text-[#707070] pt-1">
+                    <span className="font-mono text-xs text-[#6B6B6B] pt-1">
                       0{idx + 1} {"//"}
                     </span>
-                    <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#1E1E1E] group-hover:underline">
+                    <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A] group-hover:underline">
                       {item.q}
                     </h3>
                   </div>
 
-                  <span className="w-8 h-8 rounded-full bg-[#F4F3EB] border border-[#D8D6CB] flex items-center justify-center font-serif text-xl text-[#1E1E1E] shrink-0 transition-transform duration-300">
+                  <span className="w-8 h-8 rounded-full bg-[#F2F2F2] border border-[#DADADA] flex items-center justify-center font-serif text-xl text-[#0A0A0A] shrink-0 transition-transform duration-300">
                     {isOpen ? '−' : '+'}
                   </span>
                 </button>
@@ -99,7 +99,7 @@ export default function FaqSection() {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="pt-6 pl-8 sm:pl-12 font-sans-body text-base sm:text-lg text-[#5F5F5F] leading-relaxed max-w-3xl font-light">
+                      <p className="pt-6 pl-8 sm:pl-12 font-sans-body text-base sm:text-lg text-[#4A4A4A] leading-relaxed max-w-3xl font-light">
                         {item.a}
                       </p>
                     </motion.div>

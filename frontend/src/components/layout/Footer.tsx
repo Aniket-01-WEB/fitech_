@@ -9,21 +9,21 @@ export default function Footer() {
   const { openJoinModal } = usePortal();
 
   return (
-    <footer className="relative w-full bg-[#FFFBF5] border-t border-[#D8D6CB] text-[#1E1E1E] overflow-hidden">
+    <footer className="relative w-full bg-[#FFFFFF] border-t border-[#DADADA] text-[#0A0A0A] overflow-hidden">
       
       {/* Top Status Telemetry Bar */}
-      <div className="border-b border-[#D8D6CB] bg-[#F4F3EB] py-3.5">
-        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#5F5F5F]">
+      <div className="border-b border-[#DADADA] bg-[#F2F2F2] py-3.5">
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#4A4A4A]">
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-[#059669]"></span>
-            <span className="font-bold text-[#1E1E1E]">SYSTEM: ALL RESEARCH DOMAINS ACTIVE</span>
-            <span className="text-[#D8D6CB]">│</span>
+            <span className="font-bold text-[#0A0A0A]">SYSTEM: ALL RESEARCH DOMAINS ACTIVE</span>
+            <span className="text-[#DADADA]">│</span>
             <span>BUILD REF: 2026.FT-AU</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[#707070]">
+          <div className="flex items-center gap-4 text-[#6B6B6B]">
             <span>COORDINATES: 22.72° N, 88.48° E</span>
-            <span className="text-[#D8D6CB]">│</span>
+            <span className="text-[#DADADA]">│</span>
             <span>SOET • ADAMAS UNIVERSITY</span>
           </div>
         </div>
@@ -43,58 +43,58 @@ export default function Footer() {
                 height={36}
                 className="w-9 h-9 object-contain"
               />
-              <span className="font-serif text-3xl font-normal text-[#1E1E1E] tracking-tight">
+              <span className="font-serif text-3xl font-normal text-[#0A0A0A] tracking-tight">
                 FITECH
               </span>
             </div>
 
-            <p className="font-mono text-xs text-[#707070] uppercase tracking-wider mb-6">
+            <p className="font-mono text-xs text-[#6B6B6B] uppercase tracking-wider mb-6">
               Engineering × Quantitative Finance × Innovation
             </p>
 
-            <p className="font-sans-body text-sm text-[#5F5F5F] leading-relaxed max-w-md font-light">
+            <p className="font-sans-body text-sm text-[#4A4A4A] leading-relaxed max-w-md font-light">
               The student quantitative finance and financial engineering research society at Adamas University. We engineer algorithmic systems, empirical risk models, and decentralized protocols.
             </p>
 
-            <div className="mt-8 pt-6 border-t border-[#D8D6CB] font-mono text-xs text-[#707070] space-y-1">
+            <div className="mt-8 pt-6 border-t border-[#DADADA] font-mono text-xs text-[#6B6B6B] space-y-1">
               <div>AFFILIATION: SCHOOL OF ENGINEERING & TECHNOLOGY</div>
               <div>ADAMAS UNIVERSITY • BARASAT, KOLKATA 700126</div>
             </div>
           </div>
 
           {/* Navigation Column */}
-          <div className="lg:col-span-3 lg:border-l lg:border-[#D8D6CB] lg:pl-8">
-            <span className="font-mono text-xs font-bold text-[#1E1E1E] uppercase tracking-wider block mb-5">
+          <div className="lg:col-span-3 lg:border-l lg:border-[#DADADA] lg:pl-8">
+            <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-5">
               NAVIGATION
             </span>
-            <ul className="font-mono text-xs text-[#5F5F5F] space-y-3">
+            <ul className="font-mono text-xs text-[#4A4A4A] space-y-3">
               <li>
-                <Link href="/#composition" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/#composition" className="hover:text-[#0A0A0A] hover:underline">
                   COMPOSITION // ABOUT
                 </Link>
               </li>
               <li>
-                <Link href="/domain" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/domain" className="hover:text-[#0A0A0A] hover:underline">
                   DOMAINS (06)
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/events" className="hover:text-[#0A0A0A] hover:underline">
                   SCHEDULE
                 </Link>
               </li>
               <li>
-                <Link href="/projects" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/projects" className="hover:text-[#0A0A0A] hover:underline">
                   LAB BUILDS
                 </Link>
               </li>
               <li>
-                <Link href="/gallery" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/gallery" className="hover:text-[#0A0A0A] hover:underline">
                   MOMENTS / GALLERY
                 </Link>
               </li>
               <li>
-                <Link href="/team" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/team" className="hover:text-[#0A0A0A] hover:underline">
                   PEOPLE INDEX
                 </Link>
               </li>
@@ -102,27 +102,27 @@ export default function Footer() {
           </div>
 
           {/* Contact Column */}
-          <div className="lg:col-span-2 lg:border-l lg:border-[#D8D6CB] lg:pl-8">
-            <span className="font-mono text-xs font-bold text-[#1E1E1E] uppercase tracking-wider block mb-5">
+          <div className="lg:col-span-2 lg:border-l lg:border-[#DADADA] lg:pl-8">
+            <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-5">
               FELLOWSHIP
             </span>
-            <ul className="font-mono text-xs text-[#5F5F5F] space-y-3">
+            <ul className="font-mono text-xs text-[#4A4A4A] space-y-3">
               <li>
                 <button
                   type="button"
                   onClick={openJoinModal}
-                  className="hover:text-[#1E1E1E] hover:underline text-left cursor-pointer"
+                  className="hover:text-[#0A0A0A] hover:underline text-left cursor-pointer"
                 >
                   JOIN FELLOWSHIP →
                 </button>
               </li>
               <li>
-                <Link href="/events" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/events" className="hover:text-[#0A0A0A] hover:underline">
                   SYMPOSIA
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-[#1E1E1E] hover:underline">
+                <Link href="/about" className="hover:text-[#0A0A0A] hover:underline">
                   CONSTITUTION
                 </Link>
               </li>
@@ -130,17 +130,17 @@ export default function Footer() {
           </div>
 
           {/* Social Links */}
-          <div className="lg:col-span-2 lg:border-l lg:border-[#D8D6CB] lg:pl-8">
-            <span className="font-mono text-xs font-bold text-[#1E1E1E] uppercase tracking-wider block mb-5">
+          <div className="lg:col-span-2 lg:border-l lg:border-[#DADADA] lg:pl-8">
+            <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-5">
               CONNECT
             </span>
-            <ul className="font-mono text-xs text-[#5F5F5F] space-y-3">
+            <ul className="font-mono text-xs text-[#4A4A4A] space-y-3">
               <li>
                 <a
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#1E1E1E] hover:underline flex items-center gap-1.5"
+                  className="hover:text-[#0A0A0A] hover:underline flex items-center gap-1.5"
                 >
                   <span>LINKEDIN</span>
                   <span>↗</span>
@@ -151,7 +151,7 @@ export default function Footer() {
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#1E1E1E] hover:underline flex items-center gap-1.5"
+                  className="hover:text-[#0A0A0A] hover:underline flex items-center gap-1.5"
                 >
                   <span>X / TWITTER</span>
                   <span>↗</span>
@@ -162,7 +162,7 @@ export default function Footer() {
                   href="https://discord.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#1E1E1E] hover:underline flex items-center gap-1.5"
+                  className="hover:text-[#0A0A0A] hover:underline flex items-center gap-1.5"
                 >
                   <span>DISCORD</span>
                   <span>↗</span>
@@ -173,7 +173,7 @@ export default function Footer() {
                   href="https://github.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#1E1E1E] hover:underline flex items-center gap-1.5"
+                  className="hover:text-[#0A0A0A] hover:underline flex items-center gap-1.5"
                 >
                   <span>GITHUB</span>
                   <span>↗</span>
@@ -186,8 +186,8 @@ export default function Footer() {
       </div>
 
       {/* Colophon & Copyright Bar */}
-      <div className="border-t border-[#D8D6CB] bg-[#FFFBF5] py-6">
-        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#707070]">
+      <div className="border-t border-[#DADADA] bg-[#FFFFFF] py-6">
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#6B6B6B]">
           <div>
             © 2026 FITECH SOCIETY • ADAMAS UNIVERSITY CHAPTER. ALL RIGHTS RESERVED.
           </div>

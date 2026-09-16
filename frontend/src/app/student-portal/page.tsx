@@ -142,16 +142,16 @@ export default function StudentPortalPage() {
     <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
       <div className="container">
         {/* WELCOME HEADER */}
-        <div className="portal-header-card" style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', color: '#ffffff', padding: '32px', borderRadius: '16px', marginBottom: '32px' }}>
+        <div className="portal-header-card" style={{ background: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)', color: '#ffffff', padding: '32px', borderRadius: '16px', marginBottom: '32px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
             <div>
-              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#94a3b8' }}>
+              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#8A8A8A' }}>
                 STUDENT MEMBER DASHBOARD
               </span>
               <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: '900', margin: '8px 0' }}>
                 WELCOME, {memberProfile.name.toUpperCase()}
               </h1>
-              <p style={{ color: '#cbd5e1', fontSize: '14px' }}>
+              <p style={{ color: '#DADADA', fontSize: '14px' }}>
                 {memberProfile.rollNumber} • {memberProfile.department} • {memberProfile.interestedDomain}
               </p>
             </div>
@@ -159,12 +159,12 @@ export default function StudentPortalPage() {
             <div style={{ display: 'flex', gap: '16px' }}>
               <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{myEvents.length}</span>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Registered Events</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Registered Events</span>
               </div>
 
               <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
                 <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{formatHoursMins(userActivity.totalSeconds)}</span>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Learning Time</span>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Learning Time</span>
               </div>
             </div>
           </div>
@@ -221,8 +221,8 @@ export default function StudentPortalPage() {
           <div>
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>MY REGISTERED EVENTS</h2>
             {myEvents.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px', marginBottom: '16px' }}>You haven&apos;t registered for any events yet.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px', marginBottom: '16px' }}>You haven&apos;t registered for any events yet.</p>
                 <button type="button" className="btn btn-primary" onClick={() => setActiveTab('all-events')}>
                   BROWSE ALL EVENTS →
                 </button>
@@ -318,7 +318,7 @@ export default function StudentPortalPage() {
                   <div className="simple-card-top">
                     <span className="simple-card-category">{rec.type}</span>
                     <h3 className="simple-card-title">{rec.title}</h3>
-                    <p style={{ color: '#0f172a', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
+                    <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
                     <p className="simple-card-desc">{rec.description}</p>
                   </div>
                   <div className="simple-card-bottom">
@@ -346,8 +346,8 @@ export default function StudentPortalPage() {
           <div>
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>SHARED NOTES & STUDY MATERIAL</h2>
             {notes.length === 0 ? (
-              <div style={{ padding: '48px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#64748b', fontSize: '15px' }}>No notes have been uploaded yet. Check back soon.</p>
+              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No notes have been uploaded yet. Check back soon.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
@@ -361,7 +361,7 @@ export default function StudentPortalPage() {
                         {note.topics && note.topics.length > 0 && (
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '8px 0' }}>
                             {note.topics.map((topic, i) => (
-                              <span key={i} style={{ fontSize: '11px', fontWeight: '600', color: '#0f172a', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '2px 10px', borderRadius: '100px' }}>{topic}</span>
+                              <span key={i} style={{ fontSize: '11px', fontWeight: '600', color: '#0A0A0A', background: '#F2F2F2', border: '1px solid #DADADA', padding: '2px 10px', borderRadius: '100px' }}>{topic}</span>
                             ))}
                           </div>
                         )}
@@ -396,22 +396,22 @@ export default function StudentPortalPage() {
           <div>
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>STUDENT ACTIVITY & METRICS</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase' }}>TOTAL TIME ON PORTAL</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0f172a', margin: '8px 0' }}>{formatHoursMins(userActivity.totalSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#64748b' }}>Live counter running</p>
+              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>TOTAL TIME ON PORTAL</span>
+                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.totalSeconds)}</h3>
+                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Live counter running</p>
               </div>
 
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase' }}>WEBSITE ACTIVE TIME</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0f172a', margin: '8px 0' }}>{formatHoursMins(userActivity.websiteSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#64748b' }}>Dashboard & portal navigation</p>
+              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>WEBSITE ACTIVE TIME</span>
+                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.websiteSeconds)}</h3>
+                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Dashboard & portal navigation</p>
               </div>
 
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase' }}>MASTERCLASS WATCH TIME</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0f172a', margin: '8px 0' }}>{formatHoursMins(userActivity.recordingSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#64748b' }}>Video session consumption</p>
+              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
+                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>MASTERCLASS WATCH TIME</span>
+                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.recordingSeconds)}</h3>
+                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Video session consumption</p>
               </div>
             </div>
           </div>
@@ -430,48 +430,48 @@ export default function StudentPortalPage() {
             </div>
 
             {!editingProfile ? (
-              <div style={{ background: '#ffffff', padding: '32px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+              <div style={{ background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>FULL NAME</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.name}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>FULL NAME</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.name}</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>REGISTRATION NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.regNumber}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>REGISTRATION NUMBER</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.regNumber}</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>ROLL NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.rollNumber}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>ROLL NUMBER</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.rollNumber}</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>SECTION & YEAR</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.section} ({memberProfile.currentYear})</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>SECTION & YEAR</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.section} ({memberProfile.currentYear})</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>DEPARTMENT</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.department}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>DEPARTMENT</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.department}</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>SCHOOL / COLLEGE</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.school}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>SCHOOL / COLLEGE</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.school}</strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>CONTACT NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.contactNumber}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>CONTACT NUMBER</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.contactNumber}</strong>
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>GMAIL / EMAIL</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.gmail}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>GMAIL / EMAIL</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.gmail}</strong>
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: '700' }}>PRIMARY TRACK</span>
-                    <strong style={{ fontSize: '16px', color: '#0f172a' }}>{memberProfile.interestedDomain}</strong>
+                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>PRIMARY TRACK</span>
+                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.interestedDomain}</strong>
                   </div>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleProfileSave} style={{ background: '#ffffff', padding: '32px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+              <form onSubmit={handleProfileSave} style={{ background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Full Name</label>
@@ -521,12 +521,12 @@ export default function StudentPortalPage() {
             )}
 
             {/* ADMIN ACCESS REQUEST */}
-            <div style={{ marginTop: '32px', background: '#ffffff', padding: '32px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}>REQUEST ADMIN ACCESS</h3>
+            <div style={{ marginTop: '32px', background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#0A0A0A', marginBottom: '8px' }}>REQUEST ADMIN ACCESS</h3>
 
               {!myAdminRequest && (
                 <>
-                  <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '16px' }}>
+                  <p style={{ color: '#8A8A8A', fontSize: '13px', marginBottom: '16px' }}>
                     Want to help run the club — create events, upload notes? Apply for admin access. A Super Admin reviews every request before it&apos;s granted.
                   </p>
                   <form onSubmit={handleAdminRequestSubmit}>
@@ -536,7 +536,7 @@ export default function StudentPortalPage() {
                         value={adminReason}
                         onChange={(e) => setAdminReason(e.target.value)}
                         rows={3}
-                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontFamily: 'inherit', fontSize: '14px', resize: 'vertical' }}
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #DADADA', borderRadius: '8px', fontFamily: 'inherit', fontSize: '14px', resize: 'vertical' }}
                         placeholder="e.g. I'd like to organize and run the workshops track."
                       />
                     </div>
