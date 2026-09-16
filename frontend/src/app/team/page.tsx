@@ -304,7 +304,7 @@ export default function TeamPage() {
                         <img
                           src={member.image!}
                           alt={member.name}
-                          className="w-full h-full object-cover grayscale contrast-115 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 will-change-transform"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 will-change-transform"
                         />
                         <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#0A0A0A]/85 text-[#FFFFFF] font-mono text-[8px] uppercase tracking-wider backdrop-blur-sm">
                           FELLOW FT-{member.num}

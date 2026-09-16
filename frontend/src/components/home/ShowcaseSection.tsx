@@ -221,7 +221,7 @@ export default function ShowcaseSection() {
               <img
                 src={activeProject.image}
                 alt={activeProject.title}
-                className="w-full h-full object-cover grayscale contrast-115 transition-all duration-700"
+                className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute bottom-4 right-4 flex items-center gap-3">
                 <Link

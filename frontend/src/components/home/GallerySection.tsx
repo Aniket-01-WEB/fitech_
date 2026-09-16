@@ -52,7 +52,7 @@ export default function GallerySection() {
               style={{ scale: scaleImage }}
               src="/images/event-summit.jpg"
               alt="Flagship FinTech & Quantitative Research Summit"
-              className="w-full h-full object-cover grayscale contrast-115 transition-all duration-700"
+              className="w-full h-full object-cover transition-all duration-700"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md">
               Plate 01 // Main Auditorium • Keynote Session
@@ -89,7 +89,7 @@ export default function GallerySection() {
               <img
                 src="/images/team/aniket.jpeg"
                 alt="Systems & Matching Engine Lab"
-                className="w-full h-full object-cover grayscale contrast-110 transition-all duration-700"
+                className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase">
                 Plate 02 // Systems & Matching Lab
@@ -106,7 +106,7 @@ export default function GallerySection() {
               <img
                 src="/images/team/pritesh.jpeg"
                 alt="Quantitative Research & Strategy"
-                className="w-full h-full object-cover grayscale contrast-110 transition-all duration-700"
+                className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase">
                 Plate 03 // Quant Research Desk
