@@ -5127,3 +5127,51 @@ footer img { filter: brightness(0) invert(1); }
   .ascii-dollar { animation: none; }
   .ascii-dollar-shine { display: none; }
 }
+
+/* ==========================================================================
+   PRESS FEEDBACK — every clickable control squashes while it's held down.
+   Kept at the very end so it outranks every hover transform above; the
+   poster pills with a hard offset shadow "sink" into that shadow instead.
+   ========================================================================== */
+button,
+[role="button"],
+.btn,
+.stanzza-btn-pill,
+.cta-join-btn,
+.upcoming-hero-action-btn,
+.sleek-nav-links a[href="/login"],
+.sleek-mobile-links a {
+  transition-property: transform, box-shadow, background-color, border-color, color, opacity;
+  transition-duration: 0.12s, 0.12s, 0.2s, 0.2s, 0.2s, 0.2s;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+button:active,
+[role="button"]:active,
+.btn:active,
+.cta-join-btn:active,
+.upcoming-hero-action-btn:active,
+.sleek-nav-links a[href="/login"]:active,
+.sleek-mobile-links a:active {
+  transform: scale(0.95) translateY(1px) !important;
+}
+
+/* Hard-shadow pills: move into the shadow so it reads as physically pressed. */
+button.stanzza-btn-pill:active,
+a.stanzza-btn-pill:active,
+.btn-primary:active,
+.btn-secondary:active,
+.sleek-nav-links a[href="/login"]:active {
+  transform: translate(3px, 3px) scale(0.98) !important;
+  box-shadow: 1px 1px 0 0 var(--mono-ink) !important;
+}
+
+.sleek-nav-toggle:active { transform: scale(0.9) !important; }
+button:disabled:active { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  button:active, [role="button"]:active, .btn:active, .stanzza-btn-pill:active,
+  .cta-join-btn:active, .upcoming-hero-action-btn:active,
+  .sleek-nav-links a[href="/login"]:active, .sleek-mobile-links a:active,
+  .sleek-nav-toggle:active { transform: none !important; }
+}
