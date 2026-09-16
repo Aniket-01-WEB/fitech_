@@ -5101,6 +5101,7 @@ footer img { filter: brightness(0) invert(1); }
   line-height: 1;
   letter-spacing: 0;
   white-space: pre;
+  text-align: left; /* hero is text-center; each trimmed line must not recentre itself */
   color: #0A0A0A;
 }
 /* Same text stacked on top in light grey, revealed through a moving band

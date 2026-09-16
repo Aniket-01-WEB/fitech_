@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Set the moment the loader begins to fade out; shown once per session.
+export const LOADER_SESSION_KEY = 'fitech_stanzza_loader';
+
 export default function PageLoader() {
   const [progress, setProgress] = useState(0);
   const [isDone, setIsDone] = useState(false);
@@ -11,7 +14,7 @@ export default function PageLoader() {
   useEffect(() => {
     // Check if preloader has already been shown in this session
     try {
-      if (sessionStorage.getItem('fitech_stanzza_loader')) {
+      if (sessionStorage.getItem(LOADER_SESSION_KEY)) {
         setShouldRender(false);
         return;
       }
@@ -35,7 +38,7 @@ export default function PageLoader() {
         setProgress(100);
         setIsDone(true);
         try {
-          sessionStorage.setItem('fitech_stanzza_loader', 'true');
+          sessionStorage.setItem(LOADER_SESSION_KEY, 'true');
         } catch {
           // ignore
         }
