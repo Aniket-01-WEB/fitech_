@@ -5047,12 +5047,46 @@ footer img { filter: brightness(0) invert(1); }
 }
 
 /* ---- ASCII $100 note (landing hero) ---- */
+/* Stage supplies the perspective; the note drifts in 3D on its own, the
+   inner .ascii-dollar-tilt follows the pointer, and a depth copy of the
+   text (as a text-shadow) sits behind the ink so the note reads as a thin
+   slab rather than a flat print. The crumple/unfold only ever changes the text — none of
+   these transforms touch it. */
+.ascii-stage {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+  margin-bottom: 26px;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+}
 .ascii-dollar {
   position: relative;
   width: 100%;
   container-type: inline-size;
-  overflow: hidden;
-  animation: ascii-float 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: ascii-drift 9s ease-in-out infinite;
+}
+.ascii-dollar-tilt {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Soft ground shadow, pushed back so the note floats above it. */
+.ascii-dollar::after {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -22px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(10, 10, 10, 0.22), rgba(10, 10, 10, 0) 70%);
+  transform: translateZ(-60px);
+  pointer-events: none;
 }
 .ascii-dollar pre {
   position: absolute;
@@ -5067,29 +5101,40 @@ footer img { filter: brightness(0) invert(1); }
   white-space: pre;
   text-align: left; /* hero is text-center; each trimmed line must not recentre itself */
   color: #0A0A0A;
+  backface-visibility: hidden;
+  will-change: transform;
 }
-/* Same text stacked on top in light grey, revealed through a moving band
-   mask — a light sweeping across the note that loops forever. */
+/* Extruded edge drawn as a shadow on the same layer — a second text layer
+   for the depth copy doubled the 3D compositing cost for no visible gain. */
+.ascii-dollar-base {
+  transform: translateZ(0);
+  text-shadow: 3px 3px 0 #BDBDBD;
+}
+/* Light sweep: a translucent white band that slides across the note on
+   the compositor (transform only — no repaint of the text layers). */
 .ascii-dollar-shine {
-  color: #8A8A8A;
-  text-shadow: none;
-  -webkit-mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
-  mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
-  -webkit-mask-size: 300% 100%;
-  mask-size: 300% 100%;
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 60%;
+  transform: translate3d(-120%, 0, 2px) skewX(-15deg);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
   animation: ascii-shine 5s linear infinite;
   pointer-events: none;
+  will-change: transform;
 }
 @keyframes ascii-shine {
-  from { -webkit-mask-position: 150% 0; mask-position: 150% 0; }
-  to   { -webkit-mask-position: -150% 0; mask-position: -150% 0; }
+  from { transform: translate3d(-120%, 0, 2px) skewX(-15deg); }
+  to   { transform: translate3d(300%, 0, 2px) skewX(-15deg); }
 }
-@keyframes ascii-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
+@keyframes ascii-drift {
+  0%, 100% { transform: rotateX(6deg) rotateY(-6deg) translateY(0); }
+  50%      { transform: rotateX(3deg) rotateY(6deg) translateY(-6px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ascii-dollar { animation: none; }
+  .ascii-dollar { animation: none; transform: rotateX(5deg); }
+  .ascii-dollar-tilt { transition: none; }
   .ascii-dollar-shine { display: none; }
 }
 

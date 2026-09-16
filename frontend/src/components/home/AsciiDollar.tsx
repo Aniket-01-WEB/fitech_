@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { LOADER_SESSION_KEY } from '@/components/layout/PageLoader';
 
 type Dots = { cols: number; rows: number; text: string };
@@ -198,15 +198,38 @@ export default function AsciiDollar() {
     };
   }, []);
 
+  // Mouse-follow tilt. Written straight to CSS variables (no React state)
+  // so it never re-renders the text and can't interfere with the unfold.
+  const stageRef = useRef<HTMLDivElement>(null);
+  const onMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const el = stageRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty('--tilt-y', `${(x * 10).toFixed(2)}deg`);
+    el.style.setProperty('--tilt-x', `${(-y * 7).toFixed(2)}deg`);
+  }, []);
+  const onLeave = useCallback(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    el.style.setProperty('--tilt-y', '0deg');
+    el.style.setProperty('--tilt-x', '0deg');
+  }, []);
+
   return (
-    <div
-      className="ascii-dollar"
-      role="img"
-      aria-label="Dot-matrix ASCII rendering of a one hundred dollar note being smoothed flat"
-      style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}` }}
-    >
-      <pre className="ascii-dollar-base" aria-hidden="true">{text}</pre>
-      <pre className="ascii-dollar-shine" aria-hidden="true">{text}</pre>
+    <div className="ascii-stage" ref={stageRef} onPointerMove={onMove} onPointerLeave={onLeave}>
+      <div
+        className="ascii-dollar"
+        role="img"
+        aria-label="Dot-matrix ASCII rendering of a one hundred dollar note being smoothed flat"
+        style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}` }}
+      >
+        <div className="ascii-dollar-tilt">
+          <pre className="ascii-dollar-base" aria-hidden="true">{text}</pre>
+          <div className="ascii-dollar-shine" aria-hidden="true" />
+        </div>
+      </div>
     </div>
   );
 }
