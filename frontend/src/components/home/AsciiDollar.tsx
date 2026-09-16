@@ -7,8 +7,8 @@ type Dots = { cols: number; rows: number; text: string };
 
 // Sized from the dot grid so the box holds its shape before the data
 // arrives (no layout shift), and the font scales with the container width.
-const COLS = 440;
-const ROWS = 105;
+const COLS = 520;
+const ROWS = 124;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
 
 const UNFOLD_MS = 4200;
@@ -34,6 +34,36 @@ const SEEDS = Array.from({ length: FACETS }, (_, k) => ({
   rim: 0.88 + hash(k, 5) * 0.22, // silhouette bump for this facet
 }));
 
+// Nearest-facet lookup precomputed once over note space at grid
+// resolution, so each animation frame only does transforms and table
+// reads instead of a 26-seed search per cell. Stores the facet, the
+// crease glyph for the boundary with the runner-up facet, and the
+// distance gap to that boundary.
+const FACET = new Uint8Array(COLS * ROWS);
+const GAP = new Float32Array(COLS * ROWS);
+const CREASE = new Uint8Array(COLS * ROWS);
+{
+  const cx = COLS / 2, cy = ROWS / 2;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const nx = (c - cx) * CHAR_ASPECT, ny = r - cy;
+      let best = 0, second = 1, d1 = Infinity, d2 = Infinity;
+      for (let k = 0; k < FACETS; k++) {
+        const s = SEEDS[k];
+        const d = (nx - s.x) * (nx - s.x) + (ny - s.y) * (ny - s.y);
+        if (d < d1) { d2 = d1; second = best; d1 = d; best = k; } else if (d < d2) { d2 = d; second = k; }
+      }
+      const i = r * COLS + c;
+      FACET[i] = best;
+      GAP[i] = Math.sqrt(d2) - Math.sqrt(d1);
+      const o = SEEDS[second], sd = SEEDS[best];
+      const ang = Math.atan2(sd.y - o.y, sd.x - o.x) + Math.PI / 2;
+      const q = Math.round(((ang % Math.PI) + Math.PI) % Math.PI / (Math.PI / 4)) % 4;
+      CREASE[i] = [1, 0, 3, 2][q];
+    }
+  }
+}
+
 // Samples the flat note through a crumple field of strength `a` (1 -> 0):
 // the note is squeezed into a rough ball, its surface broken into shifted
 // facets with dark crease edges, tilted mid-way through, and everything
@@ -54,58 +84,54 @@ function crumple(rows: string[], a: number): string {
   const cosT = Math.cos(tilt);
   const sinT = Math.sin(tilt);
   const edgeW = 0.55 * a;
+  const sprinkle = a > 0.15 ? a * a * 0.03 : 0;
 
   const out: string[] = [];
+  const buf: string[] = new Array(COLS);
   for (let r = 0; r < ROWS; r++) {
-    let line = '';
+    const py = r - cy;
+    let last = -1;
     for (let c = 0; c < COLS; c++) {
       // Output cell -> px, undo tilt, undo scale -> note-space px.
       const px = (c - cx) * CHAR_ASPECT;
-      const py = r - cy;
       const ux = px * cosT + py * sinT;
       const uy = -px * sinT + py * cosT;
       const nx = ux / sxScale;
       const ny = uy / syScale;
 
-      // Cheap reject before the facet search: anything outside the ball's
-      // widest possible rim (and, as it opens, the note rectangle) is blank.
-      const rectD = Math.max(Math.abs(nx) / halfW, Math.abs(ny) / halfH);
-      const radial = Math.hypot(ux, uy) / ballR;
-      if (a * radial / 1.1 + (1 - a) * rectD >= 1) { line += ' '; continue; }
+      // Cheap reject: outside the ball's widest possible rim (and, as it
+      // opens, the note rectangle) is blank.
+      const ax = nx < 0 ? -nx : nx, ay = ny < 0 ? -ny : ny;
+      const rectD = ax / halfW > ay / halfH ? ax / halfW : ay / halfH;
+      const radial = Math.sqrt(ux * ux + uy * uy) / ballR;
+      if (a * radial / 1.1 + (1 - a) * rectD >= 1) { buf[c] = ' '; continue; }
+
+      // Facet lookup (clamped to the table).
+      let tc = Math.round(nx / CHAR_ASPECT + cx), tr = Math.round(ny + cy);
+      if (tc < 0) tc = 0; else if (tc >= COLS) tc = COLS - 1;
+      if (tr < 0) tr = 0; else if (tr >= ROWS) tr = ROWS - 1;
+      const ti = tr * COLS + tc;
+      const seed = SEEDS[FACET[ti]];
 
       // Silhouette: blend a jagged circle (ball) with the note rectangle.
-      let best = 0, second = 1, d1 = Infinity, d2 = Infinity;
-      for (let k = 0; k < FACETS; k++) {
-        const s = SEEDS[k];
-        const d = (nx - s.x) * (nx - s.x) + (ny - s.y) * (ny - s.y);
-        if (d < d1) { d2 = d1; second = best; d1 = d; best = k; } else if (d < d2) { d2 = d; second = k; }
-      }
-      const seed = SEEDS[best];
-      const circD = radial / seed.rim;
-      const inside = a * circD + (1 - a) * rectD < 1;
-      if (!inside) { line += ' '; continue; }
+      if (a * (radial / seed.rim) + (1 - a) * rectD >= 1) { buf[c] = ' '; continue; }
 
       // Facet shows a shifted fragment of the note.
-      const fx = nx + a * seed.dx;
-      const fy = ny + a * seed.dy;
-      const cc = Math.round(fx / CHAR_ASPECT + cx);
-      const rr = Math.round(fy + cy);
+      const cc = Math.round((nx + a * seed.dx) / CHAR_ASPECT + cx);
+      const rr = Math.round(ny + a * seed.dy + cy);
       let ch = ' ';
       if (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS) ch = rows[rr][cc] ?? ' ';
 
       // Crease where two facets meet, oriented along the boundary.
-      const gap = Math.sqrt(d2) - Math.sqrt(d1);
-      if (gap < edgeW) {
-        const o = SEEDS[second];
-        const ang = Math.atan2(seed.y - o.y, seed.x - o.x) + Math.PI / 2;
-        const q = Math.round(((ang % Math.PI) + Math.PI) % Math.PI / (Math.PI / 4)) % 4;
-        ch = EDGE[[1, 0, 3, 2][q]];
-      } else if (a > 0.15 && hash(r, c) < a * a * 0.03) {
+      if (GAP[ti] < edgeW) {
+        ch = EDGE[CREASE[ti]];
+      } else if (sprinkle > 0 && hash(r, c) < sprinkle) {
         ch = EDGE[Math.floor(hash(c, r) * EDGE.length)];
       }
-      line += ch;
+      buf[c] = ch;
+      if (ch !== ' ') last = c;
     }
-    out.push(line.replace(/\s+$/, ''));
+    out.push(last < 0 ? '' : buf.slice(0, last + 1).join(''));
   }
   return out.join('\n');
 }
@@ -134,6 +160,7 @@ export default function AsciiDollar() {
           }
         };
         let start = 0;
+        let lastDraw = 0;
         const tick = (now: number) => {
           if (!start) {
             if (!loaderGone()) {
@@ -146,6 +173,14 @@ export default function AsciiDollar() {
             raf = requestAnimationFrame(tick);
             return;
           }
+          // Re-laying out ~65k glyphs (x2 for the shine layer) is the real
+          // per-frame cost, so draw at 30 Hz — plenty for a text morph —
+          // and leave the main thread headroom for scrolling.
+          if (now - lastDraw < 32 && now - start < UNFOLD_MS) {
+            raf = requestAnimationFrame(tick);
+            return;
+          }
+          lastDraw = now;
           const t = Math.min(1, (now - start) / UNFOLD_MS);
           // Slow start (the ball loosening), fast middle (the note
           // springing open), gentle settle to perfectly flat.

@@ -20,7 +20,7 @@ const require = createRequire(import.meta.url);
 const jpeg = require('jpeg-js');
 
 const src = process.argv[2];
-const COLS = Number(process.argv[3] || 440);
+const COLS = Number(process.argv[3] || 520);
 const CHAR_ASPECT = 0.6; // monospace advance width / line height at line-height:1
 // Light -> dark. Each glyph is a grey level; at hero size the glyph shape
 // blurs away and only its ink coverage reads, so this behaves like a
@@ -31,7 +31,7 @@ const GAMMA = Number(process.argv[4] || 1.35);
 const CONTRAST = Number(process.argv[6] || 2.4);
 // Unsharp mask amount applied to the cell grid before quantising — brings
 // out edges (hair, lettering, the frame) that box-averaging softens.
-const SHARPEN = Number(process.argv[7] || 1.2);
+const SHARPEN = Number(process.argv[7] || 1.4);
 
 if (!src) {
   console.error('usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]');
