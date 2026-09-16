@@ -563,7 +563,8 @@ canvas{display:block}
 .mobile-links a {
   font-family: var(--font-heading);
   font-size: clamp(28px, 5.2vw, 48px);
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   transition: opacity 0.25s ease, color 0.25s ease;
   text-decoration: none;
@@ -717,7 +718,8 @@ canvas{display:block}
 .habito-badge-pill {
   font-family: var(--font-heading);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   background: #0A0A0A;
@@ -914,7 +916,8 @@ canvas{display:block}
 .habito-ticker-content span {
   font-family: var(--font-heading);
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 2px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1162,7 +1165,8 @@ canvas{display:block}
 
 .habito-about-desc strong {
   color: #0A0A0A;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
 }
 
 @media (max-width: 992px) {
@@ -1304,7 +1308,8 @@ canvas{display:block}
   justify-content: space-between;
   font-family: var(--font-heading);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 0.5px;
   color: #0A0A0A;
   padding: 4px 4px 12px 4px;
@@ -1349,7 +1354,8 @@ canvas{display:block}
 .habito-card-badge {
   font-family: var(--font-heading);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 2px;
   opacity: 0.6;
 }
@@ -1781,7 +1787,8 @@ canvas{display:block}
 .projects-reveal-card-category {
   font-family: var(--font-alt);
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #8A8A8A;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1790,7 +1797,8 @@ canvas{display:block}
 .projects-reveal-card-number {
   font-family: var(--font-heading), sans-serif;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #8A8A8A;
 }
 
@@ -2133,7 +2141,8 @@ canvas{display:block}
 
 .team-card.theme-white .flip-hint {
   color: #8A8A8A;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 1.2px;
 }
 
@@ -2147,7 +2156,8 @@ canvas{display:block}
   border: 1px solid #0A0A0A;
   color: #ffffff !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
 }
 
 .team-card.theme-white .team-linkedin-btn:hover {
@@ -2510,7 +2520,8 @@ canvas{display:block}
 .cta-join-btn {
   padding: 16px 44px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   border-radius: 40px;
   background: #0A0A0A;
   color: #ffffff;
@@ -2863,7 +2874,8 @@ canvas{display:block}
 
 .form-group label {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin-bottom: 6px;
   text-transform: uppercase;
@@ -2965,7 +2977,8 @@ canvas{display:block}
   border-radius: 30px;
   background: #0A0A0A;
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   border: none;
   cursor: pointer;
 }
@@ -3140,7 +3153,8 @@ canvas{display:block}
 .mobile-links .nav-signout-btn {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   background: transparent;
   border: 1.5px solid #0A0A0A;
@@ -3183,7 +3197,8 @@ canvas{display:block}
   justify-content: center;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
 }
 
 .portal-events-grid {
@@ -3309,7 +3324,8 @@ canvas{display:block}
   color: #0A0A0A;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   padding: 14px 18px;
@@ -3345,7 +3361,8 @@ canvas{display:block}
 .portal-empty-title {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: clamp(20px, 2.5vw, 28px);
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin: 0 0 10px;
 }
@@ -3637,7 +3654,8 @@ canvas{display:block}
 .portal-student-name {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin: 0;
 }
@@ -3670,7 +3688,8 @@ canvas{display:block}
 .portal-student-field .field-label {
   font-family: var(--font-alt, 'Manrope', sans-serif);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--gray-2, #8A8A8A);
@@ -3767,7 +3786,8 @@ canvas{display:block}
 .recording-duration-badge {
   font-family: var(--font-alt, 'Manrope', sans-serif);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #ffffff;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
@@ -3803,7 +3823,8 @@ canvas{display:block}
 .recording-speaker-tag {
   font-family: var(--font-alt, 'Manrope', sans-serif);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin-bottom: 6px;
 }
@@ -3888,7 +3909,8 @@ canvas{display:block}
 .simple-section-heading {
   font-family: var(--font-heading);
   font-size: clamp(32px, 4vw, 44px);
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin: 0;
   letter-spacing: -0.5px;
@@ -3952,7 +3974,8 @@ canvas{display:block}
 .simple-card-title {
   font-family: var(--font-heading);
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   margin: 0 0 12px 0;
   line-height: 1.25;
@@ -3983,7 +4006,8 @@ canvas{display:block}
 
 .simple-meta-date {
   font-size: 13.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
 }
 
@@ -4202,7 +4226,8 @@ canvas{display:block}
 
 .admin-note-tag-pill {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   padding: 4px 10px;
   background: #F2F2F2;
   border: 1px solid #DADADA;
@@ -4334,7 +4359,8 @@ canvas{display:block}
   display: inline-block;
   font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #0A0A0A;
@@ -4391,7 +4417,8 @@ canvas{display:block}
 .lp-label {
   font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -4431,7 +4458,8 @@ canvas{display:block}
   color: #ffffff;
   font-family: var(--font-heading);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   border: none;
@@ -4458,7 +4486,8 @@ canvas{display:block}
 .lp-join-link {
   font-family: var(--font-body);
   font-size: 13.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -4493,7 +4522,8 @@ canvas{display:block}
 .lp-role-link {
   font-family: var(--font-alt);
   font-size: 13.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   color: #0A0A0A;
   background: none;
   border: none;
@@ -4535,7 +4565,8 @@ canvas{display:block}
 .lp-demo-label {
   font-family: var(--font-body);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #8A8A8A;
@@ -4646,7 +4677,8 @@ canvas{display:block}
 .lab-build-card .simple-card-category {
   font-family: var(--font-heading);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 1.5px;
   color: #8A8A8A;
   text-transform: uppercase;
@@ -4741,7 +4773,8 @@ canvas{display:block}
 .upcoming-hero-event-tag {
   font-family: var(--font-heading);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.15);
@@ -4755,7 +4788,8 @@ canvas{display:block}
 .upcoming-hero-live-badge {
   font-family: var(--font-heading);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   letter-spacing: 1px;
   text-transform: uppercase;
   background: rgba(16, 185, 129, 0.2);
@@ -4843,7 +4877,8 @@ canvas{display:block}
   padding: 13px 28px;
   border-radius: 30px !important;
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   font-size: 13px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
@@ -5058,9 +5093,10 @@ footer img { filter: brightness(0) invert(1); }
   inset: 0;
   margin: 0;
   font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
-  /* 228 columns at a 0.6em advance width fill the container exactly */
+  /* 240 columns at a 0.6em advance width fill the container exactly */
   font-size: calc(100cqw / 144); /* 240 cols x 0.6em */
-  font-weight: 700;
+  font-weight: 800;
+  text-shadow: 0 0 0.6px #0A0A0A, 0.3px 0 0 #0A0A0A;
   line-height: 1;
   letter-spacing: 0;
   white-space: pre;
@@ -5069,7 +5105,8 @@ footer img { filter: brightness(0) invert(1); }
 /* Same text stacked on top in light grey, revealed through a moving band
    mask — a light sweeping across the note that loops forever. */
 .ascii-dollar-shine {
-  color: #B5B5B5;
+  color: #8A8A8A;
+  text-shadow: none;
   -webkit-mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
   mask-image: linear-gradient(105deg, transparent 0%, transparent 42%, #000 50%, transparent 58%, transparent 100%);
   -webkit-mask-size: 300% 100%;
@@ -5083,14 +5120,4 @@ footer img { filter: brightness(0) invert(1); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ascii-dollar-shine { display: none; }
-}
-
-/* ---- Pixel-dot halo behind the landing hero ---- */
-.dot-field {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
 }

@@ -17,7 +17,7 @@ const src = process.argv[2];
 const COLS = Number(process.argv[3] || 240);
 const CHAR_ASPECT = 0.6; // monospace advance width / line height at line-height:1
 const RAMP = [' ', '.', ':'];
-const GAMMA = Number(process.argv[4] || 1.4);
+const GAMMA = Number(process.argv[4] || 1.15);
 
 if (!src) {
   console.error('usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]');
@@ -59,8 +59,8 @@ const ink = Float32Array.from(cell, (v) => {
 
 // Quantize straight onto the ramp (no error diffusion — diffusion turns the
 // engraving into speckle; hard thresholds keep the line-work crisp).
-const T1 = Number(process.argv[5] || 0.13); // ink above this -> '.'
-const T2 = Number(process.argv[6] || 0.34); // ink above this -> ':'
+const T1 = Number(process.argv[5] || 0.09); // ink above this -> '.'
+const T2 = Number(process.argv[6] || 0.26); // ink above this -> ':'
 const lines = [];
 for (let r = 0; r < ROWS; r++) {
   let line = '';
