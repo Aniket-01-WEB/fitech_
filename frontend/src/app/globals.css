@@ -5454,3 +5454,90 @@ html.js-reveal [data-reveal].in-view {
 @media (prefers-reduced-motion: reduce) {
   .loader-reel { transition: none; }
 }
+
+/* ==========================================================================
+   MOBILE — phone-width fixes found by auditing every page at 412px.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* Data tables (member directories, event lists, team roster) are wider
+     than a phone; let them scroll sideways inside their card instead of
+     being clipped. display:block on the table keeps the row-groups intact
+     and gives the element its own scroll box. */
+  main table {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  main table th,
+  main table td {
+    white-space: nowrap;
+  }
+
+  /* Portal tab bar: a single scrollable row of pills, not a wrapped blob. */
+  .portal-page .portal-role-switch {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+    scrollbar-width: none;
+  }
+  .portal-page .portal-role-switch::-webkit-scrollbar { display: none; }
+  .portal-page .portal-role-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Portal header card: stack the title and the stats/actions. */
+  .portal-page .portal-header-card > div {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+  }
+  .portal-page .portal-header-card h1,
+  .portal-page .portal-header-card h2 {
+    font-size: clamp(24px, 7vw, 32px) !important;
+  }
+
+  /* Thumb-sized targets for the small text links (footer nav, login
+     helpers, team LinkedIn links) — the text stays the same size. */
+  footer a,
+  footer button,
+  .lp-card button:not(.lp-submit-btn),
+  #team a[target="_blank"],
+  main a[target="_blank"] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  /* Ticker/marquee headers and status strips wrap onto one column. */
+  footer .flex-wrap { row-gap: 10px; }
+
+  /* Events / Domains page headers: title and back button stack instead of
+     the button being squeezed off the right edge. */
+  .simple-events-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .simple-events-shell { padding: 104px 20px 56px; }
+  .simple-events-main-title { font-size: clamp(34px, 10vw, 48px); }
+  .simple-back-btn { white-space: nowrap; }
+}
+
+@media (pointer: coarse) {
+  button,
+  [role="button"] {
+    min-height: 40px;
+  }
+  .sleek-nav-toggle,
+  .faq-toggle,
+  .join-modal-close {
+    min-height: 0;
+  }
+}
