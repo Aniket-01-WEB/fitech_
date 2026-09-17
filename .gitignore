@@ -30,8 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files — never commit real secrets/config, but keep the .env.example
-# templates so anyone cloning the repo knows what vars to set.
+# env files — never commit real secrets/config. The variable names are
+# documented in the README.
 .env
 .env.local
 .env.*.local

@@ -63,7 +63,7 @@ None.
 | XSS | PASS | No `dangerouslySetInnerHTML`/`innerHTML`/`eval` (grep); CSP present |
 | CSRF | NOT APPLICABLE | Bearer-token API, no cookies |
 | CORS | PASS | Explicit allowlist from `FRONTEND_ORIGIN`; rejects are logged, not thrown |
-| Secrets | PASS | `.env` ignored; history scanned clean; `.env.example` has names only |
+| Secrets | PASS | `.env` ignored; history scanned clean; variable names documented in README |
 | File uploads | PASS | Staff-only, MIME allowlist, size caps, signed `Content-Length` |
 | Security headers | PASS | E2E asserts CSP, nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy |
 | Rate limiting per client | NOT VERIFIED | `trust proxy` set; only observable behind Render |
@@ -85,7 +85,7 @@ None.
 |---|---|---|
 | Frontend production build | PASS | `next build` — 14 static routes |
 | Backend start | PASS | `tsx src/server.ts`; `/health` 200 |
-| Environment variables | PASS | Single root `.env`, documented table, `.env.example` complete |
+| Environment variables | PASS | Single root `.env`; every variable documented in the README table |
 | Database migrations | PASS | 11 SQL migrations tracked under `backend/supabase/migrations/` |
 | Deployment config | NOT VERIFIED | Vercel/Render env values are not accessible from here; `FRONTEND_ORIGIN` must include the Vercel origin |
 | Monitoring / alerting | FAIL | None beyond keepalive pings; recommend Render/Vercel log drains or an uptime monitor |

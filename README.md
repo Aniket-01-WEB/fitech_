@@ -24,7 +24,7 @@ backend/    Standalone Node/Express API — the only thing that talks to Supabas
 
 This is an npm workspace; run everything from the repository root.
 
-1. Copy `.env.example` to `.env` and fill in the values. **One `.env` at the root serves both apps** — the backend and the frontend both read it (`backend/src/loadEnv.ts`, `frontend/next.config.mjs`). Never commit it.
+1. Create a `.env` file at the repository root with the variables below. **One `.env` at the root serves both apps** — the backend and the frontend both read it (`backend/src/loadEnv.ts`, `frontend/next.config.mjs`). Never commit it.
 
    | Variable | Used by | Purpose |
    |---|---|---|
