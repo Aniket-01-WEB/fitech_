@@ -17,13 +17,6 @@ const ROLE_LABEL = {
   superadmin: 'Super Admin'
 };
 
-// Demo accounts seeded directly in Supabase Auth for quick testing.
-// Quick-demo buttons sign in with a shared, publicly known password, so
-// they are off in production unless explicitly enabled for a showcase.
-const DEMO_LOGIN_ENABLED =
-  process.env.NEXT_PUBLIC_ENABLE_DEMO_LOGIN === 'true' || process.env.NODE_ENV !== 'production';
-const DEMO_PASSWORD = 'MatrixDemo-2026!';
-
 export default function LoginPage() {
   const [role, setRole] = useState('student'); // 'student' | 'admin' | 'superadmin'
   const [email, setEmail] = useState('');
@@ -81,12 +74,6 @@ export default function LoginPage() {
       return;
     }
     attemptLogin(trimmedEmail, password, role);
-  };
-
-  const handleQuickDemo = (demoRole, demoEmail) => {
-    setRole(demoRole);
-    setEmail(demoEmail);
-    attemptLogin(demoEmail, DEMO_PASSWORD, demoRole);
   };
 
   const switchRole = (newRole) => {
@@ -189,7 +176,7 @@ export default function LoginPage() {
       badge: 'ADMIN AUTHENTICATION',
       subtitle: 'Sign in to manage events, recordings, and member resources.',
       emailLabel: 'Admin Email',
-      emailPlaceholder: 'admin@matrix.club',
+      emailPlaceholder: 'Enter admin email',
       passLabel: 'Admin Password',
       passPlaceholder: 'Enter admin password',
     },
@@ -197,7 +184,7 @@ export default function LoginPage() {
       badge: 'SUPER ADMIN AUTHENTICATION',
       subtitle: 'Sign in to oversee all operations and manage member roles.',
       emailLabel: 'Super Admin Email',
-      emailPlaceholder: 'superadmin@matrix.club',
+      emailPlaceholder: 'Enter super admin email',
       passLabel: 'Super Admin Password',
       passPlaceholder: 'Enter super admin password',
     },
@@ -427,38 +414,6 @@ export default function LoginPage() {
         )}
       </div>
 
-      {/* ── DEMO BUTTONS — outside the card in blank space ── */}
-      {DEMO_LOGIN_ENABLED && (
-      <div className="lp-demo-strip">
-        <span className="lp-demo-label">QUICK DEMO ACCESS</span>
-        <div className="lp-demo-btns">
-          <button
-            type="button"
-            className="lp-demo-btn"
-            disabled={isSubmitting}
-            onClick={() => handleQuickDemo('student', 'student@matrix.club')}
-          >
-            ⚡ Student Demo
-          </button>
-          <button
-            type="button"
-            className="lp-demo-btn"
-            disabled={isSubmitting}
-            onClick={() => handleQuickDemo('admin', 'admin@matrix.club')}
-          >
-            ⚡ Admin Demo
-          </button>
-          <button
-            type="button"
-            className="lp-demo-btn"
-            disabled={isSubmitting}
-            onClick={() => handleQuickDemo('superadmin', 'superadmin@matrix.club')}
-          >
-            ⚡ Superadmin Demo
-          </button>
-        </div>
-      </div>
-      )}
     </div>
   );
 }
