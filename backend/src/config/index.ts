@@ -3,22 +3,19 @@
 
 const PORT = process.env.PORT || 4000;
 
-// Comma-separated for prod + local dev at once, e.g.
-// "https://fitech.club,http://localhost:3000". Never a wildcard — this API
-// is credentialed (Authorization header), so the allowed origin list must
-// be explicit.
-const defaultOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+// Origins allowed to call this API from a browser. The deployed frontend
+// and local dev are always allowed, so a stale or missing FRONTEND_ORIGIN
+// on the host can never take the live site down (it did once: the Render
+// value pointed at an old Vercel URL and every request was CORS-blocked).
+// FRONTEND_ORIGIN adds more, comma-separated. Never a wildcard — this API
+// is credentialed (Authorization header), so the list stays explicit.
+const PRODUCTION_FRONTEND = 'https://fitech-eta.vercel.app';
+const LOCAL_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000'];
 const configuredOrigins = (process.env.FRONTEND_ORIGIN || '')
   .split(',')
-  .map((o) => o.trim())
+  .map((o) => o.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 
-const ALLOWED_ORIGINS = Array.from(
-  new Set([
-    ...(process.env.NODE_ENV === 'production' ? [] : defaultOrigins),
-    ...configuredOrigins,
-    ...(configuredOrigins.length === 0 ? defaultOrigins : []),
-  ])
-);
+const ALLOWED_ORIGINS = Array.from(new Set([PRODUCTION_FRONTEND, ...LOCAL_ORIGINS, ...configuredOrigins]));
 
 export { PORT, ALLOWED_ORIGINS };

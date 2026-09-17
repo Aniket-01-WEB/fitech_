@@ -32,7 +32,7 @@ This is an npm workspace; run everything from the repository root.
    | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | frontend | Same two values, exposed to the browser for Supabase Auth. |
    | `PORT` | backend | API port (default 4000). Only the backend reads it — the root dev script strips it before starting Next. |
    | `FRONTEND_ORIGIN` | backend | Comma-separated CORS allowlist, e.g. `http://localhost:3000,https://fitech-eta.vercel.app`. |
-   | `NEXT_PUBLIC_API_URL` | frontend | Base URL of the backend. |
+   | `NEXT_PUBLIC_API_URL` | frontend | Base URL of the backend — the live API is `https://fitech-02.onrender.com`; use `http://localhost:4000` to talk to a local backend. |
    | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | backend | Cloudflare R2 credentials scoped to the one bucket. |
    | `NEXT_PUBLIC_ENABLE_DEMO_LOGIN` | frontend | Set to `true` to show the one-click demo login buttons. They are always shown in development and hidden in production builds unless this is set. |
 

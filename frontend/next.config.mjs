@@ -33,14 +33,15 @@ const isDev = process.env.NODE_ENV !== 'production';
 // Supabase project or deployed API URL ever changes.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseWsUrl = supabaseUrl.replace(/^https:/, 'wss:');
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://fitech-02.onrender.com';
 
 const connectSrc = [
   "'self'",
   supabaseUrl,
   supabaseWsUrl,
   apiUrl,
-  'http://localhost:4000',
+  'https://fitech-02.onrender.com',
+  'http://localhost:4000', // local backend when running `npm run dev`
   'http://127.0.0.1:4000',
   'https://*.r2.cloudflarestorage.com', // R2 presigned PUT/GET, called straight from the browser
   'https://script.google.com', // JoinModal's fire-and-forget backup-log webhook

@@ -36,12 +36,21 @@ describe('config/index (ALLOWED_ORIGINS)', () => {
     expect(localhostCount).toBe(1);
   });
 
-  it('excludes localhost in production when FRONTEND_ORIGIN is set', async () => {
+  it('always allows the deployed frontend and local dev, even in production', async () => {
     process.env.NODE_ENV = 'production';
     process.env.FRONTEND_ORIGIN = 'https://fitech.club';
     const { ALLOWED_ORIGINS } = await import('../config/index.js');
     expect(ALLOWED_ORIGINS).toContain('https://fitech.club');
-    expect(ALLOWED_ORIGINS).not.toContain('http://localhost:3000');
+    expect(ALLOWED_ORIGINS).toContain('https://fitech-eta.vercel.app');
+    expect(ALLOWED_ORIGINS).toContain('http://localhost:3000');
+  });
+
+  it('strips trailing slashes from configured origins', async () => {
+    process.env.FRONTEND_ORIGIN = 'https://fitech.club/, https://staging.fitech.club//';
+    const { ALLOWED_ORIGINS } = await import('../config/index.js');
+    expect(ALLOWED_ORIGINS).toContain('https://fitech.club');
+    expect(ALLOWED_ORIGINS).toContain('https://staging.fitech.club');
+    expect(ALLOWED_ORIGINS).not.toContain('https://fitech.club/');
   });
 
   it('uses default PORT 4000 when PORT is not set', async () => {

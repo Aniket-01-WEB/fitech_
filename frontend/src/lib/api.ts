@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://fitech-02.onrender.com';
 const REQUEST_TIMEOUT_MS = 15000;
 const RETRY_DELAY_MS = 1500;
 
