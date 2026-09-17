@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePortal } from '@/context/PortalContext';
+import { friendlyError } from '@/lib/errors';
 
 const ROLE_HOME = {
   admin: '/admin-portal',
@@ -67,7 +68,7 @@ export default function LoginPage() {
       }
       router.push(ROLE_HOME[profile.role] || '/student-portal');
     } catch (err) {
-      setErrorMsg(err.message || 'Sign in failed. Check your email and password.');
+      setErrorMsg(friendlyError(err, 'Sign in failed. Check your email and password.'));
       setIsSubmitting(false);
     }
   };
@@ -123,7 +124,7 @@ export default function LoginPage() {
       setInfoMsg(`A 6-digit verification code has been sent to ${trimmed}. It expires shortly, so enter it soon.`);
       setView('forgot-verify');
     } catch (err) {
-      setErrorMsg(err.message || 'Could not send a reset code. Check the email and try again.');
+      setErrorMsg(friendlyError(err, 'Could not send a reset code. Check the email and try again.'));
     }
     setIsSubmitting(false);
   };
@@ -142,7 +143,7 @@ export default function LoginPage() {
       setInfoMsg('');
       setView('forgot-reset');
     } catch (err) {
-      setErrorMsg(err.message || 'That code is invalid or has expired. Request a new one.');
+      setErrorMsg(friendlyError(err, 'That code is invalid or has expired. Request a new one.'));
     }
     setIsSubmitting(false);
   };
@@ -170,7 +171,7 @@ export default function LoginPage() {
       setErrorMsg('');
       setInfoMsg('Password updated. Please log in with your new password.');
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to reset password.');
+      setErrorMsg(friendlyError(err, 'Failed to reset password.'));
     }
     setIsSubmitting(false);
   };

@@ -1,6 +1,8 @@
 'use client';
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  // Logged for developers; the page itself shows a plain message only.
+  if (typeof window !== 'undefined') console.error('[app error]', error?.digest || '', error);
   return (
     <div style={{
       minHeight: '100vh',
@@ -43,7 +45,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         fontSize: '15px',
         lineHeight: 1.6
       }}>
-        {error?.message || 'An unexpected error occurred. Please try again.'}
+        An unexpected error occurred. Please try again, and if it keeps happening, contact the club team.
       </p>
       <button
         onClick={reset}

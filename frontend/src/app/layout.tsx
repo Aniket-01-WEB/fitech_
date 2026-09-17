@@ -7,6 +7,7 @@ import JoinModal from '@/components/modals/JoinModal';
 import EventDetailModal from '@/components/modals/EventDetailModal';
 import RecordingPlayerModal from '@/components/modals/RecordingPlayerModal';
 import SmoothScroll from '@/components/layout/SmoothScroll';
+import { ToastProvider } from '@/components/layout/Toast';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 
 const instrumentSerif = Instrument_Serif({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${instrumentSerif.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}>
       <body className="antialiased overflow-x-hidden">
+        <ToastProvider>
         <PortalProvider>
           <SmoothScroll>
             <PageLoader />
@@ -59,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <RecordingPlayerModal />
           </SmoothScroll>
         </PortalProvider>
+        </ToastProvider>
       </body>
     </html>
   );

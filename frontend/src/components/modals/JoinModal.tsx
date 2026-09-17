@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePortal } from '@/context/PortalContext';
+import { friendlyError } from '@/lib/errors';
 
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyd1SmdJymqZ1B0Z-d5K0J5N28h-M4jJq1rF-vX1Q1s9J4x2m/exec';
 
@@ -56,7 +57,7 @@ export default function JoinModal() {
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
-      }).catch(err => console.warn('Webhook error:', err.message));
+      }).catch(() => { /* backup log only — never surfaced */ });
 
       const result = await signUp(formData.gmail, formData.password, formData);
 
@@ -65,7 +66,7 @@ export default function JoinModal() {
       setSubmitted(true);
     } catch (err) {
       setSubmitting(false);
-      setErrorMsg(err.message || 'An error occurred during submission.');
+      setErrorMsg(friendlyError(err, 'An error occurred during submission.'));
     }
   };
 

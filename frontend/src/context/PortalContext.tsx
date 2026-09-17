@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { api } from '@/lib/api';
+import { friendlyError } from '@/lib/errors';
 
 // Shared domain/track options — used by the Join form, the Notes uploader, and profile editing.
 export const DOMAIN_OPTIONS = [
@@ -217,7 +218,7 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
     } catch (err: unknown) {
       // Never substitute made-up events: keep what we have (initially
       // nothing) and let the UI show the failure.
-      setEventsError(err instanceof Error ? err.message : 'Could not load events.');
+      setEventsError(friendlyError(err, 'Could not load events.'));
     }
   }, []);
 

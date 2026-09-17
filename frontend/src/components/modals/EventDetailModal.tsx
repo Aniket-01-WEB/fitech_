@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { usePortal } from '@/context/PortalContext';
+import { useToast } from '@/components/layout/Toast';
 import { useRouter } from 'next/navigation';
 
 export default function EventDetailModal() {
   const { activeDetailEvent, closeDetailModal, isEventJoined, toggleJoinEvent, currentUser, openJoinModal } = usePortal();
+  const { notify, notifyError } = useToast();
   const router = useRouter();
 
   if (!activeDetailEvent) return null;
@@ -18,7 +20,7 @@ export default function EventDetailModal() {
       openJoinModal();
       return;
     }
-    toggleJoinEvent(activeDetailEvent.id).catch(err => alert(err.message));
+    toggleJoinEvent(activeDetailEvent.id).catch(notifyError);
   };
 
   return (

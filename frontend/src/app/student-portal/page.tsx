@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePortal, DOMAIN_OPTIONS } from '@/context/PortalContext';
+import { useToast } from '@/components/layout/Toast';
 
 const DEFAULT_PROFILE_TEMPLATE = {
   name: '',
@@ -35,6 +36,7 @@ export default function StudentPortalPage() {
     requestAdminAccess,
     resubmitAdminRequest
   } = usePortal();
+  const { notify, notifyError } = useToast();
 
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('my-events');
@@ -85,7 +87,7 @@ export default function StudentPortalPage() {
     try {
       await saveMember(profileForm);
     } catch (err) {
-      alert(err.message || 'Failed to save profile.');
+      notifyError(err, 'Failed to save profile.');
       return;
     }
     setEditingProfile(false);
@@ -100,7 +102,7 @@ export default function StudentPortalPage() {
       await requestAdminAccess(adminReason.trim());
       setAdminReason('');
     } catch (err) {
-      alert(err.message || 'Failed to submit request.');
+      notifyError(err, 'Failed to submit request.');
     } finally {
       setSubmittingAdminRequest(false);
     }
@@ -112,7 +114,7 @@ export default function StudentPortalPage() {
     try {
       await resubmitAdminRequest(myAdminRequest.id);
     } catch (err) {
-      alert(err.message || 'Failed to resubmit request.');
+      notifyError(err, 'Failed to resubmit request.');
     } finally {
       setSubmittingAdminRequest(false);
     }
@@ -243,7 +245,7 @@ export default function StudentPortalPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => toggleJoinEvent(evt.id).catch(err => alert(err.message))}
+                        onClick={() => toggleJoinEvent(evt.id).catch(notifyError)}
                         className="btn portal-btn-joined"
                         style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}
                       >
@@ -292,7 +294,7 @@ export default function StudentPortalPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => toggleJoinEvent(evt.id).catch(err => alert(err.message))}
+                          onClick={() => toggleJoinEvent(evt.id).catch(notifyError)}
                           className={`btn ${joined ? 'portal-btn-joined' : 'btn-primary'}`}
                           style={{ flex: 1.5, fontSize: '12px', justifyContent: 'center' }}
                         >

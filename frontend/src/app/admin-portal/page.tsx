@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePortal } from '@/context/PortalContext';
+import { useToast } from '@/components/layout/Toast';
 import { STATUS_LABEL } from '@/constants/statusLabels';
 
 export default function AdminPortalPage() {
@@ -26,6 +27,7 @@ export default function AdminPortalPage() {
     saveMember,
     getRegisteredStudentsForEvent
   } = usePortal();
+  const { notify, notifyError } = useToast();
 
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('events');
@@ -103,7 +105,7 @@ export default function AdminPortalPage() {
         await createEvent(eventForm);
       }
     } catch (err) {
-      alert(err.message || 'Failed to save event.');
+      notifyError(err, 'Failed to save event.');
       return;
     }
     setShowEventForm(false);
@@ -133,7 +135,7 @@ export default function AdminPortalPage() {
   const handleSaveNoteSubmit = async (e) => {
     e.preventDefault();
     if (!noteForm.file && !noteForm.link.trim()) {
-      alert('Attach a file or provide a link before uploading a note.');
+      notify('Attach a file or provide a link before uploading a note.', 'error');
       return;
     }
     const topics = noteForm.topicsStr
@@ -153,7 +155,7 @@ export default function AdminPortalPage() {
         file: noteForm.file
       });
     } catch (err) {
-      alert(err.message || 'Failed to upload note.');
+      notifyError(err, 'Failed to upload note.');
       setUploadingNote(false);
       return;
     }
@@ -176,14 +178,14 @@ export default function AdminPortalPage() {
   const handleSaveRec = async (e) => {
     e.preventDefault();
     if (!recForm.file && !recForm.videoUrl.trim()) {
-      alert('Attach a video file or provide a video link before saving.');
+      notify('Attach a video file or provide a video link before saving.', 'error');
       return;
     }
     setUploadingRec(true);
     try {
       await saveRecording(recForm);
     } catch (err) {
-      alert(err.message || 'Failed to save recording.');
+      notifyError(err, 'Failed to save recording.');
       setUploadingRec(false);
       return;
     }
@@ -505,7 +507,7 @@ export default function AdminPortalPage() {
                       {evt.status === 'rejected' && (
                         <button
                           type="button"
-                          onClick={() => resubmitEvent(evt.id).catch(err => alert(err.message))}
+                          onClick={() => resubmitEvent(evt.id).catch(notifyError)}
                           className="admin-btn admin-btn-edit"
                         >
                           RESUBMIT
@@ -513,7 +515,7 @@ export default function AdminPortalPage() {
                       )}
                       <button
                         type="button"
-                        onClick={() => { if (confirm('Delete this event?')) deleteEvent(evt.id).catch(err => alert(err.message)); }}
+                        onClick={() => { if (confirm('Delete this event?')) deleteEvent(evt.id).catch(notifyError); }}
                         className="admin-btn admin-btn-delete"
                       >
                         DELETE
@@ -615,7 +617,7 @@ export default function AdminPortalPage() {
                     {note.status === 'rejected' && (
                       <button
                         type="button"
-                        onClick={() => resubmitNote(note.id).catch(err => alert(err.message))}
+                        onClick={() => resubmitNote(note.id).catch(notifyError)}
                         className="admin-btn admin-btn-edit"
                       >
                         RESUBMIT
@@ -623,7 +625,7 @@ export default function AdminPortalPage() {
                     )}
                     <button
                       type="button"
-                      onClick={() => { if (confirm('Delete this note?')) deleteNote(note.id).catch(err => alert(err.message)); }}
+                      onClick={() => { if (confirm('Delete this note?')) deleteNote(note.id).catch(notifyError); }}
                       className="admin-btn admin-btn-delete"
                     >
                       DELETE
@@ -805,7 +807,7 @@ export default function AdminPortalPage() {
                       {rec.status === 'rejected' && (
                         <button
                           type="button"
-                          onClick={() => resubmitRecording(rec.id).catch(err => alert(err.message))}
+                          onClick={() => resubmitRecording(rec.id).catch(notifyError)}
                           className="admin-btn admin-btn-edit"
                         >
                           RESUBMIT
@@ -813,7 +815,7 @@ export default function AdminPortalPage() {
                       )}
                       <button
                         type="button"
-                        onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(err => alert(err.message)); }}
+                        onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(notifyError); }}
                         className="admin-btn admin-btn-delete"
                       >
                         DELETE RECORDING
