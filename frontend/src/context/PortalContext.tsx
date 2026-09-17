@@ -49,6 +49,8 @@ function mapAdminRequest(r) {
   };
 }
 
+export type PortalEvent = ReturnType<typeof mapEvent>;
+
 function mapEvent(e) {
   return {
     id: e.id,
@@ -56,6 +58,7 @@ function mapEvent(e) {
     type: e.type,
     banner: e.banner,
     time: e.event_time_label || (e.event_time ? new Date(e.event_time).toLocaleString() : ''),
+    eventTime: e.event_time ? new Date(e.event_time).getTime() : null,
     venue: e.venue,
     description: e.description,
     status: e.status,
@@ -115,55 +118,6 @@ function mapRegistration(r) {
   };
 }
 
-// Intentionally duplicated in backend/src/routes/events.ts (FALLBACK_EVENTS)
-// so the homepage works even when the backend is unreachable. Keep both in sync.
-const DEFAULT_EVENTS = [
-  {
-    id: 'demo-evt-1',
-    title: 'Adamas FinTech & Quantitative Research Summit',
-    type: 'FLAGSHIP SUMMIT',
-    banner: '/images/event-summit.jpg',
-    image: '/images/event-summit.jpg',
-    event_time_label: 'March 28, 2026 • 10:00 AM IST',
-    venue: 'Adamas University Main Auditorium',
-    description: 'Premier academic and industry gathering featuring quantitative researchers, fintech leaders, algorithmic labs, and student innovators.',
-    status: 'approved',
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'demo-evt-2',
-    title: 'DeFi Liquidity Pools & Invariant Modeling Summit',
-    type: 'SUMMIT',
-    banner: 'linear-gradient(135deg, #1e1b4b, #312e81)',
-    event_time_label: 'April 02, 2026 • 5:30 PM EST',
-    venue: 'Main Auditorium & YouTube Live',
-    description: 'Analyzing Uniswap v4 hook architecture, concentrated liquidity invariants, and MEV arbitrage searchers.',
-    status: 'approved',
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'demo-evt-3',
-    title: 'AI Transformer Volatility Forecasting Hackathon',
-    type: 'HACKATHON',
-    banner: 'linear-gradient(135deg, #064e3b, #047857)',
-    event_time_label: 'April 20, 2026 • 10:00 AM EST',
-    venue: 'Computational Finance Center',
-    description: 'Build predictive volatility surfaces using domain-adapted LLMs and time-series transformer architectures.',
-    status: 'approved',
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'demo-evt-4',
-    title: '2025 Algorithmic Trading Architecture Symposium',
-    type: 'PAST EVENT 2025',
-    banner: 'linear-gradient(135deg, #334155, #475569)',
-    event_time_label: 'December 12, 2025',
-    venue: 'Archived Recording',
-    description: 'Retrospective analysis of zero-copy network stacks and kernel-bypass TCP socket programming in trading systems.',
-    status: 'approved',
-    created_at: new Date('2025-12-12').toISOString()
-  }
-];
 
 const DEFAULT_RECORDINGS = [
   {
@@ -202,7 +156,8 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState(null); // mapped profile, or null
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [events, setEvents] = useState(DEFAULT_EVENTS.map(mapEvent));
+  const [events, setEvents] = useState<ReturnType<typeof mapEvent>[]>([]);
+  const [eventsError, setEventsError] = useState<string | null>(null);
   const [recordings, setRecordings] = useState(DEFAULT_RECORDINGS.map(mapRecording));
   const [notes, setNotes] = useState([]);
   const [registrations, setRegistrations] = useState([]);
@@ -257,11 +212,12 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
   const refreshEvents = useCallback(async () => {
     try {
       const res = await api.get('/api/events');
-      if (res?.events && res.events.length > 0) {
-        setEvents(res.events.map(mapEvent));
-      }
-    } catch {
-      // Gracefully maintain default approved events when server is offline
+      setEvents((res?.events ?? []).map(mapEvent));
+      setEventsError(null);
+    } catch (err: unknown) {
+      // Never substitute made-up events: keep what we have (initially
+      // nothing) and let the UI show the failure.
+      setEventsError(err instanceof Error ? err.message : 'Could not load events.');
     }
   }, []);
 
@@ -767,6 +723,7 @@ export function PortalProvider({ children }: { children: React.ReactNode }) {
         verifyPasswordResetOtp,
         updatePassword,
         events,
+        eventsError,
         createEvent,
         updateEvent,
         deleteEvent,

@@ -3,14 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePortal } from '@/context/PortalContext';
+import { splitEvents } from '@/lib/events';
 
 export default function EventsPage() {
   const { events, openDetailModal } = usePortal();
 
   // Only Super-Admin-approved events are ever shown publicly.
-  const approvedEvents = events.filter(evt => (evt.status || 'approved') === 'approved');
-  const upcomingEvents = approvedEvents.filter(evt => !evt.title.toLowerCase().includes('2025') && !evt.title.toLowerCase().includes('past'));
-  const pastEvents = approvedEvents.filter(evt => evt.title.toLowerCase().includes('2025') || evt.title.toLowerCase().includes('past'));
+  const { upcoming: upcomingEvents, past: pastEvents } = splitEvents(events);
 
   return (
     <div className="simple-events-shell">
@@ -35,7 +34,7 @@ export default function EventsPage() {
 
         {upcomingEvents.length === 0 ? (
           <div className="empty-events-box">
-            <p className="empty-events-text">No upcoming events.</p>
+            <p className="empty-events-text">No upcoming events</p>
           </div>
         ) : (
           <div className="simple-events-grid">
