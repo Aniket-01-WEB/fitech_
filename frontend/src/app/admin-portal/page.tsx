@@ -3,12 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePortal } from '@/context/PortalContext';
-
-const STATUS_LABEL = {
-  pending: '⏳ PENDING SUPER ADMIN REVIEW',
-  approved: '✅ LIVE — APPROVED',
-  rejected: '✕ REJECTED'
-};
+import { STATUS_LABEL } from '@/constants/statusLabels';
 
 export default function AdminPortalPage() {
   const {

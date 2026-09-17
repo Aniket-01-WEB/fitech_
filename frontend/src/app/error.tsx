@@ -1,36 +1,68 @@
 'use client';
 
-export default function GlobalError({ error, reset }) {
+export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <div style={{
       minHeight: '100vh',
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: 'column' as const,
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#0a0a0f',
-      color: '#DADADA',
-      fontFamily: 'system-ui, sans-serif',
+      background: '#FFFFFF',
+      color: '#0A0A0A',
+      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       padding: '2rem',
-      textAlign: 'center'
+      textAlign: 'center' as const
     }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#f87171' }}>Something went wrong</h1>
-      <p style={{ color: '#8A8A8A', marginBottom: '2rem', maxWidth: '400px' }}>
+      <p style={{
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '12px',
+        fontWeight: 600,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase' as const,
+        color: '#6B6B6B',
+        marginBottom: '16px'
+      }}>
+        SYSTEM ERROR
+      </p>
+      <h1 style={{
+        fontFamily: "'Instrument Serif', Georgia, serif",
+        fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+        fontWeight: 400,
+        lineHeight: 1.1,
+        letterSpacing: '-1px',
+        marginBottom: '1rem',
+        color: '#0A0A0A'
+      }}>
+        Something went wrong
+      </h1>
+      <p style={{
+        color: '#6B6B6B',
+        marginBottom: '2rem',
+        maxWidth: '440px',
+        fontSize: '15px',
+        lineHeight: 1.6
+      }}>
         {error?.message || 'An unexpected error occurred. Please try again.'}
       </p>
       <button
         onClick={reset}
         style={{
-          padding: '0.75rem 2rem',
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '8px',
+          padding: '12px 28px',
+          background: '#0A0A0A',
+          color: '#FFFFFF',
+          border: '1px solid #0A0A0A',
+          borderRadius: '9999px',
           cursor: 'pointer',
-          fontSize: '1rem'
+          fontSize: '11px',
+          fontWeight: 600,
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase' as const,
+          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
-        Try Again
+        Try Again →
       </button>
     </div>
   );

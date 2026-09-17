@@ -17,8 +17,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       infinite: false,
     });
 
-    // Make lenis accessible globally if needed
-    (window as any).lenis = lenis;
+
 
     let animationFrameId: number;
     function raf(time: number) {
@@ -31,7 +30,6 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     return () => {
       cancelAnimationFrame(animationFrameId);
       lenis.destroy();
-      delete (window as any).lenis;
     };
   }, []);
 

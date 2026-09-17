@@ -6,6 +6,8 @@ import { validateBody, validateIdParam, eventCreateSchema, eventUpdateSchema } f
 
 const router = Router();
 
+// Intentionally duplicated in frontend/src/context/PortalContext.tsx (DEFAULT_EVENTS)
+// so the homepage works even when the backend is unreachable. Keep both in sync.
 const FALLBACK_EVENTS = [
   {
     id: 'demo-evt-1',

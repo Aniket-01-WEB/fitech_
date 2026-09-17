@@ -1,7 +1,6 @@
-// Shared status display labels used across portal pages.
-// Extracted here to avoid duplication between admin-portal and super-admin.
-export const STATUS_LABEL: Record<string, string> = {
-  approved: '✅ Approved',
-  pending: '⏳ Pending',
-  rejected: '❌ Rejected'
+// Status pill text shared by the admin and super-admin portals.
+export const STATUS_LABEL: Record<'pending' | 'approved' | 'rejected', string> = {
+  pending: '⏳ PENDING SUPER ADMIN REVIEW',
+  approved: '✅ LIVE — APPROVED',
+  rejected: '✕ REJECTED',
 };

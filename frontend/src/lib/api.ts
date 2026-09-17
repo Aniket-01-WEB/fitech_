@@ -34,12 +34,12 @@ export async function apiFetch<T = any>(path: string, { method = 'GET', body }: 
   let res: Response;
   try {
     res = await fetchWithTimeout(url, fetchOptions);
-  } catch (firstErr: any) {
+  } catch (firstErr: unknown) {
     await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
     try {
       res = await fetchWithTimeout(url, fetchOptions);
-    } catch (secondErr: any) {
-      if (secondErr?.name === 'AbortError') {
+    } catch (secondErr: unknown) {
+      if (secondErr instanceof Error && secondErr.name === 'AbortError') {
         throw new Error('The server took too long to respond. Please try again.');
       }
       throw new Error("Can't reach the server right now. Check your connection and try again.");

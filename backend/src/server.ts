@@ -8,6 +8,11 @@ import { PORT, ALLOWED_ORIGINS } from './config/index.js';
 
 const app = express();
 
+// Deployed behind a reverse proxy (Render). Without this every request
+// appears to come from the proxy's own IP, so the rate limiter would put
+// all clients in one shared bucket.
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({
   origin(origin, callback) {
@@ -43,7 +48,6 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => res.json({ ok: true, service: 'matrix-backend' }));
 
 app.use('/api', apiRouter);
-app.use('/', apiRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

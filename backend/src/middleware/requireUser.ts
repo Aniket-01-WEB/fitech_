@@ -1,3 +1,4 @@
+import type { Request, Response, NextFunction } from 'express';
 import { supabaseFromRequest, getRequestUser } from '../lib/supabaseClient.js';
 
 /**
@@ -5,7 +6,7 @@ import { supabaseFromRequest, getRequestUser } from '../lib/supabaseClient.js';
  * token) and `req.user`, or responds 401 if no valid session was presented.
  * Use on any route that must be signed in.
  */
-export async function requireUser(req, res, next) {
+export async function requireUser(req: Request, res: Response, next: NextFunction) {
   const supabase = supabaseFromRequest(req);
   const user = await getRequestUser(supabase);
   if (!user) {
@@ -21,7 +22,7 @@ export async function requireUser(req, res, next) {
  * anonymous caller may also hit (e.g. browsing approved events). RLS still
  * applies; it just narrows what an anonymous caller can see.
  */
-export function attachSupabase(req, res, next) {
+export function attachSupabase(req: Request, _res: Response, next: NextFunction) {
   req.supabase = supabaseFromRequest(req);
   next();
 }

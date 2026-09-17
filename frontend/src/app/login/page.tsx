@@ -17,6 +17,10 @@ const ROLE_LABEL = {
 };
 
 // Demo accounts seeded directly in Supabase Auth for quick testing.
+// Quick-demo buttons sign in with a shared, publicly known password, so
+// they are off in production unless explicitly enabled for a showcase.
+const DEMO_LOGIN_ENABLED =
+  process.env.NEXT_PUBLIC_ENABLE_DEMO_LOGIN === 'true' || process.env.NODE_ENV !== 'production';
 const DEMO_PASSWORD = 'MatrixDemo-2026!';
 
 export default function LoginPage() {
@@ -423,6 +427,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── DEMO BUTTONS — outside the card in blank space ── */}
+      {DEMO_LOGIN_ENABLED && (
       <div className="lp-demo-strip">
         <span className="lp-demo-label">QUICK DEMO ACCESS</span>
         <div className="lp-demo-btns">
@@ -452,6 +457,7 @@ export default function LoginPage() {
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 }

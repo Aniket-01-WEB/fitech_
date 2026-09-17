@@ -8,7 +8,7 @@ const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
 const bucket = process.env.R2_BUCKET;
 
 if (!accountId || !accessKeyId || !secretAccessKey || !bucket) {
-  console.warn(' R2 config missing: set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET in backend/.env');
+  console.warn(' R2 config missing: set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET in the root .env');
 }
 
 // R2 is S3-compatible — same SDK, just pointed at Cloudflare's endpoint.
@@ -55,6 +55,20 @@ export async function deleteObject(key) {
 
 /** Namespaced, collision-proof object key for a new upload. */
 export function buildKey(kind, uploaderId, fileName) {
-  const safeName = String(fileName || 'file').replace(/[^a-zA-Z0-9._-]/g, '_').slice(-120);
+  const safeName = String(fileName || 'file')
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .replace(/\.{2,}/g, '.') // no '..' runs, even though R2 keys aren't paths
+    .slice(-120);
   return `${kind}/${uploaderId || 'unknown'}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+}
+
+/**
+ * True when `key` was minted for this uploader by buildKey(kind, uploaderId, …).
+ * Routes that accept a client-supplied r2_key must check this before
+ * storing it: otherwise a staff user could attach someone else's object
+ * to their own row — reading it through the download URL the GET route
+ * mints, and deleting it from R2 when they delete their row.
+ */
+export function ownsKey(kind: 'notes' | 'recordings', uploaderId: string, key: unknown): boolean {
+  return typeof key === 'string' && key.startsWith(`${kind}/${uploaderId}/`);
 }

@@ -41,14 +41,15 @@ router.post('/', requireUser, validateBody(registrationCreateSchema), async (req
 // DELETE /api/registrations/:eventId — leave an event. RLS only allows a
 // student to delete their own registration row.
 router.delete('/:eventId', requireUser, async (req, res) => {
-  if (!/^\d+$/.test(req.params.eventId)) {
+  const eventId = String(req.params.eventId ?? '');
+  if (!/^\d+$/.test(eventId)) {
     return res.status(400).json({ error: 'Invalid eventId.' });
   }
 
   const { error } = await req.supabase
     .from('event_registrations')
     .delete()
-    .eq('event_id', req.params.eventId)
+    .eq('event_id', eventId)
     .eq('user_id', req.user.id);
 
   if (error) return sendError(res, error);

@@ -115,6 +115,8 @@ function mapRegistration(r) {
   };
 }
 
+// Intentionally duplicated in backend/src/routes/events.ts (FALLBACK_EVENTS)
+// so the homepage works even when the backend is unreachable. Keep both in sync.
 const DEFAULT_EVENTS = [
   {
     id: 'demo-evt-1',

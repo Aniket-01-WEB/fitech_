@@ -3,7 +3,7 @@ import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
 import { statusHandler } from '../lib/statusUpdater.js';
-import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
+import { getUploadUrl, getDownloadUrl, deleteObject, buildKey, ownsKey } from '../lib/r2.js';
 import { sensitiveActionLimiter } from '../lib/rateLimit.js';
 import {
   validateBody,
@@ -80,6 +80,9 @@ router.post('/upload-url', requireUser, requireStaff, sensitiveActionLimiter, va
 // arbitrary client-supplied "here's a URL" blob. New notes always start
 // 'pending' (notes_force_pending trigger).
 router.post('/', requireUser, validateBody(noteCreateSchema), async (req, res) => {
+  if (req.body.r2_key && !ownsKey('notes', req.user.id, req.body.r2_key)) {
+    return res.status(403).json({ error: 'That upload does not belong to you.' });
+  }
   const { data, error } = await req.supabase.from('notes').insert(req.body).select().single();
   if (error) return sendError(res, error, 403);
   res.status(201).json({ note: data });

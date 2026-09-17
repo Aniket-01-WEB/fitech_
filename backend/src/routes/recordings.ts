@@ -3,7 +3,7 @@ import { requireUser } from '../middleware/requireUser.js';
 import { requireStaff } from '../middleware/requireStaff.js';
 import { sendError } from '../lib/errorResponse.js';
 import { statusHandler } from '../lib/statusUpdater.js';
-import { getUploadUrl, getDownloadUrl, deleteObject, buildKey } from '../lib/r2.js';
+import { getUploadUrl, getDownloadUrl, deleteObject, buildKey, ownsKey } from '../lib/r2.js';
 import { sensitiveActionLimiter } from '../lib/rateLimit.js';
 import {
   validateBody,
@@ -66,6 +66,9 @@ router.post('/upload-url', requireUser, requireStaff, sensitiveActionLimiter, va
 // independent — either, both, or neither may be set. New recordings
 // always start 'pending' (recordings_force_pending trigger).
 router.post('/', requireUser, validateBody(recordingCreateSchema), async (req, res) => {
+  if (req.body.r2_key && !ownsKey('recordings', req.user.id, req.body.r2_key)) {
+    return res.status(403).json({ error: 'That upload does not belong to you.' });
+  }
   const { data, error } = await req.supabase.from('recordings').insert(req.body).select().single();
   if (error) return sendError(res, error, 403);
   res.status(201).json({ recording: data });
@@ -75,6 +78,9 @@ router.post('/', requireUser, validateBody(recordingCreateSchema), async (req, r
 router.patch('/:id', requireUser, validateIdParam, validateBody(recordingUpdateSchema), async (req, res) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ error: 'No editable fields supplied.' });
+  }
+  if (req.body.r2_key && !ownsKey('recordings', req.user.id, req.body.r2_key)) {
+    return res.status(403).json({ error: 'That upload does not belong to you.' });
   }
 
   const { data, error } = await req.supabase.from('recordings').update(req.body).eq('id', req.params.id).select().single();
