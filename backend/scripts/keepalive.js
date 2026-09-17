@@ -16,7 +16,7 @@ async function keepSupabaseAwake() {
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('SUPABASE_URL and SUPABASE_ANON_KEY must be set (as env vars or in backend/.env).');
+    throw new Error('SUPABASE_URL and SUPABASE_ANON_KEY must be set (as env vars or in the root .env).');
   }
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
