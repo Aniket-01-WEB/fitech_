@@ -44,8 +44,12 @@ router.patch('/:id', requireUser, validateIdParam, validateBody(eventUpdateSchem
 
 // DELETE /api/events/:id — staff-only via RLS.
 router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
-  const { error } = await req.supabase.from('events').delete().eq('id', req.params.id);
+  // RLS silently deletes zero rows for a caller who isn't allowed to — so
+  // ask for the deleted row back and report 404 when there wasn't one,
+  // instead of a misleading 200.
+  const { data: deleted, error } = await req.supabase.from('events').delete().eq('id', req.params.id).select('id');
   if (error) return sendError(res, error, 403);
+  if (!deleted || deleted.length === 0) return res.status(404).json({ error: 'Not found.' });
   res.json({ ok: true });
 });
 

@@ -104,8 +104,12 @@ router.post('/:id/resubmit', requireUser, validateIdParam, statusHandler('record
 router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
   const { data: existing } = await req.supabase.from('recordings').select('r2_key').eq('id', req.params.id).single();
 
-  const { error } = await req.supabase.from('recordings').delete().eq('id', req.params.id);
+  // RLS silently deletes zero rows for a caller who isn't allowed to — so
+  // ask for the deleted row back and report 404 when there wasn't one,
+  // instead of a misleading 200.
+  const { data: deleted, error } = await req.supabase.from('recordings').delete().eq('id', req.params.id).select('id');
   if (error) return sendError(res, error, 403);
+  if (!deleted || deleted.length === 0) return res.status(404).json({ error: 'Not found.' });
 
   if (existing?.r2_key) {
     deleteObject(existing.r2_key).catch(err => console.error('Failed to delete R2 object for recording', req.params.id, err));
