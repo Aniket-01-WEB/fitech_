@@ -1,11 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
 
-// The intro loader plays once per session; pre-set its flag so tests see
+// The intro loader plays on every load; set its skip flag so tests see
 // the page immediately.
 async function open(page: Page, path: string) {
   await page.addInitScript(() => {
     try {
-      sessionStorage.setItem('fitech_stanzza_loader', 'true');
+      sessionStorage.setItem('fitech_skip_loader', 'true');
     } catch {
       // storage unavailable — loader simply plays
     }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { LOADER_SESSION_KEY } from '@/components/layout/PageLoader';
+import { isLoaderDone } from '@/components/layout/PageLoader';
 
 type Dots = { cols: number; rows: number; text: string };
 
@@ -167,13 +167,7 @@ export default function AsciiDollar() {
         // smoothing it out until the page loader has begun to lift —
         // otherwise the whole unfold plays hidden behind it.
         setText(crumple(rows, 1));
-        const loaderGone = () => {
-          try {
-            return !!sessionStorage.getItem(LOADER_SESSION_KEY);
-          } catch {
-            return true;
-          }
-        };
+        const loaderGone = isLoaderDone;
         let start = 0;
         let lastDraw = 0;
         const tick = (now: number) => {

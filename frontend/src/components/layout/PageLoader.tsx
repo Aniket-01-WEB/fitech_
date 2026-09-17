@@ -3,8 +3,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Set the moment the loader begins to fade out; shown once per session.
-export const LOADER_SESSION_KEY = 'fitech_stanzza_loader';
+// The loader plays on every page load. When it starts to slide away it
+// marks <html data-loader-done> so the landing note knows it can begin
+// its unfold in view. Tests can skip it with sessionStorage 'fitech_skip_loader'.
+export const LOADER_DONE_ATTR = 'data-loader-done';
+export const LOADER_SKIP_KEY = 'fitech_skip_loader';
+
+export function isLoaderDone(): boolean {
+  return document.documentElement.hasAttribute(LOADER_DONE_ATTR) || !document.querySelector('[data-page-loader]');
+}
 
 // One odometer column: a reel of 0-9 plus a trailing 0 so a 9 -> 0 wrap
 // rolls forward into the spare slot, then snaps back to the real 0 with
@@ -49,15 +56,16 @@ export default function PageLoader() {
   const [shouldRender, setShouldRender] = useState(true);
 
   useEffect(() => {
-    // Check if preloader has already been shown in this session
     try {
-      if (sessionStorage.getItem(LOADER_SESSION_KEY)) {
+      if (sessionStorage.getItem(LOADER_SKIP_KEY)) {
+        document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
         setShouldRender(false);
         return;
       }
     } catch {
-      // ignore
+      // storage unavailable — just play the loader
     }
+    document.documentElement.removeAttribute(LOADER_DONE_ATTR);
 
     const startTime = performance.now();
     const duration = 2600; // 000 -> 100
@@ -80,11 +88,7 @@ export default function PageLoader() {
         setProgress(100);
         holdTimer = window.setTimeout(() => {
           setIsDone(true);
-          try {
-            sessionStorage.setItem(LOADER_SESSION_KEY, 'true');
-          } catch {
-            // ignore
-          }
+          document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
           setTimeout(() => {
             setShouldRender(false);
           }, 900);
@@ -108,6 +112,7 @@ export default function PageLoader() {
     <AnimatePresence>
       {!isDone && (
         <motion.div
+          data-page-loader
           initial={{ y: 0 }}
           exit={{ y: '-100%' }}
           transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
