@@ -14,9 +14,12 @@ jobs:
     name: Lint, types, unit tests, build
     runs-on: ubuntu-latest
     env:
-      # Build-time placeholders only; nothing here talks to a real service.
-      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+      # Same project as .env so the production build (and its CSP
+      # connect-src) matches what is deployed. The anon key is the public
+      # publishable key, read from the repository secret the keepalive
+      # workflow already uses.
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://cpainkjljrjjwzdgdewz.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       NEXT_PUBLIC_API_URL: http://localhost:4000
     steps:
       - uses: actions/checkout@v4
