@@ -43,7 +43,7 @@ export default function CommunitiesSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>03 / CONTROLLED ENGINEERING</span>
+          <span>CONTROLLED ENGINEERING</span>
           <span>EMPIRICAL PERFORMANCE RECORD // 2026</span>
         </div>
 
@@ -51,7 +51,7 @@ export default function CommunitiesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-10 sm:mb-14 items-end">
           <div className="lg:col-span-6">
             <span className="px-3.5 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
-              03 // ADVANTAGE
+              ADVANTAGE
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Controlled
@@ -95,7 +95,7 @@ export default function CommunitiesSection() {
               className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#DADADA] hover:bg-[#F2F2F2] transition-all duration-300"
             >
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#DADADA] font-mono text-xs text-[#6B6B6B]">
-                <span className="font-bold text-[#0A0A0A]">{adv.num} {"//"} PILLAR</span>
+                <span className="font-bold text-[#0A0A0A]">PILLAR</span>
                 <span>VERIFIED</span>
               </div>
               <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#0A0A0A] mb-3">

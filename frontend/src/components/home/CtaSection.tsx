@@ -13,7 +13,7 @@ export default function CtaSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>09 / INTAKE & ADMISSIONS</span>
+          <span>INTAKE & ADMISSIONS</span>
           <span>CAMPUS GUILD CHAPTER // 2026</span>
         </div>
 

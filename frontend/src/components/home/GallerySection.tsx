@@ -20,7 +20,7 @@ export default function GallerySection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>07 / FIELD NOTES & ARCHIVE</span>
+          <span>FIELD NOTES & ARCHIVE</span>
           <span>PHOTOGRAPHIC LOG // 2026</span>
         </div>
 
@@ -28,7 +28,7 @@ export default function GallerySection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 sm:mb-8">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
-              07 // GALLERY
+              GALLERY
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Moments from
@@ -55,7 +55,7 @@ export default function GallerySection() {
               className="w-full h-full object-cover transition-all duration-700"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md">
-              Plate 01 // Main Auditorium • Keynote Session
+              Plate Main Auditorium • Keynote Session
             </div>
             <div className="absolute bottom-4 right-4 px-3.5 py-1.5 rounded-full bg-[#FFFFFF]/90 text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md border border-[#DADADA]">
               Adamas University Campus
@@ -92,7 +92,7 @@ export default function GallerySection() {
                 className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase">
-                Plate 02 // Systems & Matching Lab
+                Plate Systems & Matching Lab
               </div>
             </div>
             <h5 className="font-serif text-xl text-[#0A0A0A]">Order Book Matching Benchmarks</h5>
@@ -109,7 +109,7 @@ export default function GallerySection() {
                 className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase">
-                Plate 03 // Quant Research Desk
+                Plate Quant Research Desk
               </div>
             </div>
             <h5 className="font-serif text-xl text-[#0A0A0A]">Algorithmic Strategy & Alpha</h5>

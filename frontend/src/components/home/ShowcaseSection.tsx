@@ -92,7 +92,7 @@ export default function ShowcaseSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>02 / FLAGSHIP CODEBASES</span>
+          <span>FLAGSHIP CODEBASES</span>
           <span>APPLIED ENGINEERING ARCHIVE // 2026</span>
         </div>
 
@@ -100,7 +100,7 @@ export default function ShowcaseSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-10">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
-              02 // LAB BUILDS
+              LAB BUILDS
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Flagship
@@ -128,7 +128,6 @@ export default function ShowcaseSection() {
                     : 'stanzza-btn-light'
                 }`}
               >
-                <span>{proj.num} {"//"}</span>
                 <span>{proj.title}</span>
               </button>
             );
@@ -150,7 +149,7 @@ export default function ShowcaseSection() {
             <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-[#DADADA]">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-[#0A0A0A]">
-                  SPEC REF: EXP-2026.0{activeIdx + 1}
+                  SPEC REF: EXP-2026
                 </span>
                 <span className="text-[#DADADA]">│</span>
                 <span className="font-mono text-xs text-[#4A4A4A] uppercase">

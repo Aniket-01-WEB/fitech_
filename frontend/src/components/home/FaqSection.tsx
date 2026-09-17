@@ -39,7 +39,7 @@ export default function FaqSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>08 / FREQUENTLY ASKED QUESTIONS</span>
+          <span>FREQUENTLY ASKED QUESTIONS</span>
           <span>ADMISSIONS & INTAKE // 2026</span>
         </div>
 
@@ -47,7 +47,7 @@ export default function FaqSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-6 sm:mb-8 items-end">
           <div className="lg:col-span-6">
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
-              08 // FAQS
+              FAQS
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Questions prospective
@@ -73,9 +73,6 @@ export default function FaqSection() {
               >
                 <div className="w-full flex items-start justify-between gap-6 text-left">
                   <div className="flex items-baseline gap-4 sm:gap-6">
-                    <span className="font-mono text-xs text-[#6B6B6B] pt-1">
-                      0{idx + 1} {"//"}
-                    </span>
                     <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#0A0A0A]">
                       {item.q}
                     </h3>

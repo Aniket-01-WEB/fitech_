@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const DOMAINS_INDEX = [
   {
     num: '01',
-    code: 'FA-01',
+    code: 'FA',
     title: 'FinTech Architecture & Infrastructure',
     category: 'Systems & Low-Latency Execution',
     desc: 'Sub-microsecond order matching engines, lock-free ring buffers, kernel-bypass DPDK networking, and distributed financial exchange backbones.',
@@ -17,7 +17,7 @@ const DOMAINS_INDEX = [
   },
   {
     num: '02',
-    code: 'MQ-02',
+    code: 'MQ',
     title: 'Markets & Quantitative Investment',
     category: 'Algorithmic Strategy & Alpha',
     desc: 'Microstructure tick-level signal generation, statistical arbitrage, order flow toxicity (VPIN), mean-reversion, and momentum execution.',
@@ -27,7 +27,7 @@ const DOMAINS_INDEX = [
   },
   {
     num: '03',
-    code: 'AI-03',
+    code: 'AI',
     title: 'AI & Machine Learning in Finance',
     category: 'Time-Series & Neural Engines',
     desc: 'Transformer architectures for multi-asset regime forecasting, NLP extraction from SEC filings and earnings transcripts, and neural credit evaluation.',
@@ -37,7 +37,7 @@ const DOMAINS_INDEX = [
   },
   {
     num: '04',
-    code: 'QR-04',
+    code: 'QR',
     title: 'Quantitative Research & Derivatives',
     category: 'Stochastic Analysis & SVI',
     desc: 'Stochastic volatility modeling (Heston, SVI), Monte Carlo derivatives pricing, Extreme Value Theory (EVT), and institutional portfolio stress testing.',
@@ -47,7 +47,7 @@ const DOMAINS_INDEX = [
   },
   {
     num: '05',
-    code: 'VE-05',
+    code: 'VE',
     title: 'Venture Capital & Entrepreneurship',
     category: 'Incubation & Angel Syndicates',
     desc: 'Incubating student fintech founders, building prototype financial APIs, stress-testing unit economics, and preparing institutional pitch decks.',
@@ -57,7 +57,7 @@ const DOMAINS_INDEX = [
   },
   {
     num: '06',
-    code: 'BC-06',
+    code: 'BC',
     title: 'Decentralized Finance & Web3',
     category: 'Decentralized Protocols & ZK',
     desc: 'Automated market maker (AMM) concentrated liquidity mechanics, zero-knowledge solvency proofs, MEV arbitrage searchers, and smart contract audits.',
@@ -77,15 +77,15 @@ export default function DomainsSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>04 / ARCHITECTURAL THINKING</span>
-          <span>CURRICULUM ARCHIVE // 01—06</span>
+          <span>ARCHITECTURAL THINKING</span>
+          <span>CURRICULUM ARCHIVE</span>
         </div>
 
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-6 sm:mb-8">
           <div>
             <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4">
-              04 // DISCIPLINES
+              DISCIPLINES
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Operational
@@ -138,7 +138,6 @@ export default function DomainsSection() {
 
             <div className="pt-4 border-t border-[#DADADA] flex items-center justify-between font-mono text-[10px] text-[#6B6B6B]">
               <span>SELECT DISCIPLINE</span>
-              <span>INDEX: 0{activeIdx + 1}/06</span>
             </div>
           </div>
 
@@ -157,10 +156,7 @@ export default function DomainsSection() {
                       : 'hover:bg-[#F2F2F2]/60'
                   }`}
                 >
-                  <div className="flex items-baseline justify-between gap-4 mb-2">
-                    <span className="font-mono text-xs font-bold text-[#6B6B6B]">
-                      {domain.num} {"//"}
-                    </span>
+                  <div className="flex items-baseline justify-end gap-4 mb-2">
                     <span className="font-mono text-[10px] uppercase text-[#6B6B6B]">
                       {domain.category}
                     </span>

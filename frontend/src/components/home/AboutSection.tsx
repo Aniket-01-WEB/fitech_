@@ -47,7 +47,7 @@ export default function AboutSection() {
         
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
-          <span>01 / COMPOSITION & PHILOSOPHY</span>
+          <span>COMPOSITION & PHILOSOPHY</span>
           <span>CAMPUS GUILD CHARTER // 2026</span>
         </div>
 
@@ -57,7 +57,7 @@ export default function AboutSection() {
           {/* Left Column: Micro Title */}
           <div className="lg:col-span-4">
             <span className="px-3.5 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
-              01 // MANDATE
+              MANDATE
             </span>
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#0A0A0A] tracking-tight leading-[0.92]">
               Composed
@@ -116,7 +116,7 @@ export default function AboutSection() {
 
               <div className="px-2 pb-2">
                 <div className="flex items-center justify-between text-[#6B6B6B] font-mono text-[10px] uppercase mb-1.5">
-                  <span>PLATE {card.num}</span>
+                  <span>PLATE</span>
                   <span>VERIFIED</span>
                 </div>
                 <h4 className="font-serif text-xl font-normal text-[#0A0A0A] leading-snug mb-2 group-hover:underline">

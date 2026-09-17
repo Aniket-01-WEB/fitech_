@@ -229,7 +229,7 @@ export default function TeamPage() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 sm:mb-10">
           <div>
             <span className="font-mono text-xs font-bold text-[#0A0A0A] uppercase tracking-wider block mb-2">
-              05 / PERSONNEL
+              PERSONNEL
             </span>
             <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-black text-[#0A0A0A] uppercase tracking-tight leading-none">
               GOVERNANCE ROSTER
@@ -286,7 +286,7 @@ export default function TeamPage() {
 
                     <div>
                       <div className="flex items-center justify-between font-mono text-[10px] pb-2 mb-3 border-b border-[#F2F2F2]">
-                        <span className="font-bold text-[#0A0A0A]">NO. {member.num} / 16</span>
+                        <span className="font-bold text-[#0A0A0A]">{member.dept}</span>
                         {member.linkedin && (
                           <a
                             href={member.linkedin}
@@ -307,7 +307,7 @@ export default function TeamPage() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 will-change-transform"
                         />
                         <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#0A0A0A]/85 text-[#FFFFFF] font-mono text-[8px] uppercase tracking-wider backdrop-blur-sm">
-                          FELLOW FT-{member.num}
+                          FELLOW
                         </div>
                       </div>
 
@@ -356,7 +356,6 @@ export default function TeamPage() {
             <table className="w-full text-left font-mono text-xs">
               <thead>
                 <tr className="border-b-2 border-[#0A0A0A] text-[10px] text-[#6B6B6B] uppercase tracking-wider">
-                  <th className="py-3 pr-4 font-bold text-[#0A0A0A]">INDEX</th>
                   <th className="py-3 px-4 font-bold text-[#0A0A0A]">FELLOW IDENTITY</th>
                   <th className="py-3 px-4 font-bold text-[#0A0A0A]">GOVERNANCE ROLE</th>
                   <th className="py-3 px-4 font-bold text-[#0A0A0A] hidden md:table-cell">DOMAIN & MANDATE</th>
@@ -370,10 +369,6 @@ export default function TeamPage() {
                     key={member.num}
                     className="hover:bg-[#F2F2F2] transition-colors group cursor-default"
                   >
-                    <td className="py-4 pr-4 text-[#6B6B6B] font-medium whitespace-nowrap">
-                      NO. {member.num}
-                    </td>
-
                     <td className="py-4 px-4 whitespace-nowrap">
                       <div className="font-heading font-black text-sm text-[#0A0A0A] uppercase tracking-tight group-hover:underline">
                         {member.name}

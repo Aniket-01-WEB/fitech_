@@ -68,12 +68,11 @@ export default function DomainPage() {
         {DOMAINS_DATA.map((domain, index) => (
           <div key={index} className="habito-col">
             <div className="habito-col-header">
-              <span className="habito-col-title">TRACK {domain.num}</span>
+              <span className="habito-col-title">TRACK</span>
               <span className="habito-col-year">2026</span>
             </div>
             <div className={`habito-card habito-card-${domain.theme}`}>
               <div className="habito-card-inner">
-                <span className="habito-card-badge">{domain.num}</span>
                 <h3 className="habito-card-heading">{domain.title}</h3>
                 <p className="habito-card-text">{domain.desc}</p>
                 <div className="habito-card-tags">
