@@ -107,6 +107,8 @@ export default function AboutSection() {
                 <img
                   src={card.image}
                   alt={card.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-all duration-700"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">

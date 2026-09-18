@@ -220,6 +220,8 @@ export default function ShowcaseSection() {
               <img
                 src={activeProject.image}
                 alt={activeProject.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute bottom-4 right-4 flex items-center gap-3">

@@ -52,6 +52,8 @@ export default function GallerySection() {
               style={{ scale: scaleImage }}
               src="/images/event-summit.jpg"
               alt="Flagship FinTech & Quantitative Research Summit"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover transition-all duration-700"
             />
             <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md">

@@ -124,7 +124,14 @@
   border-radius: 50% !important;
 }
 
-/* Lenis smooth scrolling */
+/* Lenis smooth scrolling & responsive scroll foundations */
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+html:not(.lenis-smooth) {
+  scroll-behavior: smooth;
+}
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -136,6 +143,9 @@ html.lenis, html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 /* Stanzza Editorial Link Underline */
@@ -5140,6 +5150,13 @@ footer img { filter: brightness(0) invert(1); }
   0%, 100% { transform: rotateX(6deg) rotateY(-6deg) translateY(0); }
   50%      { transform: rotateX(3deg) rotateY(6deg) translateY(-6px); }
 }
+@media (max-width: 640px) {
+  .ascii-stage { perspective: none; margin-bottom: 8px; }
+  .ascii-dollar { animation: none; transform: none; }
+  .ascii-dollar-tilt { transform: none !important; transition: none !important; }
+  .ascii-strip { animation: none; text-shadow: none; }
+  .ascii-dollar-shine { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .ascii-dollar { animation: none; transform: rotateX(5deg); }
   .ascii-dollar-tilt { transition: none; }
@@ -5384,6 +5401,13 @@ html.js-reveal [data-reveal] {
 html.js-reveal [data-reveal].in-view {
   opacity: 1;
   transform: none;
+}
+@media (max-width: 640px) {
+  html.js-reveal [data-reveal] {
+    transform: translate3d(0, 14px, 0);
+    transition-duration: 0.4s;
+    transition-delay: 0ms !important;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html.js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }

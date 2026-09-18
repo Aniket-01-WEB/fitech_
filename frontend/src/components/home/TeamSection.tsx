@@ -124,6 +124,8 @@ export default function TeamSection() {
                 <img
                   src={leader.image!}
                   alt={leader.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-all duration-700"
                 />
                 <div className="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[9px] uppercase tracking-wider backdrop-blur-md">
