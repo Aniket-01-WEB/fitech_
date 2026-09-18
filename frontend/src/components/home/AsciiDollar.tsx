@@ -11,7 +11,7 @@ const COLS = 520;
 const ROWS = 124;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
 
-const UNFOLD_MS = 4200;
+const UNFOLD_MS = 1800;
 const FACETS = 26;
 const EDGE = '|/-\\';
 
@@ -86,25 +86,31 @@ function crumple(rows: string[], a: number): string {
   const edgeW = 0.55 * a;
   const sprinkle = a > 0.15 ? a * a * 0.03 : 0;
 
+  const dx_ux = CHAR_ASPECT * cosT;
+  const dx_uy = -CHAR_ASPECT * sinT;
+  const dx_nx = dx_ux / sxScale;
+  const dx_ny = dx_uy / syScale;
+
   const out: string[] = [];
   const buf: string[] = new Array(COLS);
   for (let r = 0; r < ROWS; r++) {
     const py = r - cy;
     let last = -1;
-    for (let c = 0; c < COLS; c++) {
-      // Output cell -> px, undo tilt, undo scale -> note-space px.
-      const px = (c - cx) * CHAR_ASPECT;
-      const ux = px * cosT + py * sinT;
-      const uy = -px * sinT + py * cosT;
-      const nx = ux / sxScale;
-      const ny = uy / syScale;
+    let ux = -cx * CHAR_ASPECT * cosT + py * sinT;
+    let uy = cx * CHAR_ASPECT * sinT + py * cosT;
+    let nx = ux / sxScale;
+    let ny = uy / syScale;
 
-      // Cheap reject: outside the ball's widest possible rim (and, as it
-      // opens, the note rectangle) is blank.
+    for (let c = 0; c < COLS; c++) {
+      // Cheap reject: outside the ball's widest possible rim is blank.
       const ax = nx < 0 ? -nx : nx, ay = ny < 0 ? -ny : ny;
       const rectD = ax / halfW > ay / halfH ? ax / halfW : ay / halfH;
       const radial = Math.sqrt(ux * ux + uy * uy) / ballR;
-      if (a * radial / 1.1 + (1 - a) * rectD >= 1) { buf[c] = ' '; continue; }
+      if (a * radial / 1.1 + (1 - a) * rectD >= 1) {
+        buf[c] = ' ';
+        ux += dx_ux; uy += dx_uy; nx += dx_nx; ny += dx_ny;
+        continue;
+      }
 
       // Facet lookup (clamped to the table).
       let tc = Math.round(nx / CHAR_ASPECT + cx), tr = Math.round(ny + cy);
@@ -114,7 +120,11 @@ function crumple(rows: string[], a: number): string {
       const seed = SEEDS[FACET[ti]];
 
       // Silhouette: blend a jagged circle (ball) with the note rectangle.
-      if (a * (radial / seed.rim) + (1 - a) * rectD >= 1) { buf[c] = ' '; continue; }
+      if (a * (radial / seed.rim) + (1 - a) * rectD >= 1) {
+        buf[c] = ' ';
+        ux += dx_ux; uy += dx_uy; nx += dx_nx; ny += dx_ny;
+        continue;
+      }
 
       // Facet shows a shifted fragment of the note.
       const cc = Math.round((nx + a * seed.dx) / CHAR_ASPECT + cx);
@@ -130,6 +140,8 @@ function crumple(rows: string[], a: number): string {
       }
       buf[c] = ch;
       if (ch !== ' ') last = c;
+
+      ux += dx_ux; uy += dx_uy; nx += dx_nx; ny += dx_ny;
     }
     out.push(last < 0 ? '' : buf.slice(0, last + 1).join(''));
   }
@@ -142,6 +154,7 @@ function crumple(rows: string[], a: number): string {
 const STRIP_COLS = 20;
 const STRIPS = Math.ceil(COLS / STRIP_COLS);
 function strips(text: string): string[] {
+  if (!text) return [];
   const lines = text.split('\n');
   const out: string[] = [];
   for (let s = 0; s < STRIPS; s++) {
@@ -153,6 +166,22 @@ function strips(text: string): string[] {
 
 export default function AsciiDollar() {
   const [text, setText] = useState('');
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  // Pause animations when offscreen to preserve 100% GPU/CPU headroom during scrolling
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        el.classList.remove('is-paused');
+      } else {
+        el.classList.add('is-paused');
+      }
+    }, { threshold: 0.05 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -163,36 +192,34 @@ export default function AsciiDollar() {
         if (cancelled) return;
         const rows = data.text.split('\n').map((l) => l.padEnd(COLS, ' '));
         while (rows.length < ROWS) rows.push(' '.repeat(COLS));
-        // Show the note fully crumpled straight away, but don't start
-        // smoothing it out until the page loader has begun to lift —
-        // otherwise the whole unfold plays hidden behind it.
         setText(crumple(rows, 1));
         const loaderGone = isLoaderDone;
         let start = 0;
         let lastDraw = 0;
         const tick = (now: number) => {
+          if (cancelled) return;
+          if (stageRef.current?.classList.contains('is-paused')) {
+            raf = requestAnimationFrame(tick);
+            return;
+          }
           if (!start) {
             if (!loaderGone()) {
               raf = requestAnimationFrame(tick);
               return;
             }
-            start = now + 250; // let the fade get going first
+            start = now + 150;
           }
           if (now < start) {
             raf = requestAnimationFrame(tick);
             return;
           }
-          // Re-laying out ~65k glyphs (x2 for the shine layer) is the real
-          // per-frame cost, so draw at 30 Hz — plenty for a text morph —
-          // and leave the main thread headroom for scrolling.
-          if (now - lastDraw < 32 && now - start < UNFOLD_MS) {
+          // Throttle to ~24 FPS (42ms) for text morph to leave main thread free
+          if (now - lastDraw < 42 && now - start < UNFOLD_MS) {
             raf = requestAnimationFrame(tick);
             return;
           }
           lastDraw = now;
           const t = Math.min(1, (now - start) / UNFOLD_MS);
-          // Slow start (the ball loosening), fast middle (the note
-          // springing open), gentle settle to perfectly flat.
           const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
           const a = Math.max(0, 1 - eased);
           setText(crumple(rows, t >= 1 ? 0 : a));
@@ -209,7 +236,6 @@ export default function AsciiDollar() {
 
   // Mouse-follow tilt. Written straight to CSS variables (no React state)
   // so it never re-renders the text and can't interfere with the unfold.
-  const stageRef = useRef<HTMLDivElement>(null);
   const onMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const el = stageRef.current;
     if (!el) return;
@@ -226,6 +252,8 @@ export default function AsciiDollar() {
     el.style.setProperty('--tilt-x', '0deg');
   }, []);
 
+  const stripList = React.useMemo(() => strips(text), [text]);
+
   return (
     <div className="ascii-stage" ref={stageRef} onPointerMove={onMove} onPointerLeave={onLeave}>
       <div
@@ -236,7 +264,7 @@ export default function AsciiDollar() {
       >
         <div className="ascii-dollar-tilt">
           <div className="ascii-dollar-base" aria-hidden="true">
-            {strips(text).map((strip, i) => (
+            {stripList.map((strip, i) => (
               <pre
                 key={i}
                 className="ascii-strip"

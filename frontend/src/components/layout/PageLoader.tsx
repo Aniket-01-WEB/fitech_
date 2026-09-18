@@ -68,16 +68,14 @@ export default function PageLoader() {
     document.documentElement.removeAttribute(LOADER_DONE_ATTR);
 
     const startTime = performance.now();
-    const duration = 2600; // 000 -> 100
-    const holdAt100 = 400; // ~3 s on screen in total before the slide-up
+    const duration = 950; // 000 -> 100 snappy calibration
+    const holdAt100 = 120; // brief hold at 100 before sliding out
 
     let animationFrameId: number;
     let holdTimer = 0;
 
     const updateProgress = (currentTime: number) => {
       const elapsed = currentTime - startTime;
-      // Ease-out so the last digits slow down and settle on 100 rather
-      // than blurring past it.
       const t = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - t, 2.2);
       setProgress(Math.round(eased * 100));
@@ -89,9 +87,12 @@ export default function PageLoader() {
         holdTimer = window.setTimeout(() => {
           setIsDone(true);
           document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
+          try {
+            sessionStorage.setItem(LOADER_SKIP_KEY, 'true');
+          } catch {}
           setTimeout(() => {
             setShouldRender(false);
-          }, 900);
+          }, 600);
         }, holdAt100);
       }
     };
@@ -115,7 +116,7 @@ export default function PageLoader() {
           data-page-loader
           initial={{ y: 0 }}
           exit={{ y: '-100%' }}
-          transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[99999] bg-[#FFFFFF] flex flex-col justify-between p-8 sm:p-14 select-none pointer-events-auto overflow-hidden"
         >
           {/* Top Archival Header */}

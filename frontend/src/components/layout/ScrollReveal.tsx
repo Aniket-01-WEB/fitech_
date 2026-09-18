@@ -80,7 +80,7 @@ export default function ScrollReveal() {
         if (el.closest(EXCLUDE)) return;
         if (el.hasAttribute('data-reveal')) { mark(el, 0); return; }
         if (el.closest('[data-reveal]') || el.querySelector('[data-reveal], .ascii-stage')) return;
-        if ((el as HTMLElement).offsetParent === null && getComputedStyle(el).position !== 'fixed') return;
+        if ((el as HTMLElement).offsetParent === null) return;
         mark(el, 0);
       });
     };
@@ -90,7 +90,7 @@ export default function ScrollReveal() {
     let t = 0;
     const mo = new MutationObserver(() => {
       window.clearTimeout(t);
-      t = window.setTimeout(scan, 60);
+      t = window.setTimeout(scan, 120);
     });
     mo.observe(document.body, { childList: true, subtree: true });
 
