@@ -3,9 +3,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// The loader plays on every page load. When it starts to slide away it
-// marks <html data-loader-done> so the landing note knows it can begin
-// its unfold in view. Tests can skip it with sessionStorage 'fitech_skip_loader'.
+// The loader plays on every page load and refresh — it is never
+// remembered across loads. When it starts to slide away it marks
+// <html data-loader-done> so the landing note knows it can begin its
+// unfold in view. Tests can skip it by setting sessionStorage
+// 'fitech_skip_loader' themselves; the loader never sets it.
 export const LOADER_DONE_ATTR = 'data-loader-done';
 export const LOADER_SKIP_KEY = 'fitech_skip_loader';
 
@@ -87,9 +89,6 @@ export default function PageLoader() {
         holdTimer = window.setTimeout(() => {
           setIsDone(true);
           document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
-          try {
-            sessionStorage.setItem(LOADER_SKIP_KEY, 'true');
-          } catch {}
           setTimeout(() => {
             setShouldRender(false);
           }, 600);
