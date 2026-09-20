@@ -7,9 +7,12 @@ type Dots = { cols: number; rows: number; text: string };
 
 // Sized from the dot grid so the box holds its shape before the data
 // arrives (no layout shift), and the font scales with the container width.
-const COLS = 520;
-const ROWS = 124;
+const COLS = 347;
+const ROWS = 83;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
+// Crumple geometry was tuned at 520 columns; scale its pixel-space
+// constants so the ball looks the same at any grid resolution.
+const GRID_SCALE = COLS / 520;
 
 const UNFOLD_MS = 1800;
 const FACETS = 26;
@@ -29,8 +32,8 @@ function hash(a: number, b: number) {
 const SEEDS = Array.from({ length: FACETS }, (_, k) => ({
   x: (hash(k, 1) - 0.5) * COLS * CHAR_ASPECT,
   y: (hash(k, 2) - 0.5) * ROWS,
-  dx: (hash(k, 3) - 0.5) * 70, // fragment shift (px), scaled by crumple
-  dy: (hash(k, 4) - 0.5) * 30,
+  dx: (hash(k, 3) - 0.5) * 70 * GRID_SCALE, // fragment shift (px), scaled by crumple
+  dy: (hash(k, 4) - 0.5) * 30 * GRID_SCALE,
   rim: 0.88 + hash(k, 5) * 0.22, // silhouette bump for this facet
 }));
 
@@ -83,7 +86,7 @@ function crumple(rows: string[], a: number): string {
   const tilt = a * (1 - a) * 1.1;
   const cosT = Math.cos(tilt);
   const sinT = Math.sin(tilt);
-  const edgeW = 0.55 * a;
+  const edgeW = 0.55 * a * GRID_SCALE;
   const sprinkle = a > 0.15 ? a * a * 0.03 : 0;
 
   const dx_ux = CHAR_ASPECT * cosT;
@@ -151,8 +154,8 @@ function crumple(rows: string[], a: number): string {
 // The note is drawn as vertical strips (STRIP_COLS columns each) so a
 // phase-shifted CSS animation can bob each strip in Y — a wave travelling
 // along X, like a flag — using transforms only, with no text re-layout.
-const STRIP_COLS = 20;
-const STRIPS = Math.ceil(COLS / STRIP_COLS);
+const STRIPS = 26;
+const STRIP_COLS = Math.ceil(COLS / STRIPS);
 function strips(text: string): string[] {
   if (!text) return [];
   const lines = text.split('\n');
@@ -260,7 +263,7 @@ export default function AsciiDollar() {
         className="ascii-dollar"
         role="img"
         aria-label="Dot-matrix ASCII rendering of a five hundred rupee note being smoothed flat"
-        style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}` }}
+        style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}`, '--ascii-em-cols': COLS * CHAR_ASPECT } as React.CSSProperties}
       >
         <div className="ascii-dollar-tilt">
           <div className="ascii-dollar-base" aria-hidden="true">
