@@ -5115,7 +5115,7 @@ footer img { filter: brightness(0) invert(1); }
      height and a negative letter-spacing pulls the advance back to 0.6
      cells, so the grid and the box are unchanged. */
   --ascii-cell: calc(100cqw / 312); /* 520 cols x 0.6em */
-  --ascii-glyph-scale: 1.22;
+  --ascii-glyph-scale: 1.12;
   font-size: calc(var(--ascii-cell) * var(--ascii-glyph-scale));
   font-weight: 800;
   line-height: var(--ascii-cell);
@@ -5150,8 +5150,10 @@ footer img { filter: brightness(0) invert(1); }
 }
 
 /* Extruded edge drawn as a shadow on the same layer — a second text layer
-   for the depth copy doubled the 3D compositing cost for no visible gain. */
-.ascii-strip { text-shadow: 3px 3px 0 #BDBDBD; }
+   for the depth copy doubled the 3D compositing cost for no visible gain.
+   Kept to a 1px lift: at ~4px glyphs a 3px offset was nearly a whole
+   character, which ghosted every letter and blurred the note's small type. */
+.ascii-strip { text-shadow: 1px 1px 0 #C8C8C8; }
 /* Light sweep: a translucent white band that slides across the note on
    the compositor (transform only — no repaint of the text layers). */
 .ascii-dollar-shine {
