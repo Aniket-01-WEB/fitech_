@@ -8,7 +8,7 @@ type Dots = { cols: number; rows: number; text: string };
 // Sized from the dot grid so the box holds its shape before the data
 // arrives (no layout shift), and the font scales with the container width.
 const COLS = 520;
-const ROWS = 144;
+const ROWS = 130;
 const CHAR_ASPECT = 0.6; // JetBrains Mono advance width / em
 
 const UNFOLD_MS = 1800;
