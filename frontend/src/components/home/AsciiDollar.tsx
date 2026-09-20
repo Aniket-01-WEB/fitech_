@@ -16,7 +16,7 @@ const GRID_SCALE = COLS / 520;
 
 const UNFOLD_MS = 1800;
 const FACETS = 26;
-const EDGE = '|/-\\';
+const EDGE = '....'; // the note is drawn with dots only, so creases are dots too
 
 // Deterministic noise so facet layout and crumple texture don't flicker.
 function hash(a: number, b: number) {
