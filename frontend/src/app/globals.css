@@ -5057,10 +5057,11 @@ footer img { filter: brightness(0) invert(1); }
 }
 
 /* ---- ASCII ₹500 note (landing hero) ---- */
-/* A dot-matrix note drawn as vertical text strips. The only motion is a
-   flag-style wave: each strip bobs in Y with a phase set by its index,
-   so a ripple travels across the note. Transform-only — the glyphs are
-   never re-laid-out — and nothing here casts a shadow. */
+/* An ASCII note drawn as vertical text strips. Two motions: the crumpled
+   ball smoothing flat on load (the component rewrites the text), and a
+   flag-style wave where each strip bobs in Y with a phase set by its
+   index. The wave is transform-only — the glyphs are never re-laid-out —
+   and nothing here casts a shadow. */
 .ascii-stage {
   margin-bottom: 14px;
 }
@@ -5077,13 +5078,12 @@ footer img { filter: brightness(0) invert(1); }
   font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
   /* The grid cell is one "em" of the base size: COLS cells at a 0.6em
      advance fill the container exactly (the component sets
-     --ascii-em-cols = COLS * 0.6). The note is drawn with dots only, and
-     a "." at cell size is a ~1px speck, so the glyph is rendered at
-     --ascii-dot-scale times the cell while the cell itself is held
-     constant: line-height pins the row height and a negative
-     letter-spacing pulls the advance back to 0.6 cells. */
+     --ascii-em-cols = COLS * 0.6). Glyphs are drawn slightly larger than
+     the cell while the cell itself is held constant (line-height pins the
+     row height, a negative letter-spacing pulls the advance back to 0.6
+     cells) so strokes read bold instead of thin at ~6px. */
   --ascii-cell: calc(100cqw / var(--ascii-em-cols, 312));
-  --ascii-dot-scale: 1.75;
+  --ascii-dot-scale: 1.2;
   font-size: calc(var(--ascii-cell) * var(--ascii-dot-scale));
   font-weight: 800;
   line-height: var(--ascii-cell);
