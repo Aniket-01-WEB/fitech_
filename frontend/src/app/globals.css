@@ -5056,7 +5056,7 @@ footer img { filter: brightness(0) invert(1); }
   box-shadow: var(--mono-shadow) !important;
 }
 
-/* ---- ASCII $100 note (landing hero) ---- */
+/* ---- ASCII ₹500 note (landing hero) ---- */
 /* Stage supplies the perspective; the note drifts in 3D on its own, the
    inner .ascii-dollar-tilt follows the pointer, and a depth copy of the
    text (as a text-shadow) sits behind the ink so the note reads as a thin

@@ -259,7 +259,7 @@ export default function AsciiDollar() {
       <div
         className="ascii-dollar"
         role="img"
-        aria-label="Dot-matrix ASCII rendering of a one hundred dollar note being smoothed flat"
+        aria-label="Dot-matrix ASCII rendering of a five hundred rupee note being smoothed flat"
         style={{ aspectRatio: `${COLS * CHAR_ASPECT} / ${ROWS}` }}
       >
         <div className="ascii-dollar-tilt">
