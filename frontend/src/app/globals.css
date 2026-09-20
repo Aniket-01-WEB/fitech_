@@ -5098,7 +5098,7 @@ footer img { filter: brightness(0) invert(1); }
   letter-spacing: 0;
   white-space: pre;
   text-align: left; /* hero is text-center; each trimmed line must not recentre itself */
-  color: #0A0A0A;
+  color: #000000;
   backface-visibility: hidden;
 }
 /* Wave along X: the note is drawn as vertical strips, each bobbing in Y
@@ -5127,7 +5127,10 @@ footer img { filter: brightness(0) invert(1); }
 
 /* Extruded edge drawn as a shadow on the same layer — a second text layer
    for the depth copy doubled the 3D compositing cost for no visible gain. */
-.ascii-strip { text-shadow: 3px 3px 0 #BDBDBD; }
+/* At ~4px glyphs a 3px offset was nearly a full character — every glyph
+   got a grey ghost and the whole note read as haze. A 1px lift keeps a
+   hint of thickness without doubling the ink. */
+.ascii-strip { text-shadow: 1px 1px 0 #E2E2E2; }
 /* Light sweep: a translucent white band that slides across the note on
    the compositor (transform only — no repaint of the text layers). */
 .ascii-dollar-shine {
@@ -5137,7 +5140,7 @@ footer img { filter: brightness(0) invert(1); }
   left: 0;
   width: 60%;
   transform: translate3d(-120%, 0, 2px) skewX(-15deg);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.28) 50%, rgba(255, 255, 255, 0) 100%);
   animation: ascii-shine 5s linear infinite;
   pointer-events: none;
   will-change: transform;

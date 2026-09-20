@@ -27,7 +27,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '800'],
   variable: '--font-mono',
   display: 'swap',
 });
