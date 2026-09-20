@@ -192,12 +192,19 @@ html.lenis, html.lenis body {
 @layer base {
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 }
+/* Horizontal overflow is clipped with `clip`, not `hidden`: `hidden`
+   turns html/body into scroll containers of their own, and with
+   overscroll-behavior:none on the body a one-finger touch scroll could
+   not chain past the (unscrollable) body to the real page scroller —
+   phones simply didn't scroll. `clip` clips without creating a scroll
+   container. The pull-to-refresh guard lives on html only. */
 html {
   -webkit-font-smoothing: antialiased;
   scroll-padding-top: 80px;
   background: #FFFFFF !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   max-width: 100vw !important;
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -205,11 +212,9 @@ body {
   background: #FFFFFF !important;
   color: #0A0A0A;
   line-height: 1.6;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   max-width: 100vw !important;
   width: 100% !important;
-  overscroll-behavior: none !important;
-  overscroll-behavior-y: none !important;
 }
 a{color:inherit;text-decoration:none}
 ul{list-style:none}

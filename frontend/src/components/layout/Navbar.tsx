@@ -34,13 +34,20 @@ export default function Navbar() {
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-    document.body.style.overflow = '';
   }, [pathname]);
 
+  // The page scroll lock follows the menu state itself (not the toggle
+  // button), so closing the menu by any path — a link tap, a same-page
+  // link, a route change, unmount — always hands scrolling back.
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const toggleMobileMenu = () => {
-    const nextState = !mobileMenuOpen;
-    setMobileMenuOpen(nextState);
-    document.body.style.overflow = nextState ? 'hidden' : '';
+    setMobileMenuOpen((open) => !open);
   };
 
   const handleSignOut = () => {

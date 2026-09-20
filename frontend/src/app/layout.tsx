@@ -48,14 +48,14 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${instrumentSerif.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased overflow-x-hidden">
+      <body className="antialiased overflow-x-clip">
         <ToastProvider>
         <PortalProvider>
           <SmoothScroll>
             <PageLoader />
             <ScrollReveal />
             <Navbar />
-            <main className="w-full overflow-x-hidden">{children}</main>
+            <main className="w-full overflow-x-clip">{children}</main>
             <JoinModal />
             <EventDetailModal />
             <RecordingPlayerModal />

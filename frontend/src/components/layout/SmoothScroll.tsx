@@ -41,7 +41,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.05,
-      touchMultiplier: 0,
+      // Touch input stays native even where Lenis runs (touchscreen
+      // laptops, tablets with a pointer): a 0 multiplier here silently
+      // killed one-finger scrolling on those devices.
+      touchMultiplier: 1,
+      syncTouch: false,
       infinite: false,
     });
 
