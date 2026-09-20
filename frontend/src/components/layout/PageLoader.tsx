@@ -3,13 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// The loader plays on every page load and refresh — it is never
-// remembered across loads. When it starts to slide away it marks
-// <html data-loader-done> so the landing note knows it can begin its
-// unfold in view. Tests can skip it by setting sessionStorage
-// 'fitech_skip_loader' themselves; the loader never sets it.
+// The loader plays on every page load and refresh, unconditionally.
+// When it starts to slide away it marks <html data-loader-done> so the
+// landing note knows it can begin its unfold in view.
 export const LOADER_DONE_ATTR = 'data-loader-done';
-export const LOADER_SKIP_KEY = 'fitech_skip_loader';
 
 export function isLoaderDone(): boolean {
   return document.documentElement.hasAttribute(LOADER_DONE_ATTR) || !document.querySelector('[data-page-loader]');
@@ -58,15 +55,9 @@ export default function PageLoader() {
   const [shouldRender, setShouldRender] = useState(true);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(LOADER_SKIP_KEY)) {
-        document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
-        setShouldRender(false);
-        return;
-      }
-    } catch {
-      // storage unavailable — just play the loader
-    }
+    // An older build saved a skip flag here; clear it so tabs that still
+    // carry it don't keep skipping the loader.
+    try { sessionStorage.removeItem('fitech_skip_loader'); } catch {}
     document.documentElement.removeAttribute(LOADER_DONE_ATTR);
 
     const startTime = performance.now();
