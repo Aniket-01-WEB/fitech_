@@ -53,11 +53,11 @@ export default function Navbar() {
       <header className={`sleek-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
         <nav className="sleek-navbar" role="navigation" aria-label="Main Navigation">
           {/* Left Brand with Square White Badge */}
-          <Link href="/" className="sleek-nav-brand" aria-label="Fincode Home">
+          <Link href="/" className="sleek-nav-brand" aria-label="Fincoders Home">
             <div className="sleek-nav-logo-badge">
               <Image
                 src="/images/logo-alt.png"
-                alt="Fincode"
+                alt="Fincoders"
                 width={22}
                 height={22}
                 className="sleek-nav-logo-img"
@@ -65,7 +65,7 @@ export default function Navbar() {
               />
             </div>
             <span className="sleek-nav-brand-text">
-              <span className="sleek-nav-title">Fincode</span>
+              <span className="sleek-nav-title">Fincoders</span>
               <span className="sleek-nav-sub">by cycoders</span>
             </span>
           </Link>
