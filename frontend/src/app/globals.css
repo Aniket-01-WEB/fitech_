@@ -5057,33 +5057,17 @@ footer img { filter: brightness(0) invert(1); }
 }
 
 /* ---- ASCII ₹500 note (landing hero) ---- */
-/* Stage supplies the perspective; the note drifts in 3D on its own, the
-   inner .ascii-dollar-tilt follows the pointer, and a depth copy of the
-   text (as a text-shadow) sits behind the ink so the note reads as a thin
-   slab rather than a flat print. The crumple/unfold only ever changes the text — none of
-   these transforms touch it. */
+/* A dot-matrix note drawn as vertical text strips. The only motion is a
+   flag-style wave: each strip bobs in Y with a phase set by its index,
+   so a ripple travels across the note. Transform-only — the glyphs are
+   never re-laid-out — and nothing here casts a shadow. */
 .ascii-stage {
-  perspective: 1400px;
-  perspective-origin: 50% 40%;
   margin-bottom: 14px;
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
 }
 .ascii-dollar {
   position: relative;
   width: 100%;
   container-type: inline-size;
-  transform-style: preserve-3d;
-  will-change: transform;
-  animation: ascii-drift 9s ease-in-out infinite;
-}
-.ascii-dollar-tilt {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .ascii-dollar pre,
 .ascii-dollar-base {
@@ -5097,8 +5081,7 @@ footer img { filter: brightness(0) invert(1); }
      a "." at cell size is a ~1px speck, so the glyph is rendered at
      --ascii-dot-scale times the cell while the cell itself is held
      constant: line-height pins the row height and a negative
-     letter-spacing pulls the advance back to 0.6 cells. The grid, the
-     box, and every transform-based animation are unaffected. */
+     letter-spacing pulls the advance back to 0.6 cells. */
   --ascii-cell: calc(100cqw / var(--ascii-em-cols, 312));
   --ascii-dot-scale: 1.75;
   font-size: calc(var(--ascii-cell) * var(--ascii-dot-scale));
@@ -5108,71 +5091,27 @@ footer img { filter: brightness(0) invert(1); }
   white-space: pre;
   text-align: left; /* hero is text-center; each trimmed line must not recentre itself */
   color: #000000;
-  backface-visibility: hidden;
-}
-/* Wave along X: the note is drawn as vertical strips, each bobbing in Y
-   with a phase set by its index, so a ripple travels across the note like
-   a flag. Transform-only — the glyphs are never re-laid-out. */
-.ascii-dollar-base {
-  transform: translateZ(0);
 }
 .ascii-strip {
   position: absolute;
   top: 0;
   bottom: 0;
   overflow: visible;
+  will-change: transform;
   animation: ascii-wave 3.2s ease-in-out infinite;
   animation-delay: calc(var(--i) * -125ms);
 }
-.ascii-stage.is-paused .ascii-strip,
-.ascii-stage.is-paused .ascii-dollar,
-.ascii-stage.is-paused .ascii-dollar-shine {
+.ascii-stage.is-paused .ascii-strip {
   animation-play-state: paused !important;
 }
 @keyframes ascii-wave {
   0%, 100% { transform: translate3d(0, -4px, 0); }
   50%      { transform: translate3d(0, 4px, 0); }
 }
-
-/* Extruded edge drawn as a shadow on the same layer — a second text layer
-   for the depth copy doubled the 3D compositing cost for no visible gain. */
-/* At ~4px glyphs a 3px offset was nearly a full character — every glyph
-   got a grey ghost and the whole note read as haze. A 1px lift keeps a
-   hint of thickness without doubling the ink. */
-.ascii-strip { text-shadow: 1px 1px 0 #E2E2E2; }
-/* Light sweep: a translucent white band that slides across the note on
-   the compositor (transform only — no repaint of the text layers). */
-.ascii-dollar-shine {
-  position: absolute;
-  top: -10%;
-  bottom: -10%;
-  left: 0;
-  width: 60%;
-  transform: translate3d(-120%, 0, 2px) skewX(-15deg);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.28) 50%, rgba(255, 255, 255, 0) 100%);
-  animation: ascii-shine 5s linear infinite;
-  pointer-events: none;
-  will-change: transform;
-}
-@keyframes ascii-shine {
-  from { transform: translate3d(-120%, 0, 2px) skewX(-15deg); }
-  to   { transform: translate3d(300%, 0, 2px) skewX(-15deg); }
-}
-@keyframes ascii-drift {
-  0%, 100% { transform: rotateX(6deg) rotateY(-6deg) translateY(0); }
-  50%      { transform: rotateX(3deg) rotateY(6deg) translateY(-6px); }
-}
 @media (max-width: 640px) {
-  .ascii-stage { perspective: none; margin-bottom: 8px; }
-  .ascii-dollar { animation: none; transform: none; }
-  .ascii-dollar-tilt { transform: none !important; transition: none !important; }
-  .ascii-strip { animation: none; text-shadow: none; }
-  .ascii-dollar-shine { display: none; }
+  .ascii-stage { margin-bottom: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ascii-dollar { animation: none; transform: rotateX(5deg); }
-  .ascii-dollar-tilt { transition: none; }
-  .ascii-dollar-shine { display: none; }
   .ascii-strip { animation: none; }
 }
 
