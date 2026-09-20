@@ -5091,11 +5091,17 @@ footer img { filter: brightness(0) invert(1); }
   inset: 0;
   margin: 0;
   font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
-  /* 520 columns at a 0.6em advance width fill the container exactly */
-  font-size: calc(100cqw / 312); /* 520 cols x 0.6em */
+  /* 520 columns at a 0.6em advance width fill the container exactly.
+     The glyphs are drawn a little larger than that cell (bolder note)
+     while the cell itself is held constant: line-height pins the row
+     height and a negative letter-spacing pulls the advance back to 0.6
+     cells, so the grid and the box are unchanged. */
+  --ascii-cell: calc(100cqw / 312); /* 520 cols x 0.6em */
+  --ascii-glyph-scale: 1.22;
+  font-size: calc(var(--ascii-cell) * var(--ascii-glyph-scale));
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0;
+  line-height: var(--ascii-cell);
+  letter-spacing: calc(var(--ascii-cell) * 0.6 * (1 - var(--ascii-glyph-scale)));
   white-space: pre;
   text-align: left; /* hero is text-center; each trimmed line must not recentre itself */
   color: #0A0A0A;

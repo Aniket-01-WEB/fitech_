@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { isLoaderDone } from '@/components/layout/PageLoader';
 
 type Dots = { cols: number; rows: number; text: string };
@@ -165,8 +165,18 @@ function strips(text: string): string[] {
 }
 
 export default function AsciiDollar() {
-  const [text, setText] = useState('');
   const stageRef = useRef<HTMLDivElement>(null);
+  // The strips are filled by writing textContent directly: pushing 26 large
+  // strings through React state every frame meant a reconcile + commit per
+  // frame on top of the text layout, which is what made the unfold hitch.
+  const stripRefs = useRef<(HTMLPreElement | null)[]>([]);
+  const paint = useCallback((text: string) => {
+    const parts = strips(text);
+    for (let i = 0; i < STRIPS; i++) {
+      const el = stripRefs.current[i];
+      if (el) el.textContent = parts[i] ?? '';
+    }
+  }, []);
 
   // Pause animations when offscreen to preserve 100% GPU/CPU headroom during scrolling
   useEffect(() => {
@@ -192,10 +202,9 @@ export default function AsciiDollar() {
         if (cancelled) return;
         const rows = data.text.split('\n').map((l) => l.padEnd(COLS, ' '));
         while (rows.length < ROWS) rows.push(' '.repeat(COLS));
-        setText(crumple(rows, 1));
+        paint(crumple(rows, 1));
         const loaderGone = isLoaderDone;
         let start = 0;
-        let lastDraw = 0;
         const tick = (now: number) => {
           if (cancelled) return;
           if (stageRef.current?.classList.contains('is-paused')) {
@@ -213,16 +222,13 @@ export default function AsciiDollar() {
             raf = requestAnimationFrame(tick);
             return;
           }
-          // Throttle to ~24 FPS (42ms) for text morph to leave main thread free
-          if (now - lastDraw < 42 && now - start < UNFOLD_MS) {
-            raf = requestAnimationFrame(tick);
-            return;
-          }
-          lastDraw = now;
+          // One crumple sample per display frame; the eased timeline is
+          // wall-clock based, so a slow frame skips ahead rather than
+          // stretching the animation.
           const t = Math.min(1, (now - start) / UNFOLD_MS);
           const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
           const a = Math.max(0, 1 - eased);
-          setText(crumple(rows, t >= 1 ? 0 : a));
+          paint(crumple(rows, t >= 1 ? 0 : a));
           if (t < 1) raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
@@ -232,7 +238,7 @@ export default function AsciiDollar() {
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [paint]);
 
   // Mouse-follow tilt. Written straight to CSS variables (no React state)
   // so it never re-renders the text and can't interfere with the unfold.
@@ -252,8 +258,6 @@ export default function AsciiDollar() {
     el.style.setProperty('--tilt-x', '0deg');
   }, []);
 
-  const stripList = React.useMemo(() => strips(text), [text]);
-
   return (
     <div className="ascii-stage" ref={stageRef} onPointerMove={onMove} onPointerLeave={onLeave}>
       <div
@@ -264,14 +268,13 @@ export default function AsciiDollar() {
       >
         <div className="ascii-dollar-tilt">
           <div className="ascii-dollar-base" aria-hidden="true">
-            {stripList.map((strip, i) => (
+            {Array.from({ length: STRIPS }, (_, i) => (
               <pre
                 key={i}
+                ref={(el) => { stripRefs.current[i] = el; }}
                 className="ascii-strip"
                 style={{ '--i': i, left: `${(i * 100) / STRIPS}%`, width: `${100 / STRIPS}%` } as React.CSSProperties}
-              >
-                {strip}
-              </pre>
+              />
             ))}
           </div>
           <div className="ascii-dollar-shine" aria-hidden="true" />
