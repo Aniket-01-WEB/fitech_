@@ -124,11 +124,11 @@ export default function PageLoader() {
             <div className="flex items-center gap-3">
               <span className="w-2 h-2 bg-[#0A0A0A]"></span>
               <span className="font-bold text-[#0A0A0A]">FITECH RESEARCH GUILD</span>
-              <span>{'//'}</span>
+              <span>|</span>
               <span>SOET CHAPTER</span>
             </div>
             <div>
-              <span>SYS.INIT // 2026</span>
+              <span>SYS.INIT | 2026</span>
             </div>
           </div>
 

@@ -14,7 +14,7 @@ export default function CtaSection() {
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>INTAKE & ADMISSIONS</span>
-          <span>CAMPUS GUILD CHAPTER // 2026</span>
+          <span>CAMPUS GUILD CHAPTER | 2026</span>
         </div>
 
         {/* Stanzza Floating Conversation Card */}
@@ -25,7 +25,7 @@ export default function CtaSection() {
           {/* Top Micro-Header */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFFFFF] border border-[#DADADA] font-mono text-[11px] text-[#0A0A0A] font-semibold uppercase tracking-wider mb-8 sm:mb-10">
             <span className="w-1.5 h-1.5 bg-[#059669] rounded-full"></span>
-            <span>Annual Recruitment Cycle // Open</span>
+            <span>Annual Recruitment Cycle | Open</span>
           </div>
 
           {/* Stanzza Serif Headline */}

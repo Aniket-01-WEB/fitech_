@@ -222,7 +222,7 @@ export default function TeamPage() {
             <span>←</span>
             <span>RETURN TO REPOSITORY HOME</span>
           </Link>
-          <span>PERSONNEL REGISTRY // 2026</span>
+          <span>PERSONNEL REGISTRY | 2026</span>
         </div>
 
         {/* Header Block */}
@@ -262,7 +262,7 @@ export default function TeamPage() {
         {membersWithPhotos.length > 0 && (
           <div className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between font-mono text-[10px] text-[#6B6B6B] uppercase tracking-wider pb-2 mb-6 border-b border-[#F2F2F2]">
-              <span className="font-bold text-[#0A0A0A]">EXECUTIVE FELLOWS // PHOTOGRAPHIC ARCHIVE</span>
+              <span className="font-bold text-[#0A0A0A]">EXECUTIVE FELLOWS | PHOTOGRAPHIC ARCHIVE</span>
               <span>PLATE REF: FT-ROSTER.PH</span>
             </div>
 

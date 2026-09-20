@@ -40,7 +40,7 @@ export default function FaqSection() {
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>FREQUENTLY ASKED QUESTIONS</span>
-          <span>ADMISSIONS & INTAKE // 2026</span>
+          <span>ADMISSIONS & INTAKE | 2026</span>
         </div>
 
         {/* Section Heading */}

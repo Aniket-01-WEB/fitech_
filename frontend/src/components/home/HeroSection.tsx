@@ -12,7 +12,7 @@ export default function HeroSection() {
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10 flex flex-col items-center text-center">
 
         <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#0A0A0A] leading-snug tracking-tight mb-2 sm:mb-3">
-          From code to capital.
+          Decoding Finance
         </p>
 
         <div className="w-full max-w-[1200px]">

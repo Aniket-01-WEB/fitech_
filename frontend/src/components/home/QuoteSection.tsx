@@ -10,7 +10,7 @@ export default function QuoteSection() {
         
         <div className="max-w-5xl mx-auto text-center">
           <span className="px-3 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-6 sm:mb-8">
-            KEYNOTE // GUILD PHILOSOPHY
+            KEYNOTE | GUILD PHILOSOPHY
           </span>
 
           <blockquote className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-[#0A0A0A] leading-[1.05] tracking-tight">

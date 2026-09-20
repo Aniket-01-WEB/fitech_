@@ -265,7 +265,7 @@ export default function StudentPortalPage() {
             <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>ALL CLUB EVENTS & WORKSHOPS</h2>
             {approvedEvents.length === 0 ? (
               <div className="empty-events-box">
-                <p className="empty-events-text">No upcoming events.</p>
+                <p className="empty-events-text">Events are coming soon.</p>
               </div>
             ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>

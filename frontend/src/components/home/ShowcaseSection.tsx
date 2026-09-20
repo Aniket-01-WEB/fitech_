@@ -93,7 +93,7 @@ export default function ShowcaseSection() {
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>FLAGSHIP CODEBASES</span>
-          <span>APPLIED ENGINEERING ARCHIVE // 2026</span>
+          <span>APPLIED ENGINEERING ARCHIVE | 2026</span>
         </div>
 
         {/* Header Section */}

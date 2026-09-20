@@ -34,7 +34,7 @@ export default function EventsPage() {
 
         {upcomingEvents.length === 0 ? (
           <div className="empty-events-box">
-            <p className="empty-events-text">No upcoming events</p>
+            <p className="empty-events-text">Events are coming soon</p>
           </div>
         ) : (
           <div className="simple-events-grid">

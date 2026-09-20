@@ -60,7 +60,7 @@ export default function ActivitiesSection() {
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full bg-[#059669]"></span>
                 <span className="font-bold text-[#0A0A0A] uppercase tracking-wider">
-                  NEXT UP{featuredUpcoming.type ? ` // ${featuredUpcoming.type}` : ''}
+                  NEXT UP{featuredUpcoming.type ? ` | ${featuredUpcoming.type}` : ''}
                 </span>
               </div>
               {featuredUpcoming.venue && <span className="uppercase">VENUE: {featuredUpcoming.venue}</span>}
@@ -126,7 +126,7 @@ export default function ActivitiesSection() {
         ) : (
           <div className="rounded-2xl border border-dashed border-[#DADADA] p-8 sm:p-12 text-center mb-8">
             <p className="font-mono text-xs uppercase tracking-wider text-[#6B6B6B]">
-              {eventsError ? 'Events could not be loaded right now.' : 'No upcoming events'}
+              {eventsError ? 'Events could not be loaded right now.' : 'Events are coming soon'}
             </p>
           </div>
         )}
@@ -147,7 +147,7 @@ export default function ActivitiesSection() {
                   <div className="flex items-baseline gap-4">
                     {event.time && (
                       <span className="font-mono text-xs font-bold text-[#6B6B6B]">
-                        {event.time} {"//"}
+                        {event.time} |
                       </span>
                     )}
                     <h5 className="font-serif text-2xl text-[#0A0A0A] group-hover:underline">

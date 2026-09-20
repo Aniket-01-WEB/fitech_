@@ -70,7 +70,7 @@ export default function Footer() {
             <ul className="font-mono text-xs text-[#4A4A4A] space-y-3">
               <li>
                 <Link href="/#composition" className="hover:text-[#0A0A0A] hover:underline">
-                  COMPOSITION // ABOUT
+                  COMPOSITION | ABOUT
                 </Link>
               </li>
               <li>
