@@ -15,7 +15,7 @@ export default function HeroSection() {
           Decoding Finance
         </p>
 
-        <div className="w-full max-w-[1200px]">
+        <div className="w-[96%] max-w-[1152px]">
           <AsciiDollar />
         </div>
 

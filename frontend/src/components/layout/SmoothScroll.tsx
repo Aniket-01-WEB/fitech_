@@ -13,6 +13,18 @@ declare global {
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  // A refresh always opens at the top of the page. Browsers otherwise
+  // restore the previous scroll position (and jump to any #hash), which
+  // would land a reloaded visitor mid-page behind the loader.
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (nav?.type === 'reload' && window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     // Skip Lenis on touch/mobile devices or when user prefers reduced motion
     // to preserve native hardware-accelerated 120Hz/60Hz scrolling
