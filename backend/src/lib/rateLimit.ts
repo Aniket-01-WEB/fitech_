@@ -1,7 +1,9 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
 const jsonLimitHandler = (req, res) => {
-  res.status(429).json({ error: 'Too many requests. Please slow down and try again shortly.' });
+  res.status(429).json({
+    error: "Too many requests. Please slow down and try again shortly.",
+  });
 };
 
 /** Generous baseline for all /api traffic — catches abusive scripting, not real usage. */

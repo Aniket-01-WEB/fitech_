@@ -1,10 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase config missing: set SUPABASE_URL and SUPABASE_ANON_KEY in the root .env');
+  console.warn(
+    "⚠️ Supabase config missing: set SUPABASE_URL and SUPABASE_ANON_KEY in the root .env",
+  );
 }
 
 /**
@@ -15,8 +17,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
  * never bypasses RLS.
  */
 export function supabaseFromRequest(req) {
-  const authHeader = req.headers['authorization'] || '';
-  const accessToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const authHeader = req.headers["authorization"] || "";
+  const accessToken = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : null;
 
   return createClient(supabaseUrl, supabaseAnonKey, {
     global: {

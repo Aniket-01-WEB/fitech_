@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import { usePortal } from '@/context/PortalContext';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { usePortal } from "@/context/PortalContext";
 
 const ROLE_HOME = {
-  admin: '/admin-portal',
-  superadmin: '/super-admin',
-  student: '/student-portal',
+  admin: "/admin-portal",
+  superadmin: "/super-admin",
+  student: "/student-portal",
 };
 
 function getDashboardHref(role) {
-  return ROLE_HOME[role] || '/student-portal';
+  return ROLE_HOME[role] || "/student-portal";
 }
 
 export default function Navbar() {
@@ -27,8 +27,8 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 25);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close mobile menu on route change
@@ -40,9 +40,9 @@ export default function Navbar() {
   // button), so closing the menu by any path — a link tap, a same-page
   // link, a route change, unmount — always hands scrolling back.
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 
@@ -52,15 +52,23 @@ export default function Navbar() {
 
   const handleSignOut = () => {
     logout();
-    router.push('/');
+    router.push("/");
   };
 
   return (
     <>
-      <header className={`sleek-navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-        <nav className="sleek-navbar" role="navigation" aria-label="Main Navigation">
+      <header className={`sleek-navbar-wrapper ${scrolled ? "scrolled" : ""}`}>
+        <nav
+          className="sleek-navbar"
+          role="navigation"
+          aria-label="Main Navigation"
+        >
           {/* Left Brand with Square White Badge */}
-          <Link href="/" className="sleek-nav-brand" aria-label="Fincoders Home">
+          <Link
+            href="/"
+            className="sleek-nav-brand"
+            aria-label="Fincoders Home"
+          >
             <div className="sleek-nav-logo-badge">
               <Image
                 src="/images/logo-alt.png"
@@ -80,32 +88,47 @@ export default function Navbar() {
           {/* Desktop Nav Links */}
           <ul className="sleek-nav-links">
             <li>
-              <Link href="/" className={pathname === '/' ? 'active' : ''}>
+              <Link href="/" className={pathname === "/" ? "active" : ""}>
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/domain" className={pathname === '/domain' ? 'active' : ''}>
+              <Link
+                href="/domain"
+                className={pathname === "/domain" ? "active" : ""}
+              >
                 Domains
               </Link>
             </li>
             <li>
-              <Link href="/events" className={pathname === '/events' ? 'active' : ''}>
+              <Link
+                href="/events"
+                className={pathname === "/events" ? "active" : ""}
+              >
                 Events
               </Link>
             </li>
             <li>
-              <Link href="/projects" className={pathname === '/projects' ? 'active' : ''}>
+              <Link
+                href="/projects"
+                className={pathname === "/projects" ? "active" : ""}
+              >
                 Projects
               </Link>
             </li>
             <li>
-              <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>
+              <Link
+                href="/gallery"
+                className={pathname === "/gallery" ? "active" : ""}
+              >
                 Gallery
               </Link>
             </li>
             <li>
-              <Link href="/team" className={pathname === '/team' ? 'active' : ''}>
+              <Link
+                href="/team"
+                className={pathname === "/team" ? "active" : ""}
+              >
                 Team
               </Link>
             </li>
@@ -114,7 +137,11 @@ export default function Navbar() {
                 <li>
                   <Link
                     href={getDashboardHref(currentUser.role)}
-                    className={pathname.includes('portal') || pathname.includes('admin') ? 'active' : ''}
+                    className={
+                      pathname.includes("portal") || pathname.includes("admin")
+                        ? "active"
+                        : ""
+                    }
                   >
                     Dashboard
                   </Link>
@@ -132,7 +159,10 @@ export default function Navbar() {
               </>
             ) : (
               <li>
-                <Link href="/login" className={pathname === '/login' ? 'active' : ''}>
+                <Link
+                  href="/login"
+                  className={pathname === "/login" ? "active" : ""}
+                >
                   Portal / Login
                 </Link>
               </li>
@@ -142,7 +172,7 @@ export default function Navbar() {
           {/* Mobile Hamburger Button */}
           <button
             type="button"
-            className={`sleek-nav-toggle ${mobileMenuOpen ? 'active' : ''}`}
+            className={`sleek-nav-toggle ${mobileMenuOpen ? "active" : ""}`}
             onClick={toggleMobileMenu}
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileMenuOpen}
@@ -155,7 +185,7 @@ export default function Navbar() {
       </header>
 
       {/* Sleek White Mobile Drawer */}
-      <div className={`sleek-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+      <div className={`sleek-mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
         <div className="sleek-mobile-content">
           <ul className="sleek-mobile-links">
             <li>

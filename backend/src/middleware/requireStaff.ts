@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from "express";
 
 /**
  * Use after `requireUser` on routes that reach an external service RLS
@@ -6,10 +6,18 @@ import type { Request, Response, NextFunction } from 'express';
  * Postgres row for RLS to gate, so the staff check has to happen here
  * instead. Attaches `req.profile`.
  */
-export async function requireStaff(req: Request, res: Response, next: NextFunction) {
-  const { data, error } = await req.supabase.from('profiles').select('role').eq('id', req.user.id).single();
-  if (error || !data || !['admin', 'superadmin'].includes(data.role)) {
-    return res.status(403).json({ error: 'Staff access required.' });
+export async function requireStaff(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const { data, error } = await req.supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", req.user.id)
+    .single();
+  if (error || !data || !["admin", "superadmin"].includes(data.role)) {
+    return res.status(403).json({ error: "Staff access required." });
   }
   req.profile = data;
   next();

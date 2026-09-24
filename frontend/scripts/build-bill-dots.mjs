@@ -11,13 +11,13 @@
 //
 // Needs `jpeg-js` (npm i --no-save jpeg-js). Writes
 // public/intro/bill-dots.json = { cols, rows, text }.
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const jpeg = require('jpeg-js');
+const jpeg = require("jpeg-js");
 
 const src = process.argv[2];
 const COLS = Number(process.argv[3] || 520);
@@ -25,7 +25,7 @@ const CHAR_ASPECT = 0.6; // monospace advance width / line height at line-height
 // Light -> dark. Each glyph is a grey level; at hero size the glyph shape
 // blurs away and only its ink coverage reads, so this behaves like a
 // 10-step greyscale.
-const RAMP = process.argv[5] || ' .:-=+*#%@';
+const RAMP = process.argv[5] || " .:-=+*#%@";
 const GAMMA = Number(process.argv[4] || 1.35);
 // S-curve strength: >1 pushes paper towards white and ink towards black.
 const CONTRAST = Number(process.argv[6] || 2.4);
@@ -34,13 +34,19 @@ const CONTRAST = Number(process.argv[6] || 2.4);
 const SHARPEN = Number(process.argv[7] || 1.4);
 
 if (!src) {
-  console.error('usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]');
+  console.error(
+    "usage: node scripts/build-bill-dots.mjs <bill.jpg> [cols] [gamma]",
+  );
   process.exit(1);
 }
 const here = path.dirname(fileURLToPath(import.meta.url));
-const out = path.resolve(here, '../public/intro/bill-dots.json');
+const out = path.resolve(here, "../public/intro/bill-dots.json");
 
-const { width: imgW, height: imgH, data } = jpeg.decode(fs.readFileSync(src), { useTArray: true, formatAsRGBA: true });
+const {
+  width: imgW,
+  height: imgH,
+  data,
+} = jpeg.decode(fs.readFileSync(src), { useTArray: true, formatAsRGBA: true });
 const lumAt = (x, y) => {
   const i = (y * imgW + x) * 4;
   return 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
@@ -59,25 +65,38 @@ function frameEdge(count, other, darkAt, step) {
   for (; i >= 0 && i < count; i += step) if (darkAt(i) > margin + 25) break;
   return i;
 }
-const rowDark = (y) => { let s = 0; for (let x = 0; x < imgW; x++) s += 255 - lumAt(x, y); return s / imgW; };
-const colDark = (x) => { let s = 0; for (let y = 0; y < imgH; y++) s += 255 - lumAt(x, y); return s / imgH; };
+const rowDark = (y) => {
+  let s = 0;
+  for (let x = 0; x < imgW; x++) s += 255 - lumAt(x, y);
+  return s / imgW;
+};
+const colDark = (x) => {
+  let s = 0;
+  for (let y = 0; y < imgH; y++) s += 255 - lumAt(x, y);
+  return s / imgH;
+};
 const top = frameEdge(imgH, imgW, rowDark, 1);
 const bottom = frameEdge(imgH, imgW, rowDark, -1) + 1;
 const left = frameEdge(imgW, imgH, colDark, 1);
 const right = frameEdge(imgW, imgH, colDark, -1) + 1;
 const width = right - left;
 const height = bottom - top;
-console.log(`frame crop: x ${left}..${right}, y ${top}..${bottom} of ${imgW}x${imgH}`);
+console.log(
+  `frame crop: x ${left}..${right}, y ${top}..${bottom} of ${imgW}x${imgH}`,
+);
 
 const ROWS = Math.round((COLS * CHAR_ASPECT * height) / width);
 
 // Box-average luminance into the character grid.
 const cell = new Float32Array(COLS * ROWS);
 for (let r = 0; r < ROWS; r++) {
-  const y0 = top + Math.floor((r * height) / ROWS), y1 = top + Math.floor(((r + 1) * height) / ROWS);
+  const y0 = top + Math.floor((r * height) / ROWS),
+    y1 = top + Math.floor(((r + 1) * height) / ROWS);
   for (let c = 0; c < COLS; c++) {
-    const x0 = left + Math.floor((c * width) / COLS), x1 = left + Math.floor(((c + 1) * width) / COLS);
-    let sum = 0, n = 0;
+    const x0 = left + Math.floor((c * width) / COLS),
+      x1 = left + Math.floor(((c + 1) * width) / COLS);
+    let sum = 0,
+      n = 0;
     for (let y = y0; y < y1; y++) {
       for (let x = x0; x < x1; x++) {
         sum += lumAt(x, y);
@@ -93,10 +112,12 @@ if (SHARPEN > 0) {
   const blur = new Float32Array(cell.length);
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      let s = 0, n = 0;
+      let s = 0,
+        n = 0;
       for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
-          const rr = r + dr, cc = c + dc;
+          const rr = r + dr,
+            cc = c + dc;
           if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) continue;
           s += cell[rr * COLS + cc];
           n++;
@@ -105,7 +126,8 @@ if (SHARPEN > 0) {
       blur[r * COLS + c] = s / n;
     }
   }
-  for (let i = 0; i < cell.length; i++) cell[i] = Math.min(1, Math.max(0, cell[i] + SHARPEN * (cell[i] - blur[i])));
+  for (let i = 0; i < cell.length; i++)
+    cell[i] = Math.min(1, Math.max(0, cell[i] + SHARPEN * (cell[i] - blur[i])));
 }
 
 // Stretch contrast so the paper goes fully white and ink fully dark, then
@@ -126,7 +148,7 @@ const ink = Float32Array.from(cell, (v) => {
 const N = RAMP.length - 1;
 const lines = [];
 for (let r = 0; r < ROWS; r++) {
-  let line = '';
+  let line = "";
   for (let c = 0; c < COLS; c++) {
     const i = r * COLS + c;
     const want = Math.min(1, Math.max(0, ink[i]));
@@ -140,10 +162,15 @@ for (let r = 0; r < ROWS; r++) {
       if (c + 1 < COLS) ink[i + COLS + 1] += (err * 1) / 16;
     }
   }
-  lines.push(line.replace(/\s+$/, ''));
+  lines.push(line.replace(/\s+$/, ""));
 }
 
 fs.mkdirSync(path.dirname(out), { recursive: true });
-fs.writeFileSync(out, JSON.stringify({ cols: COLS, rows: ROWS, text: lines.join('\n') }));
-console.log(`wrote ${out}: ${COLS}x${ROWS}, ${(fs.statSync(out).size / 1024).toFixed(0)} KB`);
-console.log(lines.join('\n'));
+fs.writeFileSync(
+  out,
+  JSON.stringify({ cols: COLS, rows: ROWS, text: lines.join("\n") }),
+);
+console.log(
+  `wrote ${out}: ${COLS}x${ROWS}, ${(fs.statSync(out).size / 1024).toFixed(0)} KB`,
+);
+console.log(lines.join("\n"));

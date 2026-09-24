@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { usePortal } from '@/context/PortalContext';
-import { splitEvents } from '@/lib/events';
+import React from "react";
+import Link from "next/link";
+import { usePortal } from "@/context/PortalContext";
+import { splitEvents } from "@/lib/events";
 
 export default function EventsPage() {
   const { events, openDetailModal } = usePortal();
@@ -15,8 +15,13 @@ export default function EventsPage() {
     <div className="simple-events-shell">
       <div className="simple-events-header">
         <div className="simple-events-title-wrap">
-          <h1 className="simple-events-main-title">CLUB EVENTS & MASTERCLASSES</h1>
-          <p className="simple-events-subtitle">Browse upcoming flagship summits, algorithmic labs, and past recorded masterclasses.</p>
+          <h1 className="simple-events-main-title">
+            CLUB EVENTS & MASTERCLASSES
+          </h1>
+          <p className="simple-events-subtitle">
+            Browse upcoming flagship summits, algorithmic labs, and past
+            recorded masterclasses.
+          </p>
         </div>
         <Link href="/" className="simple-back-btn">
           ← BACK TO HOME
@@ -27,7 +32,8 @@ export default function EventsPage() {
       <div className="simple-section-block">
         <div className="simple-section-header">
           <h2 className="simple-section-heading">
-            UPCOMING EXPERIENCES <span className="count-num">({upcomingEvents.length})</span>
+            UPCOMING EXPERIENCES{" "}
+            <span className="count-num">({upcomingEvents.length})</span>
           </h2>
           <span className="simple-section-badge">SPRING / SUMMER 2026</span>
         </div>
@@ -38,10 +44,12 @@ export default function EventsPage() {
           </div>
         ) : (
           <div className="simple-events-grid">
-            {upcomingEvents.map(evt => (
+            {upcomingEvents.map((evt) => (
               <div key={evt.id} className="simple-event-card">
                 <div className="simple-card-top">
-                  <span className="simple-card-category">{evt.type || 'EVENT'}</span>
+                  <span className="simple-card-category">
+                    {evt.type || "EVENT"}
+                  </span>
                   <h3 className="simple-card-title">{evt.title}</h3>
                   <p className="simple-card-desc">{evt.description}</p>
                 </div>
@@ -70,16 +78,19 @@ export default function EventsPage() {
         <div className="simple-section-block">
           <div className="simple-section-header">
             <h2 className="simple-section-heading">
-              PAST SESSIONS & ARCHIVES <span className="count-num">({pastEvents.length})</span>
+              PAST SESSIONS & ARCHIVES{" "}
+              <span className="count-num">({pastEvents.length})</span>
             </h2>
             <span className="simple-section-badge">ARCHIVED RECORDINGS</span>
           </div>
 
           <div className="simple-events-grid">
-            {pastEvents.map(evt => (
+            {pastEvents.map((evt) => (
               <div key={evt.id} className="simple-event-card">
                 <div className="simple-card-top">
-                  <span className="simple-card-category">{evt.type || 'ARCHIVE'}</span>
+                  <span className="simple-card-category">
+                    {evt.type || "ARCHIVE"}
+                  </span>
                   <h3 className="simple-card-title">{evt.title}</h3>
                   <p className="simple-card-desc">{evt.description}</p>
                 </div>

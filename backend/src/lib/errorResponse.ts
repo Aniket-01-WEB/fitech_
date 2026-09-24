@@ -13,24 +13,38 @@
 export function sendError(res, error, fallbackStatus = 400) {
   const code = error?.code;
 
-  if (code === '42501') {
-    return res.status(403).json({ error: 'Not authorized to perform this action.' });
+  if (code === "42501") {
+    return res
+      .status(403)
+      .json({ error: "Not authorized to perform this action." });
   }
-  if (code === 'P0001') {
+  if (code === "P0001") {
     return res.status(fallbackStatus).json({ error: error.message });
   }
-  if (code === '23505') { // unique_violation
-    return res.status(409).json({ error: 'This already exists.' });
+  if (code === "23505") {
+    // unique_violation
+    return res.status(409).json({ error: "This already exists." });
   }
-  if (code === 'PGRST116') { // PostgREST: no row found for .single()
-    return res.status(404).json({ error: 'Not found.' });
-  }
-
-  if (error?.message?.includes('fetch failed') || error?.details?.includes('ENOTFOUND')) {
-    console.error('[db error] Supabase is unreachable (ENOTFOUND). If this project is on the Supabase free tier, it is likely paused. Please restore it in your Supabase dashboard.');
-    return res.status(503).json({ error: 'Database service unavailable. The Supabase project may be paused due to inactivity.' });
+  if (code === "PGRST116") {
+    // PostgREST: no row found for .single()
+    return res.status(404).json({ error: "Not found." });
   }
 
-  console.error('[db error]', error);
-  return res.status(fallbackStatus).json({ error: 'Request could not be completed.' });
+  if (
+    error?.message?.includes("fetch failed") ||
+    error?.details?.includes("ENOTFOUND")
+  ) {
+    console.error(
+      "[db error] Supabase is unreachable (ENOTFOUND). If this project is on the Supabase free tier, it is likely paused. Please restore it in your Supabase dashboard.",
+    );
+    return res.status(503).json({
+      error:
+        "Database service unavailable. The Supabase project may be paused due to inactivity.",
+    });
+  }
+
+  console.error("[db error]", error);
+  return res
+    .status(fallbackStatus)
+    .json({ error: "Request could not be completed." });
 }

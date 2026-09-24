@@ -15,9 +15,9 @@ const eslintConfig = defineConfig([
     rules: {
       "@next/next/no-img-element": "off",
       "react/no-unescaped-entities": "off",
-      "react-hooks/set-state-in-effect": "off"
-    }
-  }
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

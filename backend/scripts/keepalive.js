@@ -1,5 +1,5 @@
-import 'dotenv/config';
-import { createClient } from '@supabase/supabase-js';
+import "dotenv/config";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * Supabase pauses a free-tier project after 7 days with no activity.
@@ -16,18 +16,24 @@ async function keepSupabaseAwake() {
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('SUPABASE_URL and SUPABASE_ANON_KEY must be set (as env vars or in the root .env).');
+    throw new Error(
+      "SUPABASE_URL and SUPABASE_ANON_KEY must be set (as env vars or in the root .env).",
+    );
   }
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
   });
 
   // Any real query works — profiles is small and always exists. RLS still
   // applies (this uses the anon key, no session), so this returns zero
   // rows for an anonymous caller; the query still executing is what
   // counts as activity, not what it returns.
-  const { error } = await supabase.from('profiles').select('id').limit(1);
+  const { error } = await supabase.from("profiles").select("id").limit(1);
 
   if (error) {
     throw new Error(`Supabase keepalive query failed: ${error.message}`);
@@ -37,6 +43,6 @@ async function keepSupabaseAwake() {
 }
 
 keepSupabaseAwake().catch((err) => {
-  console.error('[keepalive] FAILED:', err.message);
+  console.error("[keepalive] FAILED:", err.message);
   process.exit(1);
 });

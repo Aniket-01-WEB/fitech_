@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { usePortal } from '@/context/PortalContext';
-import { splitEvents, bannerUrl } from '@/lib/events';
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { usePortal } from "@/context/PortalContext";
+import { splitEvents, bannerUrl } from "@/lib/events";
 
 export default function ActivitiesSection() {
   const { events, eventsError, openDetailModal } = usePortal();
@@ -13,7 +13,7 @@ export default function ActivitiesSection() {
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'end start'],
+    offset: ["start end", "end start"],
   });
 
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.08, 1.0]);
@@ -24,9 +24,12 @@ export default function ActivitiesSection() {
   const secondaryUpcoming = upcomingEvents.slice(1);
 
   return (
-    <section ref={sectionRef} id="events" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
+    <section
+      ref={sectionRef}
+      id="events"
+      className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]"
+    >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
-        
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>RESEARCH BULLETIN & CALENDAR</span>
@@ -46,30 +49,34 @@ export default function ActivitiesSection() {
             </h2>
           </div>
           <p className="text-sm sm:text-base text-[#4A4A4A] font-sans-body max-w-md leading-relaxed font-light">
-            Institutional research seminars, algorithmic workshops, and quantitative development sessions at Adamas University.
+            Institutional research seminars, algorithmic workshops, and
+            quantitative development sessions at Adamas University.
           </p>
         </div>
 
         {/* Featured Upcoming Symposium Plate */}
         {featuredUpcoming ? (
-          <div 
+          <div
             className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-10 md:p-12 mb-8 overflow-hidden group"
-            style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
+            style={{ boxShadow: "0 20px 50px rgba(30,30,30,0.05)" }}
           >
             <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-6 border-b border-[#DADADA] font-mono text-xs text-[#6B6B6B]">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full bg-[#059669]"></span>
                 <span className="font-bold text-[#0A0A0A] uppercase tracking-wider">
-                  NEXT UP{featuredUpcoming.type ? ` | ${featuredUpcoming.type}` : ''}
+                  NEXT UP
+                  {featuredUpcoming.type ? ` | ${featuredUpcoming.type}` : ""}
                 </span>
               </div>
-              {featuredUpcoming.venue && <span className="uppercase">VENUE: {featuredUpcoming.venue}</span>}
+              {featuredUpcoming.venue && (
+                <span className="uppercase">
+                  VENUE: {featuredUpcoming.venue}
+                </span>
+              )}
             </div>
 
             {/* Media plate */}
-            <div 
-              className="relative w-full aspect-[16/7] md:aspect-[21/8] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-8 border border-[#DADADA]"
-            >
+            <div className="relative w-full aspect-[16/7] md:aspect-[21/8] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-8 border border-[#DADADA]">
               <motion.img
                 style={{ scale: imageScale }}
                 src={bannerUrl(featuredUpcoming.banner)}
@@ -79,7 +86,7 @@ export default function ActivitiesSection() {
                 className="w-full h-full object-cover transition-all duration-700"
               />
               <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#0A0A0A]/80 text-[#FFFFFF] font-mono text-[10px] uppercase tracking-wider backdrop-blur-md">
-                {featuredUpcoming.type || 'Event'}
+                {featuredUpcoming.type || "Event"}
               </div>
             </div>
 
@@ -98,14 +105,22 @@ export default function ActivitiesSection() {
                 <div className="mt-6 flex flex-wrap gap-6 font-mono text-xs text-[#6B6B6B]">
                   {featuredUpcoming.time && (
                     <div>
-                      <span className="text-[10px] text-[#8A8A8A] block uppercase">WHEN:</span>
-                      <span className="font-bold text-[#0A0A0A]">{featuredUpcoming.time}</span>
+                      <span className="text-[10px] text-[#8A8A8A] block uppercase">
+                        WHEN:
+                      </span>
+                      <span className="font-bold text-[#0A0A0A]">
+                        {featuredUpcoming.time}
+                      </span>
                     </div>
                   )}
                   {featuredUpcoming.venue && (
                     <div>
-                      <span className="text-[10px] text-[#8A8A8A] block uppercase">LOCATION:</span>
-                      <span className="font-bold text-[#0A0A0A]">{featuredUpcoming.venue}</span>
+                      <span className="text-[10px] text-[#8A8A8A] block uppercase">
+                        LOCATION:
+                      </span>
+                      <span className="font-bold text-[#0A0A0A]">
+                        {featuredUpcoming.venue}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -126,7 +141,9 @@ export default function ActivitiesSection() {
         ) : (
           <div className="rounded-2xl border border-dashed border-[#DADADA] p-8 sm:p-12 text-center mb-8">
             <p className="font-mono text-xs uppercase tracking-wider text-[#6B6B6B]">
-              {eventsError ? 'Events could not be loaded right now.' : 'Events are coming soon'}
+              {eventsError
+                ? "Events could not be loaded right now."
+                : "Events are coming soon"}
             </p>
           </div>
         )}
@@ -163,7 +180,6 @@ export default function ActivitiesSection() {
             </div>
           </div>
         )}
-
       </div>
     </section>
   );

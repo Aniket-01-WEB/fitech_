@@ -1,50 +1,53 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 const COMPOSITION_CARDS = [
   {
-    num: '01',
-    title: 'High-Frequency Systems Lab',
-    tag: 'Low-Latency C++',
-    image: '/images/event-summit.jpg',
-    caption: 'Lock-free single-producer single-consumer ring buffers benchmarked under tick bursts.',
-    offset: 'md:translate-y-0',
+    num: "01",
+    title: "High-Frequency Systems Lab",
+    tag: "Low-Latency C++",
+    image: "/images/event-summit.jpg",
+    caption:
+      "Lock-free single-producer single-consumer ring buffers benchmarked under tick bursts.",
+    offset: "md:translate-y-0",
   },
   {
-    num: '02',
-    title: 'Quantitative Research Keynote',
-    tag: 'Symposia & Keynotes',
-    image: '/images/team/aniket.jpeg',
-    caption: 'Student fellows presenting stochastic volatility and arbitrage pipelines to university faculty.',
-    offset: 'md:translate-y-8',
+    num: "02",
+    title: "Quantitative Research Keynote",
+    tag: "Symposia & Keynotes",
+    image: "/images/team/aniket.jpeg",
+    caption:
+      "Student fellows presenting stochastic volatility and arbitrage pipelines to university faculty.",
+    offset: "md:translate-y-8",
   },
   {
-    num: '03',
-    title: 'Financial Machine Learning',
-    tag: 'Time-Series AI',
-    image: '/images/team/pritesh.jpeg',
-    caption: 'Temporal fusion transformers and deep feature extraction from raw order book dynamics.',
-    offset: 'md:-translate-y-4',
+    num: "03",
+    title: "Financial Machine Learning",
+    tag: "Time-Series AI",
+    image: "/images/team/pritesh.jpeg",
+    caption:
+      "Temporal fusion transformers and deep feature extraction from raw order book dynamics.",
+    offset: "md:-translate-y-4",
   },
   {
-    num: '04',
-    title: 'Decentralized Protocol Deployments',
-    tag: 'Zero-Knowledge',
-    image: '/images/team/souvik.jpeg',
-    caption: 'Groth16 snark circuits and automated market maker invariant verification on testnet.',
-    offset: 'md:translate-y-6',
+    num: "04",
+    title: "Decentralized Protocol Deployments",
+    tag: "Zero-Knowledge",
+    image: "/images/team/souvik.jpeg",
+    caption:
+      "Groth16 snark circuits and automated market maker invariant verification on testnet.",
+    offset: "md:translate-y-6",
   },
 ];
 
 export default function AboutSection() {
   return (
-    <section 
-      id="composition" 
+    <section
+      id="composition"
       className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]"
     >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
-        
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>COMPOSITION & PHILOSOPHY</span>
@@ -53,7 +56,6 @@ export default function AboutSection() {
 
         {/* Major Editorial Layout: Stanzza Composition Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-10 sm:mb-14">
-          
           {/* Left Column: Micro Title */}
           <div className="lg:col-span-4">
             <span className="px-3.5 py-1 rounded-full bg-[#EAEAEA] text-[#0A0A0A] font-mono text-[10px] uppercase tracking-wider inline-block mb-4 font-semibold">
@@ -85,14 +87,20 @@ export default function AboutSection() {
             {/* Supporting Explanation - Generous Whitespace */}
             <div className="pt-8 border-t border-[#DADADA] grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 text-[#4A4A4A] font-sans-body text-base leading-relaxed font-light">
               <p>
-                In high-calibre engineering, nothing is accidental. Proportion sets the structure, mathematical curiosity sets the velocity, and execution shapes the trajectory. FiTech operates as an applied engineering guild where students design, benchmark, and deploy real financial technology systems.
+                In high-calibre engineering, nothing is accidental. Proportion
+                sets the structure, mathematical curiosity sets the velocity,
+                and execution shapes the trajectory. FiTech operates as an
+                applied engineering guild where students design, benchmark, and
+                deploy real financial technology systems.
               </p>
               <p>
-                By connecting academic computer science and mathematics with institutional quantitative practices, members gain hands-on proficiency in low-latency C++, decentralized protocol invariants, and automated trading research pipelines.
+                By connecting academic computer science and mathematics with
+                institutional quantitative practices, members gain hands-on
+                proficiency in low-latency C++, decentralized protocol
+                invariants, and automated trading research pipelines.
               </p>
             </div>
           </div>
-
         </div>
 
         {/* STANZZA ASYMMETRICAL FLOATING COMPOSITION CARDS (100% VISIBLE & ROBUST) */}
@@ -101,7 +109,7 @@ export default function AboutSection() {
             <div
               key={idx}
               className={`group relative bg-[#F2F2F2] rounded-3xl p-4 border border-[#DADADA] hover:border-[#0A0A0A] transition-all duration-300 ${card.offset}`}
-              style={{ boxShadow: '0 12px 32px rgba(30,30,30,0.04)' }}
+              style={{ boxShadow: "0 12px 32px rgba(30,30,30,0.04)" }}
             >
               <div className="relative w-full aspect-[4/3.8] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-4">
                 <img
@@ -131,7 +139,6 @@ export default function AboutSection() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import { sendError } from './errorResponse.js';
+import { sendError } from "./errorResponse.js";
 
 /**
  * Returns an Express route handler that updates a row's status in the given
@@ -15,7 +15,7 @@ export function statusHandler(table, newStatus, responseKey) {
     const { data, error } = await req.supabase
       .from(table)
       .update({ status: newStatus })
-      .eq('id', req.params.id)
+      .eq("id", req.params.id)
       .select()
       .single();
     if (error) return sendError(res, error, 403);

@@ -1,10 +1,16 @@
-import { Router } from 'express';
-import { requireUser } from '../middleware/requireUser.js';
-import { requireStaff } from '../middleware/requireStaff.js';
-import { sendError } from '../lib/errorResponse.js';
-import { statusHandler } from '../lib/statusUpdater.js';
-import { getUploadUrl, getDownloadUrl, deleteObject, buildKey, ownsKey } from '../lib/r2.js';
-import { sensitiveActionLimiter } from '../lib/rateLimit.js';
+import { Router } from "express";
+import { requireUser } from "../middleware/requireUser.js";
+import { requireStaff } from "../middleware/requireStaff.js";
+import { sendError } from "../lib/errorResponse.js";
+import { statusHandler } from "../lib/statusUpdater.js";
+import {
+  getUploadUrl,
+  getDownloadUrl,
+  deleteObject,
+  buildKey,
+  ownsKey,
+} from "../lib/r2.js";
+import { sensitiveActionLimiter } from "../lib/rateLimit.js";
 import {
   validateBody,
   validateIdParam,
@@ -13,7 +19,7 @@ import {
   uploadUrlSchema,
   ALLOWED_RECORDING_MIME_TYPES,
   MAX_RECORDING_BYTES,
-} from '../lib/validation.js';
+} from "../lib/validation.js";
 
 const router = Router();
 
@@ -21,19 +27,28 @@ const router = Router();
 // student, everything for staff. Same R2 overlay as notes: a row backed
 // by an uploaded file (r2_key set) gets a freshly-minted, short-lived
 // video URL instead of whatever's stored in video_url.
-router.get('/', requireUser, async (req, res) => {
-  const { data, error } = await req.supabase.from('recordings').select('*').order('created_at', { ascending: false });
+router.get("/", requireUser, async (req, res) => {
+  const { data, error } = await req.supabase
+    .from("recordings")
+    .select("*")
+    .order("created_at", { ascending: false });
   if (error) return sendError(res, error);
 
-  const recordings = await Promise.all(data.map(async (rec) => {
-    if (!rec.r2_key) return rec;
-    try {
-      return { ...rec, video_url: await getDownloadUrl(rec.r2_key) };
-    } catch (err) {
-      console.error('Failed to sign R2 download URL for recording', rec.id, err);
-      return rec;
-    }
-  }));
+  const recordings = await Promise.all(
+    data.map(async (rec) => {
+      if (!rec.r2_key) return rec;
+      try {
+        return { ...rec, video_url: await getDownloadUrl(rec.r2_key) };
+      } catch (err) {
+        console.error(
+          "Failed to sign R2 download URL for recording",
+          rec.id,
+          err,
+        );
+        return rec;
+      }
+    }),
+  );
 
   res.json({ recordings });
 });
@@ -41,78 +56,151 @@ router.get('/', requireUser, async (req, res) => {
 // POST /api/recordings/upload-url — staff-only. Same presigned-PUT
 // pattern as notes (allowlisted MIME type, size cap bound into the
 // signature); the browser uploads the video bytes straight to R2.
-router.post('/upload-url', requireUser, requireStaff, sensitiveActionLimiter, validateBody(uploadUrlSchema), async (req, res) => {
-  const { fileName, contentType, fileSize } = req.body;
+router.post(
+  "/upload-url",
+  requireUser,
+  requireStaff,
+  sensitiveActionLimiter,
+  validateBody(uploadUrlSchema),
+  async (req, res) => {
+    const { fileName, contentType, fileSize } = req.body;
 
-  if (contentType && !ALLOWED_RECORDING_MIME_TYPES.has(contentType)) {
-    return res.status(400).json({ error: `File type "${contentType}" isn't allowed for recordings.` });
-  }
-  if (fileSize && fileSize > MAX_RECORDING_BYTES) {
-    return res.status(400).json({ error: 'File is too large (750MB max for recordings).' });
-  }
+    if (contentType && !ALLOWED_RECORDING_MIME_TYPES.has(contentType)) {
+      return res.status(400).json({
+        error: `File type "${contentType}" isn't allowed for recordings.`,
+      });
+    }
+    if (fileSize && fileSize > MAX_RECORDING_BYTES) {
+      return res
+        .status(400)
+        .json({ error: "File is too large (750MB max for recordings)." });
+    }
 
-  const key = buildKey('recordings', req.user.id, fileName);
-  try {
-    const uploadUrl = await getUploadUrl(key, contentType, fileSize);
-    res.json({ uploadUrl, key });
-  } catch (err) {
-    console.error('Failed to mint R2 upload URL', err);
-    res.status(500).json({ error: 'Could not prepare the upload. Try again.' });
-  }
-});
+    const key = buildKey("recordings", req.user.id, fileName);
+    try {
+      const uploadUrl = await getUploadUrl(key, contentType, fileSize);
+      res.json({ uploadUrl, key });
+    } catch (err) {
+      console.error("Failed to mint R2 upload URL", err);
+      res
+        .status(500)
+        .json({ error: "Could not prepare the upload. Try again." });
+    }
+  },
+);
 
 // POST /api/recordings — staff-only via RLS. video_url (an external
 // link, https only) and r2_key (an uploaded file) are both optional and
 // independent — either, both, or neither may be set. New recordings
 // always start 'pending' (recordings_force_pending trigger).
-router.post('/', requireUser, validateBody(recordingCreateSchema), async (req, res) => {
-  if (req.body.r2_key && !ownsKey('recordings', req.user.id, req.body.r2_key)) {
-    return res.status(403).json({ error: 'That upload does not belong to you.' });
-  }
-  const { data, error } = await req.supabase.from('recordings').insert(req.body).select().single();
-  if (error) return sendError(res, error, 403);
-  res.status(201).json({ recording: data });
-});
+router.post(
+  "/",
+  requireUser,
+  validateBody(recordingCreateSchema),
+  async (req, res) => {
+    if (
+      req.body.r2_key &&
+      !ownsKey("recordings", req.user.id, req.body.r2_key)
+    ) {
+      return res
+        .status(403)
+        .json({ error: "That upload does not belong to you." });
+    }
+    const { data, error } = await req.supabase
+      .from("recordings")
+      .insert(req.body)
+      .select()
+      .single();
+    if (error) return sendError(res, error, 403);
+    res.status(201).json({ recording: data });
+  },
+);
 
 // PATCH /api/recordings/:id — staff-only via RLS.
-router.patch('/:id', requireUser, validateIdParam, validateBody(recordingUpdateSchema), async (req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ error: 'No editable fields supplied.' });
-  }
-  if (req.body.r2_key && !ownsKey('recordings', req.user.id, req.body.r2_key)) {
-    return res.status(403).json({ error: 'That upload does not belong to you.' });
-  }
+router.patch(
+  "/:id",
+  requireUser,
+  validateIdParam,
+  validateBody(recordingUpdateSchema),
+  async (req, res) => {
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({ error: "No editable fields supplied." });
+    }
+    if (
+      req.body.r2_key &&
+      !ownsKey("recordings", req.user.id, req.body.r2_key)
+    ) {
+      return res
+        .status(403)
+        .json({ error: "That upload does not belong to you." });
+    }
 
-  const { data, error } = await req.supabase.from('recordings').update(req.body).eq('id', req.params.id).select().single();
-  if (error) return sendError(res, error, 403);
-  res.json({ recording: data });
-});
+    const { data, error } = await req.supabase
+      .from("recordings")
+      .update(req.body)
+      .eq("id", req.params.id)
+      .select()
+      .single();
+    if (error) return sendError(res, error, 403);
+    res.json({ recording: data });
+  },
+);
 
 // POST /api/recordings/:id/approve — the recordings_guard_status trigger
 // rejects this unless the caller is a superadmin.
-router.post('/:id/approve', requireUser, validateIdParam, statusHandler('recordings', 'approved', 'recording'));
+router.post(
+  "/:id/approve",
+  requireUser,
+  validateIdParam,
+  statusHandler("recordings", "approved", "recording"),
+);
 
 // POST /api/recordings/:id/reject — same guard as /approve.
-router.post('/:id/reject', requireUser, validateIdParam, statusHandler('recordings', 'rejected', 'recording'));
+router.post(
+  "/:id/reject",
+  requireUser,
+  validateIdParam,
+  statusHandler("recordings", "rejected", "recording"),
+);
 
 // POST /api/recordings/:id/resubmit — the uploader can move a rejected
 // recording back to pending for another review.
-router.post('/:id/resubmit', requireUser, validateIdParam, statusHandler('recordings', 'pending', 'recording'));
+router.post(
+  "/:id/resubmit",
+  requireUser,
+  validateIdParam,
+  statusHandler("recordings", "pending", "recording"),
+);
 
 // DELETE /api/recordings/:id — staff-only via RLS. Best-effort cleanup of
 // the R2 object; a failed R2 delete never blocks removing the row.
-router.delete('/:id', requireUser, validateIdParam, async (req, res) => {
-  const { data: existing } = await req.supabase.from('recordings').select('r2_key').eq('id', req.params.id).single();
+router.delete("/:id", requireUser, validateIdParam, async (req, res) => {
+  const { data: existing } = await req.supabase
+    .from("recordings")
+    .select("r2_key")
+    .eq("id", req.params.id)
+    .single();
 
   // RLS silently deletes zero rows for a caller who isn't allowed to — so
   // ask for the deleted row back and report 404 when there wasn't one,
   // instead of a misleading 200.
-  const { data: deleted, error } = await req.supabase.from('recordings').delete().eq('id', req.params.id).select('id');
+  const { data: deleted, error } = await req.supabase
+    .from("recordings")
+    .delete()
+    .eq("id", req.params.id)
+    .select("id");
   if (error) return sendError(res, error, 403);
-  if (!deleted || deleted.length === 0) return res.status(404).json({ error: 'Not found.' });
+  if (!deleted || deleted.length === 0)
+    return res.status(404).json({ error: "Not found." });
 
   if (existing?.r2_key) {
-    deleteObject(existing.r2_key).catch(err => console.error('Failed to delete R2 object for recording', req.params.id, err));
+    deleteObject(existing.r2_key).catch((err) =>
+      console.error(
+        "Failed to delete R2 object for recording",
+        req.params.id,
+        err,
+      ),
+    );
   }
 
   res.json({ ok: true });

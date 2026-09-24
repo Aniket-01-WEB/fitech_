@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { usePortal } from '@/context/PortalContext';
-import { friendlyError } from '@/lib/errors';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePortal } from "@/context/PortalContext";
+import { friendlyError } from "@/lib/errors";
 
 const ROLE_HOME = {
-  admin: '/admin-portal',
-  superadmin: '/super-admin',
-  student: '/student-portal'
+  admin: "/admin-portal",
+  superadmin: "/super-admin",
+  student: "/student-portal",
 };
 
 const ROLE_LABEL = {
-  student: 'Student Portal',
-  admin: 'Admin Console',
-  superadmin: 'Super Admin'
+  student: "Student Portal",
+  admin: "Admin Console",
+  superadmin: "Super Admin",
 };
 
 export default function LoginPage() {
-  const [role, setRole] = useState('student'); // 'student' | 'admin' | 'superadmin'
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [role, setRole] = useState("student"); // 'student' | 'admin' | 'superadmin'
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const {
     login,
     currentUser,
@@ -30,38 +30,42 @@ export default function LoginPage() {
     requestPasswordReset,
     verifyPasswordResetOtp,
     updatePassword,
-    logout
+    logout,
   } = usePortal();
   const router = useRouter();
 
   // view: 'login' | 'forgot-request' (enter email) | 'forgot-verify' (enter OTP) | 'forgot-reset' (set new password)
-  const [view, setView] = useState('login');
-  const [resetEmail, setResetEmail] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [infoMsg, setInfoMsg] = useState('');
+  const [view, setView] = useState("login");
+  const [resetEmail, setResetEmail] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [infoMsg, setInfoMsg] = useState("");
 
   useEffect(() => {
-    if (currentUser && view === 'login') {
-      router.push(ROLE_HOME[currentUser.role] || '/student-portal');
+    if (currentUser && view === "login") {
+      router.push(ROLE_HOME[currentUser.role] || "/student-portal");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, router]);
 
   const attemptLogin = async (loginEmail, loginPassword, expectedRole) => {
-    setErrorMsg('');
+    setErrorMsg("");
     setIsSubmitting(true);
     try {
       const profile = await login(loginEmail, loginPassword);
       if (profile.role !== expectedRole) {
-        setErrorMsg(`This account isn't registered as ${ROLE_LABEL[expectedRole]}. It's a ${ROLE_LABEL[profile.role] || profile.role} account — try that tab instead.`);
+        setErrorMsg(
+          `This account isn't registered as ${ROLE_LABEL[expectedRole]}. It's a ${ROLE_LABEL[profile.role] || profile.role} account — try that tab instead.`,
+        );
         setIsSubmitting(false);
         return;
       }
-      router.push(ROLE_HOME[profile.role] || '/student-portal');
+      router.push(ROLE_HOME[profile.role] || "/student-portal");
     } catch (err) {
-      setErrorMsg(friendlyError(err, 'Sign in failed. Check your email and password.'));
+      setErrorMsg(
+        friendlyError(err, "Sign in failed. Check your email and password."),
+      );
       setIsSubmitting(false);
     }
   };
@@ -70,7 +74,7 @@ export default function LoginPage() {
     e.preventDefault();
     const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail || !password) {
-      setErrorMsg('Please enter your email and password.');
+      setErrorMsg("Please enter your email and password.");
       return;
     }
     attemptLogin(trimmedEmail, password, role);
@@ -78,40 +82,47 @@ export default function LoginPage() {
 
   const switchRole = (newRole) => {
     setRole(newRole);
-    setEmail('');
-    setPassword('');
-    setErrorMsg('');
+    setEmail("");
+    setPassword("");
+    setErrorMsg("");
   };
 
   const goToForgotPassword = () => {
-    setErrorMsg('');
-    setInfoMsg('');
+    setErrorMsg("");
+    setInfoMsg("");
     setResetEmail(email.trim());
-    setView('forgot-request');
+    setView("forgot-request");
   };
 
   const backToLogin = () => {
-    setErrorMsg('');
-    setInfoMsg('');
-    setView('login');
+    setErrorMsg("");
+    setInfoMsg("");
+    setView("login");
   };
 
   // Step 1: send the 6-digit recovery code to the registered email.
   const handleRequestOtp = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
     const trimmed = resetEmail.trim().toLowerCase();
     if (!trimmed) {
-      setErrorMsg('Enter the email your account is registered with.');
+      setErrorMsg("Enter the email your account is registered with.");
       return;
     }
     setIsSubmitting(true);
     try {
       await requestPasswordReset(trimmed);
-      setInfoMsg(`A 6-digit verification code has been sent to ${trimmed}. It expires shortly, so enter it soon.`);
-      setView('forgot-verify');
+      setInfoMsg(
+        `A 6-digit verification code has been sent to ${trimmed}. It expires shortly, so enter it soon.`,
+      );
+      setView("forgot-verify");
     } catch (err) {
-      setErrorMsg(friendlyError(err, 'Could not send a reset code. Check the email and try again.'));
+      setErrorMsg(
+        friendlyError(
+          err,
+          "Could not send a reset code. Check the email and try again.",
+        ),
+      );
     }
     setIsSubmitting(false);
   };
@@ -119,18 +130,26 @@ export default function LoginPage() {
   // Step 2: verifying the code proves inbox ownership and opens a temporary recovery session.
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
     if (!otpCode.trim()) {
-      setErrorMsg('Enter the code from your email.');
+      setErrorMsg("Enter the code from your email.");
       return;
     }
     setIsSubmitting(true);
     try {
-      await verifyPasswordResetOtp(resetEmail.trim().toLowerCase(), otpCode.trim());
-      setInfoMsg('');
-      setView('forgot-reset');
+      await verifyPasswordResetOtp(
+        resetEmail.trim().toLowerCase(),
+        otpCode.trim(),
+      );
+      setInfoMsg("");
+      setView("forgot-reset");
     } catch (err) {
-      setErrorMsg(friendlyError(err, 'That code is invalid or has expired. Request a new one.'));
+      setErrorMsg(
+        friendlyError(
+          err,
+          "That code is invalid or has expired. Request a new one.",
+        ),
+      );
     }
     setIsSubmitting(false);
   };
@@ -138,55 +157,56 @@ export default function LoginPage() {
   // Step 3: set the new password on the now-verified session.
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
     if (newPassword.length < 8) {
-      setErrorMsg('Password must be at least 8 characters.');
+      setErrorMsg("Password must be at least 8 characters.");
       return;
     }
     if (newPassword !== confirmPassword) {
-      setErrorMsg('Passwords do not match.');
+      setErrorMsg("Passwords do not match.");
       return;
     }
     setIsSubmitting(true);
     try {
       await updatePassword(newPassword);
       await logout();
-      setView('login');
-      setPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setErrorMsg('');
-      setInfoMsg('Password updated. Please log in with your new password.');
+      setView("login");
+      setPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setErrorMsg("");
+      setInfoMsg("Password updated. Please log in with your new password.");
     } catch (err) {
-      setErrorMsg(friendlyError(err, 'Failed to reset password.'));
+      setErrorMsg(friendlyError(err, "Failed to reset password."));
     }
     setIsSubmitting(false);
   };
 
   const roleLabel = {
     student: {
-      badge: 'MEMBER AUTHENTICATION',
-      subtitle: 'Sign in to discover upcoming events, workshops, and lab sessions.',
-      emailLabel: 'Email Address',
-      emailPlaceholder: 'Enter Registered Email ID',
-      passLabel: 'Password',
-      passPlaceholder: '••••••••',
+      badge: "MEMBER AUTHENTICATION",
+      subtitle:
+        "Sign in to discover upcoming events, workshops, and lab sessions.",
+      emailLabel: "Email Address",
+      emailPlaceholder: "Enter Registered Email ID",
+      passLabel: "Password",
+      passPlaceholder: "••••••••",
     },
     admin: {
-      badge: 'ADMIN AUTHENTICATION',
-      subtitle: 'Sign in to manage events, recordings, and member resources.',
-      emailLabel: 'Admin Email',
-      emailPlaceholder: 'Enter admin email',
-      passLabel: 'Admin Password',
-      passPlaceholder: 'Enter admin password',
+      badge: "ADMIN AUTHENTICATION",
+      subtitle: "Sign in to manage events, recordings, and member resources.",
+      emailLabel: "Admin Email",
+      emailPlaceholder: "Enter admin email",
+      passLabel: "Admin Password",
+      passPlaceholder: "Enter admin password",
     },
     superadmin: {
-      badge: 'SUPER ADMIN AUTHENTICATION',
-      subtitle: 'Sign in to oversee all operations and manage member roles.',
-      emailLabel: 'Super Admin Email',
-      emailPlaceholder: 'Enter super admin email',
-      passLabel: 'Super Admin Password',
-      passPlaceholder: 'Enter super admin password',
+      badge: "SUPER ADMIN AUTHENTICATION",
+      subtitle: "Sign in to oversee all operations and manage member roles.",
+      emailLabel: "Super Admin Email",
+      emailPlaceholder: "Enter super admin email",
+      passLabel: "Super Admin Password",
+      passPlaceholder: "Enter super admin password",
     },
   };
 
@@ -199,28 +219,37 @@ export default function LoginPage() {
         {/* Header */}
         <div className="lp-header">
           <span className="lp-badge">
-            {view === 'login' ? lbl.badge : 'PASSWORD RECOVERY'}
+            {view === "login" ? lbl.badge : "PASSWORD RECOVERY"}
           </span>
           <h1 className="lp-heading">
-            {view === 'login' ? 'WELCOME' : 'RESET PASSWORD'}
+            {view === "login" ? "WELCOME" : "RESET PASSWORD"}
           </h1>
           <p className="lp-subtext">
-            {view === 'login'
+            {view === "login"
               ? lbl.subtitle
-              : 'Reset your password — verify your email, then choose a new one.'}
+              : "Reset your password — verify your email, then choose a new one."}
           </p>
         </div>
 
         {/* Info & Error messages */}
         {infoMsg && (
-          <p style={{ color: '#166534', background: '#dcfce7', border: '1px solid #bbf7d0', padding: '10px 14px', fontSize: '13px', marginBottom: '16px' }}>
+          <p
+            style={{
+              color: "#166534",
+              background: "#dcfce7",
+              border: "1px solid #bbf7d0",
+              padding: "10px 14px",
+              fontSize: "13px",
+              marginBottom: "16px",
+            }}
+          >
             {infoMsg}
           </p>
         )}
         {errorMsg && <p className="lp-error">{errorMsg}</p>}
 
         {/* VIEW 1: LOGIN FORM */}
-        {view === 'login' && (
+        {view === "login" && (
           <>
             <form onSubmit={handleSubmit} className="lp-form">
               <div className="lp-field">
@@ -239,14 +268,34 @@ export default function LoginPage() {
               </div>
 
               <div className="lp-field">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <label className="lp-label" htmlFor="lp-password" style={{ margin: 0 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <label
+                    className="lp-label"
+                    htmlFor="lp-password"
+                    style={{ margin: 0 }}
+                  >
                     {lbl.passLabel} <span className="lp-req">*</span>
                   </label>
                   <button
                     type="button"
                     onClick={goToForgotPassword}
-                    style={{ font: 'inherit', fontSize: '12px', color: '#0A0A0A', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                    style={{
+                      font: "inherit",
+                      fontSize: "12px",
+                      color: "#0A0A0A",
+                      fontWeight: "600",
+                      textDecoration: "underline",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
                   >
                     Forgot password?
                   </button>
@@ -262,46 +311,78 @@ export default function LoginPage() {
                 />
               </div>
 
-              <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? 'AUTHENTICATING...' : 'SIGN IN →'}
+              <button
+                type="submit"
+                className="lp-submit-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "AUTHENTICATING..." : "SIGN IN →"}
               </button>
             </form>
 
             {/* Join / Admin Notice links */}
-            {role === 'student' && (
+            {role === "student" && (
               <p className="lp-join-text">
-                Not registered yet?{' '}
-                <button type="button" onClick={openJoinModal} className="lp-join-link">
+                Not registered yet?{" "}
+                <button
+                  type="button"
+                  onClick={openJoinModal}
+                  className="lp-join-link"
+                >
                   Join us →
                 </button>
               </p>
             )}
 
-            {role === 'admin' && (
-              <p className="lp-join-text" style={{ fontSize: '12.5px', textAlign: 'left', lineHeight: '1.5' }}>
-                Admin accounts aren&apos;t self-registered here.{' '}
-                <button type="button" onClick={openJoinModal} className="lp-join-link">
+            {role === "admin" && (
+              <p
+                className="lp-join-text"
+                style={{
+                  fontSize: "12.5px",
+                  textAlign: "left",
+                  lineHeight: "1.5",
+                }}
+              >
+                Admin accounts aren&apos;t self-registered here.{" "}
+                <button
+                  type="button"
+                  onClick={openJoinModal}
+                  className="lp-join-link"
+                >
                   Create a student account
-                </button>
-                {' '}first, then request admin access from your Student Portal profile — a Super Admin reviews every request.
+                </button>{" "}
+                first, then request admin access from your Student Portal
+                profile — a Super Admin reviews every request.
               </p>
             )}
 
             {/* Divider + role switch links */}
             <div className="lp-divider" />
             <div className="lp-role-links">
-              {role !== 'admin' && (
-                <button type="button" className="lp-role-link" onClick={() => switchRole('admin')}>
+              {role !== "admin" && (
+                <button
+                  type="button"
+                  className="lp-role-link"
+                  onClick={() => switchRole("admin")}
+                >
                   Login as Admin →
                 </button>
               )}
-              {role !== 'superadmin' && (
-                <button type="button" className="lp-role-link" onClick={() => switchRole('superadmin')}>
+              {role !== "superadmin" && (
+                <button
+                  type="button"
+                  className="lp-role-link"
+                  onClick={() => switchRole("superadmin")}
+                >
                   Login as Superadmin →
                 </button>
               )}
-              {role !== 'student' && (
-                <button type="button" className="lp-role-link lp-role-link-back" onClick={() => switchRole('student')}>
+              {role !== "student" && (
+                <button
+                  type="button"
+                  className="lp-role-link lp-role-link-back"
+                  onClick={() => switchRole("student")}
+                >
                   ← Back to Student Login
                 </button>
               )}
@@ -310,10 +391,12 @@ export default function LoginPage() {
         )}
 
         {/* VIEW 2: FORGOT - REQUEST OTP */}
-        {view === 'forgot-request' && (
+        {view === "forgot-request" && (
           <form onSubmit={handleRequestOtp} className="lp-form">
             <div className="lp-field">
-              <label className="lp-label" htmlFor="reset-email">Registered Email <span className="lp-req">*</span></label>
+              <label className="lp-label" htmlFor="reset-email">
+                Registered Email <span className="lp-req">*</span>
+              </label>
               <input
                 type="email"
                 id="reset-email"
@@ -324,14 +407,18 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? 'SENDING CODE...' : 'SEND VERIFICATION CODE →'}
+            <button
+              type="submit"
+              className="lp-submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "SENDING CODE..." : "SEND VERIFICATION CODE →"}
             </button>
             <button
               type="button"
               onClick={backToLogin}
               className="lp-role-link lp-role-link-back"
-              style={{ marginTop: '12px' }}
+              style={{ marginTop: "12px" }}
             >
               ← Back to login
             </button>
@@ -339,10 +426,12 @@ export default function LoginPage() {
         )}
 
         {/* VIEW 3: FORGOT - VERIFY OTP */}
-        {view === 'forgot-verify' && (
+        {view === "forgot-verify" && (
           <form onSubmit={handleVerifyOtp} className="lp-form">
             <div className="lp-field">
-              <label className="lp-label" htmlFor="reset-otp">6-Digit Verification Code <span className="lp-req">*</span></label>
+              <label className="lp-label" htmlFor="reset-otp">
+                6-Digit Verification Code <span className="lp-req">*</span>
+              </label>
               <input
                 type="text"
                 id="reset-otp"
@@ -355,10 +444,20 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? 'VERIFYING...' : 'VERIFY CODE →'}
+            <button
+              type="submit"
+              className="lp-submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "VERIFYING..." : "VERIFY CODE →"}
             </button>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "12px",
+              }}
+            >
               <button
                 type="button"
                 onClick={backToLogin}
@@ -370,7 +469,16 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleRequestOtp}
                 disabled={isSubmitting}
-                style={{ font: 'inherit', fontSize: '13px', color: '#0A0A0A', fontWeight: '600', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{
+                  font: "inherit",
+                  fontSize: "13px",
+                  color: "#0A0A0A",
+                  fontWeight: "600",
+                  textDecoration: "underline",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 Resend code
               </button>
@@ -379,10 +487,12 @@ export default function LoginPage() {
         )}
 
         {/* VIEW 4: FORGOT - SET NEW PASSWORD */}
-        {view === 'forgot-reset' && (
+        {view === "forgot-reset" && (
           <form onSubmit={handleResetPassword} className="lp-form">
             <div className="lp-field">
-              <label className="lp-label" htmlFor="reset-new-pass">New Password <span className="lp-req">*</span></label>
+              <label className="lp-label" htmlFor="reset-new-pass">
+                New Password <span className="lp-req">*</span>
+              </label>
               <input
                 type="password"
                 id="reset-new-pass"
@@ -395,7 +505,9 @@ export default function LoginPage() {
               />
             </div>
             <div className="lp-field">
-              <label className="lp-label" htmlFor="reset-confirm-pass">Confirm New Password <span className="lp-req">*</span></label>
+              <label className="lp-label" htmlFor="reset-confirm-pass">
+                Confirm New Password <span className="lp-req">*</span>
+              </label>
               <input
                 type="password"
                 id="reset-confirm-pass"
@@ -407,13 +519,16 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="lp-submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? 'SAVING...' : 'RESET PASSWORD →'}
+            <button
+              type="submit"
+              className="lp-submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "SAVING..." : "RESET PASSWORD →"}
             </button>
           </form>
         )}
       </div>
-
     </div>
   );
 }

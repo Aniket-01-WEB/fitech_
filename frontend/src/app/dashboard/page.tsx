@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { usePortal } from '@/context/PortalContext';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePortal } from "@/context/PortalContext";
 
 export default function DashboardPage() {
   const { currentUser } = usePortal();
@@ -10,13 +10,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!currentUser) {
-      router.push('/login');
-    } else if (currentUser.role === 'admin') {
-      router.push('/admin-portal');
-    } else if (currentUser.role === 'superadmin') {
-      router.push('/super-admin');
+      router.push("/login");
+    } else if (currentUser.role === "admin") {
+      router.push("/admin-portal");
+    } else if (currentUser.role === "superadmin") {
+      router.push("/super-admin");
     } else {
-      router.push('/student-portal');
+      router.push("/student-portal");
     }
   }, [currentUser, router]);
 

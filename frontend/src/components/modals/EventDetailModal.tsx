@@ -1,18 +1,27 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { usePortal } from '@/context/PortalContext';
-import { useToast } from '@/components/layout/Toast';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { usePortal } from "@/context/PortalContext";
+import { useToast } from "@/components/layout/Toast";
+import { useRouter } from "next/navigation";
 
 export default function EventDetailModal() {
-  const { activeDetailEvent, closeDetailModal, isEventJoined, toggleJoinEvent, currentUser, openJoinModal } = usePortal();
+  const {
+    activeDetailEvent,
+    closeDetailModal,
+    isEventJoined,
+    toggleJoinEvent,
+    currentUser,
+    openJoinModal,
+  } = usePortal();
   const { notify, notifyError } = useToast();
   const router = useRouter();
 
   if (!activeDetailEvent) return null;
 
-  const joined = currentUser ? isEventJoined(activeDetailEvent.id, currentUser.email) : false;
+  const joined = currentUser
+    ? isEventJoined(activeDetailEvent.id, currentUser.email)
+    : false;
 
   const handleToggleJoin = () => {
     if (!currentUser) {
@@ -25,25 +34,37 @@ export default function EventDetailModal() {
 
   return (
     <div
-      className={`portal-detail-backdrop ${activeDetailEvent ? 'active' : ''}`}
+      className={`portal-detail-backdrop ${activeDetailEvent ? "active" : ""}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) closeDetailModal();
       }}
     >
-      <div className="portal-detail-dialog" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+      <div
+        className="portal-detail-dialog"
+        style={{ borderRadius: "16px", overflow: "hidden" }}
+      >
         <div
           className="portal-detail-banner"
-          style={{ background: activeDetailEvent.banner || 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' }}
+          style={{
+            background:
+              activeDetailEvent.banner ||
+              "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
+          }}
         >
-          <span className="event-category" style={{ position: 'static' }}>
-            {activeDetailEvent.type || 'Event'}
+          <span className="event-category" style={{ position: "static" }}>
+            {activeDetailEvent.type || "Event"}
           </span>
           <button
             type="button"
             className="join-modal-close"
             onClick={closeDetailModal}
             aria-label="Close"
-            style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.8)' }}
+            style={{
+              position: "absolute",
+              top: "16px",
+              right: "16px",
+              background: "rgba(255,255,255,0.8)",
+            }}
           >
             ×
           </button>
@@ -59,14 +80,16 @@ export default function EventDetailModal() {
 
           <p className="portal-detail-desc">{activeDetailEvent.description}</p>
 
-          <div className="portal-card-actions" style={{ marginTop: '24px' }}>
+          <div className="portal-card-actions" style={{ marginTop: "24px" }}>
             <button
               type="button"
-              className={`btn ${joined ? 'portal-btn-joined' : 'btn-primary'}`}
+              className={`btn ${joined ? "portal-btn-joined" : "btn-primary"}`}
               onClick={handleToggleJoin}
-              style={{ width: '100%', justifyContent: 'center' }}
+              style={{ width: "100%", justifyContent: "center" }}
             >
-              {joined ? '✓ YOU ARE REGISTERED (CLICK TO UNREGISTER)' : 'JOIN EVENT NOW →'}
+              {joined
+                ? "✓ YOU ARE REGISTERED (CLICK TO UNREGISTER)"
+                : "JOIN EVENT NOW →"}
             </button>
           </div>
         </div>

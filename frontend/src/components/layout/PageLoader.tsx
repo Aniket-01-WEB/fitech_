@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // The loader plays on every page load and refresh, unconditionally.
 // When it starts to slide away it marks <html data-loader-done> so the
 // landing note knows it can begin its unfold in view.
-export const LOADER_DONE_ATTR = 'data-loader-done';
+export const LOADER_DONE_ATTR = "data-loader-done";
 
 export function isLoaderDone(): boolean {
-  return document.documentElement.hasAttribute(LOADER_DONE_ATTR) || !document.querySelector('[data-page-loader]');
+  return (
+    document.documentElement.hasAttribute(LOADER_DONE_ATTR) ||
+    !document.querySelector("[data-page-loader]")
+  );
 }
 
 // One odometer column: a reel of 0-9 plus a trailing 0 so a 9 -> 0 wrap
@@ -39,10 +42,15 @@ function Reel({ value }: { value: number }) {
     <div className="loader-col">
       <div
         className="loader-reel"
-        style={{ transform: `translate3d(0, ${(-idx * 100) / SLOTS}%, 0)`, transition: snap ? 'none' : undefined }}
+        style={{
+          transform: `translate3d(0, ${(-idx * 100) / SLOTS}%, 0)`,
+          transition: snap ? "none" : undefined,
+        }}
       >
         {Array.from({ length: SLOTS }, (_, n) => (
-          <span key={n} className="loader-digit">{n % 10}</span>
+          <span key={n} className="loader-digit">
+            {n % 10}
+          </span>
         ))}
       </div>
     </div>
@@ -57,7 +65,9 @@ export default function PageLoader() {
   useEffect(() => {
     // An older build saved a skip flag here; clear it so tabs that still
     // carry it don't keep skipping the loader.
-    try { sessionStorage.removeItem('fitech_skip_loader'); } catch {}
+    try {
+      sessionStorage.removeItem("fitech_skip_loader");
+    } catch {}
     document.documentElement.removeAttribute(LOADER_DONE_ATTR);
 
     const startTime = performance.now();
@@ -79,7 +89,7 @@ export default function PageLoader() {
         setProgress(100);
         holdTimer = window.setTimeout(() => {
           setIsDone(true);
-          document.documentElement.setAttribute(LOADER_DONE_ATTR, '');
+          document.documentElement.setAttribute(LOADER_DONE_ATTR, "");
           setTimeout(() => {
             setShouldRender(false);
           }, 600);
@@ -105,7 +115,7 @@ export default function PageLoader() {
         <motion.div
           data-page-loader
           initial={{ y: 0 }}
-          exit={{ y: '-100%' }}
+          exit={{ y: "-100%" }}
           transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[99999] bg-[#FFFFFF] flex flex-col justify-between p-8 sm:p-14 select-none pointer-events-auto overflow-hidden"
         >
@@ -113,7 +123,9 @@ export default function PageLoader() {
           <div className="relative z-10 flex items-center justify-between font-mono text-[11px] text-[#6B6B6B] uppercase tracking-wider border-b border-[#F2F2F2] pb-4">
             <div className="flex items-center gap-3">
               <span className="w-2 h-2 bg-[#0A0A0A]"></span>
-              <span className="font-bold text-[#0A0A0A]">FITECH RESEARCH GUILD</span>
+              <span className="font-bold text-[#0A0A0A]">
+                FITECH RESEARCH GUILD
+              </span>
               <span>|</span>
               <span>SOET CHAPTER</span>
             </div>
@@ -124,7 +136,10 @@ export default function PageLoader() {
 
           {/* Giant three-column odometer: hundreds / tens / units, each digit
               rolling like a slot as the count runs 0 -> 100. */}
-          <div className="loader-odometer flex-1 min-h-0 my-4" aria-label={`Loading ${progress}%`}>
+          <div
+            className="loader-odometer flex-1 min-h-0 my-4"
+            aria-label={`Loading ${progress}%`}
+          >
             <Reel value={Math.floor(progress / 100)} />
             <Reel value={Math.floor(progress / 10) % 10} />
             <Reel value={progress % 10} />
@@ -139,7 +154,7 @@ export default function PageLoader() {
 
             <div className="flex items-center gap-4">
               <span className="text-[#0A0A0A] font-bold tracking-widest">
-                [{progress.toString().padStart(3, '0')}%]
+                [{progress.toString().padStart(3, "0")}%]
               </span>
             </div>
           </div>

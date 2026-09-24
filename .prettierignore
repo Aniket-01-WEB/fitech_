@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Next.js and build output
+.next/
+out/
+build/
+dist/
+
+# Test output and coverage
+coverage/
+playwright-report/
+test-results/
+
+# Locks and build caches
+package-lock.json
+*.tsbuildinfo
+next-env.d.ts
+
+# Large static/generated data files
+frontend/public/intro/bill-dots.json
+
+# Local tooling and editor artifacts
+.agents/
+.vscode/
+.vercel/
+skills-lock.json

@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react';
-import HeroSection from '@/components/home/HeroSection';
-import AboutSection from '@/components/home/AboutSection';
-import ShowcaseSection from '@/components/home/ShowcaseSection';
-import CommunitiesSection from '@/components/home/CommunitiesSection';
-import DomainsSection from '@/components/home/DomainsSection';
-import ActivitiesSection from '@/components/home/ActivitiesSection';
-import TrustedBySection from '@/components/home/TrustedBySection';
-import QuoteSection from '@/components/home/QuoteSection';
-import TeamSection from '@/components/home/TeamSection';
-import GallerySection from '@/components/home/GallerySection';
-import FaqSection from '@/components/home/FaqSection';
-import CtaSection from '@/components/home/CtaSection';
-import Footer from '@/components/layout/Footer';
+import React from "react";
+import HeroSection from "@/components/home/HeroSection";
+import AboutSection from "@/components/home/AboutSection";
+import ShowcaseSection from "@/components/home/ShowcaseSection";
+import CommunitiesSection from "@/components/home/CommunitiesSection";
+import DomainsSection from "@/components/home/DomainsSection";
+import ActivitiesSection from "@/components/home/ActivitiesSection";
+import TrustedBySection from "@/components/home/TrustedBySection";
+import QuoteSection from "@/components/home/QuoteSection";
+import TeamSection from "@/components/home/TeamSection";
+import GallerySection from "@/components/home/GallerySection";
+import FaqSection from "@/components/home/FaqSection";
+import CtaSection from "@/components/home/CtaSection";
+import Footer from "@/components/layout/Footer";
 
 export default function HomePage() {
   return (

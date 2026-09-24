@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import React, { useRef } from 'react';
-import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useRef } from "react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function GallerySection() {
   const masterImageRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: masterImageRef,
-    offset: ['start end', 'end start'],
+    offset: ["start end", "end start"],
   });
 
   const scaleImage = useTransform(scrollYProgress, [0, 1], [1.08, 1.0]);
 
   return (
-    <section id="gallery" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
+    <section
+      id="gallery"
+      className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]"
+    >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
-        
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>FIELD NOTES & ARCHIVE</span>
@@ -37,15 +39,17 @@ export default function GallerySection() {
             </h2>
           </div>
           <p className="text-sm sm:text-base text-[#4A4A4A] font-sans-body max-w-md leading-relaxed font-light">
-            Archival photographic documentation of our summits, algorithmic coding sessions, hackathons, and student guild ecosystem at Adamas University.
+            Archival photographic documentation of our summits, algorithmic
+            coding sessions, hackathons, and student guild ecosystem at Adamas
+            University.
           </p>
         </div>
 
         {/* Master Photo Plate */}
-        <div 
+        <div
           ref={masterImageRef}
           className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-6 sm:p-8 md:p-10 mb-8 overflow-hidden"
-          style={{ boxShadow: '0 20px 50px rgba(30,30,30,0.05)' }}
+          style={{ boxShadow: "0 20px 50px rgba(30,30,30,0.05)" }}
         >
           <div className="relative w-full aspect-[16/8] md:aspect-[21/9] rounded-2xl overflow-hidden bg-[#0A0A0A] mb-6 border border-[#DADADA]">
             <motion.img
@@ -70,7 +74,8 @@ export default function GallerySection() {
                 Flagship FinTech & Quantitative Research Summit
               </h4>
               <p className="font-sans-body text-xs sm:text-sm text-[#4A4A4A] mt-1 font-light">
-                Keynote address on limit order book microstructures and automated market maker invariants.
+                Keynote address on limit order book microstructures and
+                automated market maker invariants.
               </p>
             </div>
 
@@ -97,9 +102,12 @@ export default function GallerySection() {
                 Plate Systems & Matching Lab
               </div>
             </div>
-            <h5 className="font-serif text-xl text-[#0A0A0A]">Order Book Matching Benchmarks</h5>
+            <h5 className="font-serif text-xl text-[#0A0A0A]">
+              Order Book Matching Benchmarks
+            </h5>
             <p className="font-sans-body text-xs text-[#4A4A4A] mt-1 font-light">
-              Stress-testing lock-free queue implementations under simulated market micro-bursts.
+              Stress-testing lock-free queue implementations under simulated
+              market micro-bursts.
             </p>
           </div>
 
@@ -114,13 +122,15 @@ export default function GallerySection() {
                 Plate Quant Research Desk
               </div>
             </div>
-            <h5 className="font-serif text-xl text-[#0A0A0A]">Algorithmic Strategy & Alpha</h5>
+            <h5 className="font-serif text-xl text-[#0A0A0A]">
+              Algorithmic Strategy & Alpha
+            </h5>
             <p className="font-sans-body text-xs text-[#4A4A4A] mt-1 font-light">
-              Student teams demonstrating decentralized lending invariants and solvency vaults.
+              Student teams demonstrating decentralized lending invariants and
+              solvency vaults.
             </p>
           </div>
         </div>
-
       </div>
     </section>
   );

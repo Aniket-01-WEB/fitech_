@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { usePortal } from '@/context/PortalContext';
+import React from "react";
+import { motion } from "framer-motion";
+import { usePortal } from "@/context/PortalContext";
 
 export default function CtaSection() {
   const { openJoinModal } = usePortal();
@@ -10,7 +10,6 @@ export default function CtaSection() {
   return (
     <section className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA] overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8 relative z-10">
-        
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>INTAKE & ADMISSIONS</span>
@@ -18,9 +17,9 @@ export default function CtaSection() {
         </div>
 
         {/* Stanzza Floating Conversation Card */}
-        <div 
+        <div
           className="relative bg-[#F2F2F2] rounded-3xl border border-[#DADADA] p-10 sm:p-16 md:p-20 lg:p-24 text-center max-w-5xl mx-auto"
-          style={{ boxShadow: '0 24px 60px rgba(30,30,30,0.05)' }}
+          style={{ boxShadow: "0 24px 60px rgba(30,30,30,0.05)" }}
         >
           {/* Top Micro-Header */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFFFFF] border border-[#DADADA] font-mono text-[11px] text-[#0A0A0A] font-semibold uppercase tracking-wider mb-8 sm:mb-10">
@@ -36,7 +35,9 @@ export default function CtaSection() {
           </h2>
 
           <p className="font-sans-body text-base sm:text-xl text-[#4A4A4A] leading-relaxed max-w-2xl mx-auto font-light mb-6 sm:mb-8">
-            Whether you want to engineer low-latency matching cores, research stochastic volatility, or incubate a technical fintech startup, our laboratory doors are open.
+            Whether you want to engineer low-latency matching cores, research
+            stochastic volatility, or incubate a technical fintech startup, our
+            laboratory doors are open.
           </p>
 
           {/* Stanzza Rounded Pill Buttons */}
@@ -64,14 +65,15 @@ export default function CtaSection() {
           {/* Footnote Metadata */}
           <div className="mt-8 pt-8 border-t border-[#DADADA] flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-[#6B6B6B]">
             <div>
-              <span>TRACKS: QUANT DEVELOPER • DEFI RESEARCHER • AI / RISK FELLOW</span>
+              <span>
+                TRACKS: QUANT DEVELOPER • DEFI RESEARCHER • AI / RISK FELLOW
+              </span>
             </div>
             <div>
               <span>ADAMAS UNIVERSITY • SOET CAMPUS</span>
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

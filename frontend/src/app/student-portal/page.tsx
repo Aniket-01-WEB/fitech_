@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { usePortal, DOMAIN_OPTIONS } from '@/context/PortalContext';
-import { useToast } from '@/components/layout/Toast';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePortal, DOMAIN_OPTIONS } from "@/context/PortalContext";
+import { useToast } from "@/components/layout/Toast";
 
 const DEFAULT_PROFILE_TEMPLATE = {
-  name: '',
-  regNumber: '2024REG1092',
-  rollNumber: '24CS084',
-  school: 'School of Computer Science',
-  department: 'Computer Science',
-  section: 'CSE-B',
-  currentYear: '2nd Year',
-  contactNumber: '+91 98765 43210',
-  interestedDomain: 'Quantitative Finance & Algo',
-  gmail: ''
+  name: "",
+  regNumber: "2024REG1092",
+  rollNumber: "24CS084",
+  school: "School of Computer Science",
+  department: "Computer Science",
+  section: "CSE-B",
+  currentYear: "2nd Year",
+  contactNumber: "+91 98765 43210",
+  interestedDomain: "Quantitative Finance & Algo",
+  gmail: "",
 };
 
 export default function StudentPortalPage() {
@@ -34,14 +34,14 @@ export default function StudentPortalPage() {
     updateStudentActivity,
     getMyAdminRequest,
     requestAdminAccess,
-    resubmitAdminRequest
+    resubmitAdminRequest,
   } = usePortal();
   const { notify, notifyError } = useToast();
 
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('my-events');
+  const [activeTab, setActiveTab] = useState("my-events");
   const [editingProfile, setEditingProfile] = useState(false);
-  const [adminReason, setAdminReason] = useState('');
+  const [adminReason, setAdminReason] = useState("");
   const [submittingAdminRequest, setSubmittingAdminRequest] = useState(false);
 
   // memberProfile is derived every render so it's always safe to call as a hook
@@ -56,24 +56,24 @@ export default function StudentPortalPage() {
   // Sync redirect for unauthenticated, admin, or super admin users
   useEffect(() => {
     if (!currentUser) {
-      router.push('/login');
-    } else if (currentUser.role === 'admin') {
-      router.push('/admin-portal');
-    } else if (currentUser.role === 'superadmin') {
-      router.push('/super-admin');
+      router.push("/login");
+    } else if (currentUser.role === "admin") {
+      router.push("/admin-portal");
+    } else if (currentUser.role === "superadmin") {
+      router.push("/super-admin");
     }
   }, [currentUser, router]);
 
   // Live session timer tracking
   useEffect(() => {
-    if (!currentUser || currentUser.role !== 'student') return;
+    if (!currentUser || currentUser.role !== "student") return;
     const interval = setInterval(() => {
       updateStudentActivity(currentUser.email, 1, 0, false);
     }, 1000);
     return () => clearInterval(interval);
   }, [currentUser, updateStudentActivity]);
 
-  if (!currentUser || currentUser.role !== 'student') {
+  if (!currentUser || currentUser.role !== "student") {
     return null;
   }
 
@@ -87,7 +87,7 @@ export default function StudentPortalPage() {
     try {
       await saveMember(profileForm);
     } catch (err) {
-      notifyError(err, 'Failed to save profile.');
+      notifyError(err, "Failed to save profile.");
       return;
     }
     setEditingProfile(false);
@@ -100,9 +100,9 @@ export default function StudentPortalPage() {
     setSubmittingAdminRequest(true);
     try {
       await requestAdminAccess(adminReason.trim());
-      setAdminReason('');
+      setAdminReason("");
     } catch (err) {
-      notifyError(err, 'Failed to submit request.');
+      notifyError(err, "Failed to submit request.");
     } finally {
       setSubmittingAdminRequest(false);
     }
@@ -114,7 +114,7 @@ export default function StudentPortalPage() {
     try {
       await resubmitAdminRequest(myAdminRequest.id);
     } catch (err) {
-      notifyError(err, 'Failed to resubmit request.');
+      notifyError(err, "Failed to resubmit request.");
     } finally {
       setSubmittingAdminRequest(false);
     }
@@ -122,14 +122,14 @@ export default function StudentPortalPage() {
 
   const handleNoteDownload = (note) => {
     if (note.fileData) {
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = note.fileData;
       a.download = note.fileName || `${note.title}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     } else if (note.link) {
-      window.open(note.link, '_blank', 'noopener,noreferrer');
+      window.open(note.link, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -141,97 +141,210 @@ export default function StudentPortalPage() {
   };
 
   return (
-    <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+    <div
+      className="portal-page"
+      style={{ paddingTop: "100px", paddingBottom: "80px" }}
+    >
       <div className="container">
         {/* WELCOME HEADER */}
-        <div className="portal-header-card" style={{ background: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)', color: '#ffffff', padding: '32px', borderRadius: '16px', marginBottom: '32px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
+        <div
+          className="portal-header-card"
+          style={{
+            background: "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
+            color: "#ffffff",
+            padding: "32px",
+            borderRadius: "16px",
+            marginBottom: "32px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+              gap: "20px",
+            }}
+          >
             <div>
-              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#8A8A8A' }}>
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: "800",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase",
+                  color: "#8A8A8A",
+                }}
+              >
                 STUDENT MEMBER DASHBOARD
               </span>
-              <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: '900', margin: '8px 0' }}>
+              <h1
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "clamp(24px, 3vw, 36px)",
+                  fontWeight: "900",
+                  margin: "8px 0",
+                }}
+              >
                 WELCOME, {memberProfile.name.toUpperCase()}
               </h1>
-              <p style={{ color: '#DADADA', fontSize: '14px' }}>
-                {memberProfile.rollNumber} • {memberProfile.department} • {memberProfile.interestedDomain}
+              <p style={{ color: "#DADADA", fontSize: "14px" }}>
+                {memberProfile.rollNumber} • {memberProfile.department} •{" "}
+                {memberProfile.interestedDomain}
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{myEvents.length}</span>
-                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Registered Events</span>
+            <div style={{ display: "flex", gap: "16px" }}>
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  padding: "12px 18px",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                }}
+              >
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "20px",
+                    fontWeight: "800",
+                  }}
+                >
+                  {myEvents.length}
+                </span>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#8A8A8A",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Registered Events
+                </span>
               </div>
 
-              <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px 18px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '20px', fontWeight: '800' }}>{formatHoursMins(userActivity.totalSeconds)}</span>
-                <span style={{ fontSize: '11px', color: '#8A8A8A', textTransform: 'uppercase' }}>Learning Time</span>
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  padding: "12px 18px",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                }}
+              >
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "20px",
+                    fontWeight: "800",
+                  }}
+                >
+                  {formatHoursMins(userActivity.totalSeconds)}
+                </span>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#8A8A8A",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Learning Time
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* NAVIGATION TABS */}
-        <div className="portal-role-switch" style={{ marginBottom: '32px' }}>
+        <div className="portal-role-switch" style={{ marginBottom: "32px" }}>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'my-events' ? 'active' : ''}`}
-            onClick={() => setActiveTab('my-events')}
+            className={`portal-role-tab ${activeTab === "my-events" ? "active" : ""}`}
+            onClick={() => setActiveTab("my-events")}
           >
             MY EVENTS ({myEvents.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'all-events' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all-events')}
+            className={`portal-role-tab ${activeTab === "all-events" ? "active" : ""}`}
+            onClick={() => setActiveTab("all-events")}
           >
             ALL EVENTS ({approvedEvents.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'recordings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('recordings')}
+            className={`portal-role-tab ${activeTab === "recordings" ? "active" : ""}`}
+            onClick={() => setActiveTab("recordings")}
           >
             RECORDED SESSIONS ({recordings.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'notes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notes')}
+            className={`portal-role-tab ${activeTab === "notes" ? "active" : ""}`}
+            onClick={() => setActiveTab("notes")}
           >
             NOTES ({notes.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'metrics' ? 'active' : ''}`}
-            onClick={() => setActiveTab('metrics')}
+            className={`portal-role-tab ${activeTab === "metrics" ? "active" : ""}`}
+            onClick={() => setActiveTab("metrics")}
           >
             TIME TRACKER
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'profile' ? 'active' : ''}`}
-            onClick={() => setActiveTab('profile')}
+            className={`portal-role-tab ${activeTab === "profile" ? "active" : ""}`}
+            onClick={() => setActiveTab("profile")}
           >
             MY PROFILE
           </button>
         </div>
 
         {/* TAB 1: MY EVENTS */}
-        {activeTab === 'my-events' && (
+        {activeTab === "my-events" && (
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>MY REGISTERED EVENTS</h2>
+            <h2
+              className="section-title"
+              style={{ fontSize: "22px", marginBottom: "20px" }}
+            >
+              MY REGISTERED EVENTS
+            </h2>
             {myEvents.length === 0 ? (
-              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#8A8A8A', fontSize: '15px', marginBottom: '16px' }}>You haven&apos;t registered for any events yet.</p>
-                <button type="button" className="btn btn-primary" onClick={() => setActiveTab('all-events')}>
+              <div
+                style={{
+                  padding: "48px",
+                  background: "#F2F2F2",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                  textAlign: "center",
+                }}
+              >
+                <p
+                  style={{
+                    color: "#8A8A8A",
+                    fontSize: "15px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  You haven&apos;t registered for any events yet.
+                </p>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setActiveTab("all-events")}
+                >
                   BROWSE ALL EVENTS →
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-                {myEvents.map(evt => (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {myEvents.map((evt) => (
                   <div key={evt.id} className="simple-event-card">
                     <div className="simple-card-top">
                       <span className="simple-card-category">{evt.type}</span>
@@ -245,9 +358,15 @@ export default function StudentPortalPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => toggleJoinEvent(evt.id).catch(notifyError)}
+                        onClick={() =>
+                          toggleJoinEvent(evt.id).catch(notifyError)
+                        }
                         className="btn portal-btn-joined"
-                        style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}
+                        style={{
+                          width: "100%",
+                          justifyContent: "center",
+                          marginTop: "12px",
+                        }}
                       >
                         ✓ REGISTERED (CLICK TO LEAVE)
                       </button>
@@ -260,67 +379,110 @@ export default function StudentPortalPage() {
         )}
 
         {/* TAB 2: ALL EVENTS */}
-        {activeTab === 'all-events' && (
+        {activeTab === "all-events" && (
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>ALL CLUB EVENTS & WORKSHOPS</h2>
+            <h2
+              className="section-title"
+              style={{ fontSize: "22px", marginBottom: "20px" }}
+            >
+              ALL CLUB EVENTS & WORKSHOPS
+            </h2>
             {approvedEvents.length === 0 ? (
               <div className="empty-events-box">
                 <p className="empty-events-text">Events are coming soon.</p>
               </div>
             ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-              {approvedEvents.map(evt => {
-                const joined = isEventJoined(evt.id, currentUser.email);
-                return (
-                  <div key={evt.id} className="simple-event-card">
-                    <div className="simple-card-top">
-                      <span className="simple-card-category">{evt.type}</span>
-                      <h3 className="simple-card-title">{evt.title}</h3>
-                      <p className="simple-card-desc">{evt.description}</p>
-                    </div>
-                    <div className="simple-card-bottom">
-                      <div className="simple-card-meta">
-                        <span>📅 {evt.time}</span>
-                        <span>📍 {evt.venue}</span>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {approvedEvents.map((evt) => {
+                  const joined = isEventJoined(evt.id, currentUser.email);
+                  return (
+                    <div key={evt.id} className="simple-event-card">
+                      <div className="simple-card-top">
+                        <span className="simple-card-category">{evt.type}</span>
+                        <h3 className="simple-card-title">{evt.title}</h3>
+                        <p className="simple-card-desc">{evt.description}</p>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                        <button
-                          type="button"
-                          onClick={() => openDetailModal(evt)}
-                          className="btn btn-secondary"
-                          style={{ flex: 1, fontSize: '12px' }}
+                      <div className="simple-card-bottom">
+                        <div className="simple-card-meta">
+                          <span>📅 {evt.time}</span>
+                          <span>📍 {evt.venue}</span>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            marginTop: "12px",
+                          }}
                         >
-                          DETAILS
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => toggleJoinEvent(evt.id).catch(notifyError)}
-                          className={`btn ${joined ? 'portal-btn-joined' : 'btn-primary'}`}
-                          style={{ flex: 1.5, fontSize: '12px', justifyContent: 'center' }}
-                        >
-                          {joined ? '✓ REGISTERED' : 'REGISTER NOW'}
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => openDetailModal(evt)}
+                            className="btn btn-secondary"
+                            style={{ flex: 1, fontSize: "12px" }}
+                          >
+                            DETAILS
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              toggleJoinEvent(evt.id).catch(notifyError)
+                            }
+                            className={`btn ${joined ? "portal-btn-joined" : "btn-primary"}`}
+                            style={{
+                              flex: 1.5,
+                              fontSize: "12px",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {joined ? "✓ REGISTERED" : "REGISTER NOW"}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         )}
 
         {/* TAB 3: RECORDED MASTERCLASS SESSIONS */}
-        {activeTab === 'recordings' && (
+        {activeTab === "recordings" && (
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>MASTERCLASS RECORDING LIBRARY</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
-              {recordings.map(rec => (
+            <h2
+              className="section-title"
+              style={{ fontSize: "22px", marginBottom: "20px" }}
+            >
+              MASTERCLASS RECORDING LIBRARY
+            </h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gap: "24px",
+              }}
+            >
+              {recordings.map((rec) => (
                 <div key={rec.id} className="simple-event-card">
                   <div className="simple-card-top">
                     <span className="simple-card-category">{rec.type}</span>
                     <h3 className="simple-card-title">{rec.title}</h3>
-                    <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '12px', margin: '6px 0' }}>🎙 {rec.speaker}</p>
+                    <p
+                      style={{
+                        color: "#0A0A0A",
+                        fontWeight: "700",
+                        fontSize: "12px",
+                        margin: "6px 0",
+                      }}
+                    >
+                      🎙 {rec.speaker}
+                    </p>
                     <p className="simple-card-desc">{rec.description}</p>
                   </div>
                   <div className="simple-card-bottom">
@@ -332,7 +494,11 @@ export default function StudentPortalPage() {
                       type="button"
                       onClick={() => openRecordingPlayer(rec)}
                       className="btn btn-primary"
-                      style={{ width: '100%', justifyContent: 'center', marginTop: '12px' }}
+                      style={{
+                        width: "100%",
+                        justifyContent: "center",
+                        marginTop: "12px",
+                      }}
                     >
                       ▶ STREAM MASTERCLASS →
                     </button>
@@ -344,26 +510,69 @@ export default function StudentPortalPage() {
         )}
 
         {/* TAB: NOTES LIBRARY */}
-        {activeTab === 'notes' && (
+        {activeTab === "notes" && (
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>SHARED NOTES & STUDY MATERIAL</h2>
+            <h2
+              className="section-title"
+              style={{ fontSize: "22px", marginBottom: "20px" }}
+            >
+              SHARED NOTES & STUDY MATERIAL
+            </h2>
             {notes.length === 0 ? (
-              <div style={{ padding: '48px', background: '#F2F2F2', border: '1px solid #DADADA', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ color: '#8A8A8A', fontSize: '15px' }}>No notes have been uploaded yet. Check back soon.</p>
+              <div
+                style={{
+                  padding: "48px",
+                  background: "#F2F2F2",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{ color: "#8A8A8A", fontSize: "15px" }}>
+                  No notes have been uploaded yet. Check back soon.
+                </p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-                {notes.map(note => {
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  gap: "24px",
+                }}
+              >
+                {notes.map((note) => {
                   const hasFile = Boolean(note.fileData || note.link);
                   return (
                     <div key={note.id} className="simple-event-card">
                       <div className="simple-card-top">
-                        <span className="simple-card-category">{note.domain}</span>
+                        <span className="simple-card-category">
+                          {note.domain}
+                        </span>
                         <h3 className="simple-card-title">{note.title}</h3>
                         {note.topics && note.topics.length > 0 && (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '8px 0' }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: "6px",
+                              margin: "8px 0",
+                            }}
+                          >
                             {note.topics.map((topic, i) => (
-                              <span key={i} style={{ fontSize: '11px', fontWeight: '600', color: '#0A0A0A', background: '#F2F2F2', border: '1px solid #DADADA', padding: '2px 10px', borderRadius: '100px' }}>{topic}</span>
+                              <span
+                                key={i}
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: "600",
+                                  color: "#0A0A0A",
+                                  background: "#F2F2F2",
+                                  border: "1px solid #DADADA",
+                                  padding: "2px 10px",
+                                  borderRadius: "100px",
+                                }}
+                              >
+                                {topic}
+                              </span>
                             ))}
                           </div>
                         )}
@@ -372,7 +581,9 @@ export default function StudentPortalPage() {
                       <div className="simple-card-bottom">
                         <div className="simple-card-meta">
                           <span>👤 {note.uploadedBy}</span>
-                          <span>🗓 {new Date(note.uploadedAt).toLocaleDateString()}</span>
+                          <span>
+                            🗓 {new Date(note.uploadedAt).toLocaleDateString()}
+                          </span>
                           {note.fileType && <span>📎 {note.fileType}</span>}
                         </div>
                         <button
@@ -380,9 +591,17 @@ export default function StudentPortalPage() {
                           onClick={() => handleNoteDownload(note)}
                           className="btn btn-primary"
                           disabled={!hasFile}
-                          style={{ width: '100%', justifyContent: 'center', marginTop: '12px', opacity: hasFile ? 1 : 0.5, cursor: hasFile ? 'pointer' : 'not-allowed' }}
+                          style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            marginTop: "12px",
+                            opacity: hasFile ? 1 : 0.5,
+                            cursor: hasFile ? "pointer" : "not-allowed",
+                          }}
                         >
-                          {hasFile ? '📄 READ / DOWNLOAD NOTE →' : 'NO FILE ATTACHED'}
+                          {hasFile
+                            ? "📄 READ / DOWNLOAD NOTE →"
+                            : "NO FILE ATTACHED"}
                         </button>
                       </div>
                     </div>
@@ -394,142 +613,499 @@ export default function StudentPortalPage() {
         )}
 
         {/* TAB 4: TIME TRACKER & METRICS */}
-        {activeTab === 'metrics' && (
+        {activeTab === "metrics" && (
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', marginBottom: '20px' }}>STUDENT ACTIVITY & METRICS</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>TOTAL TIME ON PORTAL</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.totalSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Live counter running</p>
+            <h2
+              className="section-title"
+              style={{ fontSize: "22px", marginBottom: "20px" }}
+            >
+              STUDENT ACTIVITY & METRICS
+            </h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                gap: "20px",
+                marginBottom: "32px",
+              }}
+            >
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "24px",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#8A8A8A",
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  TOTAL TIME ON PORTAL
+                </span>
+                <h3
+                  style={{
+                    fontSize: "32px",
+                    fontWeight: "900",
+                    color: "#0A0A0A",
+                    margin: "8px 0",
+                  }}
+                >
+                  {formatHoursMins(userActivity.totalSeconds)}
+                </h3>
+                <p style={{ fontSize: "12px", color: "#8A8A8A" }}>
+                  Live counter running
+                </p>
               </div>
 
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>WEBSITE ACTIVE TIME</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.websiteSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Dashboard & portal navigation</p>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "24px",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#8A8A8A",
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  WEBSITE ACTIVE TIME
+                </span>
+                <h3
+                  style={{
+                    fontSize: "32px",
+                    fontWeight: "900",
+                    color: "#0A0A0A",
+                    margin: "8px 0",
+                  }}
+                >
+                  {formatHoursMins(userActivity.websiteSeconds)}
+                </h3>
+                <p style={{ fontSize: "12px", color: "#8A8A8A" }}>
+                  Dashboard & portal navigation
+                </p>
               </div>
 
-              <div style={{ background: '#ffffff', padding: '24px', border: '1px solid #DADADA', borderRadius: '12px' }}>
-                <span style={{ fontSize: '11px', color: '#8A8A8A', fontWeight: '700', textTransform: 'uppercase' }}>MASTERCLASS WATCH TIME</span>
-                <h3 style={{ fontSize: '32px', fontWeight: '900', color: '#0A0A0A', margin: '8px 0' }}>{formatHoursMins(userActivity.recordingSeconds)}</h3>
-                <p style={{ fontSize: '12px', color: '#8A8A8A' }}>Video session consumption</p>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "24px",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#8A8A8A",
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  MASTERCLASS WATCH TIME
+                </span>
+                <h3
+                  style={{
+                    fontSize: "32px",
+                    fontWeight: "900",
+                    color: "#0A0A0A",
+                    margin: "8px 0",
+                  }}
+                >
+                  {formatHoursMins(userActivity.recordingSeconds)}
+                </h3>
+                <p style={{ fontSize: "12px", color: "#8A8A8A" }}>
+                  Video session consumption
+                </p>
               </div>
             </div>
           </div>
         )}
 
         {/* TAB 5: MY PROFILE */}
-        {activeTab === 'profile' && (
-          <div style={{ maxWidth: '640px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 className="section-title" style={{ fontSize: '22px', margin: 0 }}>STUDENT PROFILE DETAILS</h2>
+        {activeTab === "profile" && (
+          <div style={{ maxWidth: "640px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
+              <h2
+                className="section-title"
+                style={{ fontSize: "22px", margin: 0 }}
+              >
+                STUDENT PROFILE DETAILS
+              </h2>
               {!editingProfile && (
-                <button type="button" onClick={() => { setProfileForm(memberProfile); setEditingProfile(true); }} className="btn btn-secondary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProfileForm(memberProfile);
+                    setEditingProfile(true);
+                  }}
+                  className="btn btn-secondary"
+                >
                   ✏ EDIT PROFILE
                 </button>
               )}
             </div>
 
             {!editingProfile ? (
-              <div style={{ background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "32px",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "20px",
+                  }}
+                >
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>FULL NAME</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.name}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      FULL NAME
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.name}
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>REGISTRATION NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.regNumber}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      REGISTRATION NUMBER
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.regNumber}
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>ROLL NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.rollNumber}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      ROLL NUMBER
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.rollNumber}
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>SECTION & YEAR</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.section} ({memberProfile.currentYear})</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      SECTION & YEAR
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.section} ({memberProfile.currentYear})
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>DEPARTMENT</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.department}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      DEPARTMENT
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.department}
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>SCHOOL / COLLEGE</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.school}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      SCHOOL / COLLEGE
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.school}
+                    </strong>
                   </div>
                   <div>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>CONTACT NUMBER</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.contactNumber}</strong>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      CONTACT NUMBER
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.contactNumber}
+                    </strong>
                   </div>
-                  <div style={{ gridColumn: '1 / -1' }}>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>GMAIL / EMAIL</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.gmail}</strong>
+                  <div style={{ gridColumn: "1 / -1" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      GMAIL / EMAIL
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.gmail}
+                    </strong>
                   </div>
-                  <div style={{ gridColumn: '1 / -1' }}>
-                    <span style={{ display: 'block', fontSize: '11px', color: '#8A8A8A', fontWeight: '700' }}>PRIMARY TRACK</span>
-                    <strong style={{ fontSize: '16px', color: '#0A0A0A' }}>{memberProfile.interestedDomain}</strong>
+                  <div style={{ gridColumn: "1 / -1" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        color: "#8A8A8A",
+                        fontWeight: "700",
+                      }}
+                    >
+                      PRIMARY TRACK
+                    </span>
+                    <strong style={{ fontSize: "16px", color: "#0A0A0A" }}>
+                      {memberProfile.interestedDomain}
+                    </strong>
                   </div>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleProfileSave} style={{ background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
+              <form
+                onSubmit={handleProfileSave}
+                style={{
+                  background: "#ffffff",
+                  padding: "32px",
+                  border: "1px solid #DADADA",
+                  borderRadius: "12px",
+                }}
+              >
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Full Name</label>
-                    <input type="text" value={profileForm.name} onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.name}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, name: e.target.value })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Registration Number</label>
-                    <input type="text" value={profileForm.regNumber} onChange={(e) => setProfileForm({ ...profileForm, regNumber: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.regNumber}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          regNumber: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Roll Number</label>
-                    <input type="text" value={profileForm.rollNumber} onChange={(e) => setProfileForm({ ...profileForm, rollNumber: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.rollNumber}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          rollNumber: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>School / College</label>
-                    <input type="text" value={profileForm.school} onChange={(e) => setProfileForm({ ...profileForm, school: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.school}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          school: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Department</label>
-                    <input type="text" value={profileForm.department} onChange={(e) => setProfileForm({ ...profileForm, department: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.department}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          department: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Section</label>
-                    <input type="text" value={profileForm.section} onChange={(e) => setProfileForm({ ...profileForm, section: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.section}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          section: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Contact Number</label>
-                    <input type="text" value={profileForm.contactNumber} onChange={(e) => setProfileForm({ ...profileForm, contactNumber: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.contactNumber}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          contactNumber: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Current Year</label>
-                    <input type="text" value={profileForm.currentYear} onChange={(e) => setProfileForm({ ...profileForm, currentYear: e.target.value })} required />
+                    <input
+                      type="text"
+                      value={profileForm.currentYear}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          currentYear: e.target.value,
+                        })
+                      }
+                      required
+                    />
                   </div>
                   <div className="form-group form-group-full">
                     <label>Primary Track of Interest</label>
-                    <select value={profileForm.interestedDomain} onChange={(e) => setProfileForm({ ...profileForm, interestedDomain: e.target.value })}>
-                      {DOMAIN_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                    <select
+                      value={profileForm.interestedDomain}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          interestedDomain: e.target.value,
+                        })
+                      }
+                    >
+                      {DOMAIN_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
-                  <button type="submit" className="btn btn-primary">SAVE CHANGES</button>
-                  <button type="button" onClick={() => setEditingProfile(false)} className="btn btn-secondary">CANCEL</button>
+                <div
+                  style={{ display: "flex", gap: "12px", marginTop: "20px" }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    SAVE CHANGES
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingProfile(false)}
+                    className="btn btn-secondary"
+                  >
+                    CANCEL
+                  </button>
                 </div>
               </form>
             )}
 
             {/* ADMIN ACCESS REQUEST */}
-            <div style={{ marginTop: '32px', background: '#ffffff', padding: '32px', border: '1px solid #DADADA', borderRadius: '12px' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#0A0A0A', marginBottom: '8px' }}>REQUEST ADMIN ACCESS</h3>
+            <div
+              style={{
+                marginTop: "32px",
+                background: "#ffffff",
+                padding: "32px",
+                border: "1px solid #DADADA",
+                borderRadius: "12px",
+              }}
+            >
+              <h3
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "16px",
+                  fontWeight: "900",
+                  color: "#0A0A0A",
+                  marginBottom: "8px",
+                }}
+              >
+                REQUEST ADMIN ACCESS
+              </h3>
 
               {!myAdminRequest && (
                 <>
-                  <p style={{ color: '#8A8A8A', fontSize: '13px', marginBottom: '16px' }}>
-                    Want to help run the club — create events, upload notes? Apply for admin access. A Super Admin reviews every request before it&apos;s granted.
+                  <p
+                    style={{
+                      color: "#8A8A8A",
+                      fontSize: "13px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    Want to help run the club — create events, upload notes?
+                    Apply for admin access. A Super Admin reviews every request
+                    before it&apos;s granted.
                   </p>
                   <form onSubmit={handleAdminRequestSubmit}>
                     <div className="form-group">
@@ -538,36 +1114,78 @@ export default function StudentPortalPage() {
                         value={adminReason}
                         onChange={(e) => setAdminReason(e.target.value)}
                         rows={3}
-                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #DADADA', borderRadius: '8px', fontFamily: 'inherit', fontSize: '14px', resize: 'vertical' }}
+                        style={{
+                          width: "100%",
+                          padding: "10px 12px",
+                          border: "1px solid #DADADA",
+                          borderRadius: "8px",
+                          fontFamily: "inherit",
+                          fontSize: "14px",
+                          resize: "vertical",
+                        }}
                         placeholder="e.g. I'd like to organize and run the workshops track."
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary" disabled={submittingAdminRequest} style={{ marginTop: '12px' }}>
-                      {submittingAdminRequest ? 'SUBMITTING…' : 'APPLY FOR ADMIN ACCESS'}
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={submittingAdminRequest}
+                      style={{ marginTop: "12px" }}
+                    >
+                      {submittingAdminRequest
+                        ? "SUBMITTING…"
+                        : "APPLY FOR ADMIN ACCESS"}
                     </button>
                   </form>
                 </>
               )}
 
-              {myAdminRequest && myAdminRequest.status === 'pending' && (
-                <p style={{ color: '#b45309', fontSize: '14px', fontWeight: '600' }}>
+              {myAdminRequest && myAdminRequest.status === "pending" && (
+                <p
+                  style={{
+                    color: "#b45309",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                  }}
+                >
                   ⏳ Your admin access request is awaiting Super Admin review.
                 </p>
               )}
 
-              {myAdminRequest && myAdminRequest.status === 'approved' && (
-                <p style={{ color: '#15803d', fontSize: '14px', fontWeight: '600' }}>
-                  ✓ Your admin access request was approved. Sign out and back in to switch to the Admin Console.
+              {myAdminRequest && myAdminRequest.status === "approved" && (
+                <p
+                  style={{
+                    color: "#15803d",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                  }}
+                >
+                  ✓ Your admin access request was approved. Sign out and back in
+                  to switch to the Admin Console.
                 </p>
               )}
 
-              {myAdminRequest && myAdminRequest.status === 'rejected' && (
+              {myAdminRequest && myAdminRequest.status === "rejected" && (
                 <>
-                  <p style={{ color: '#b91c1c', fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>
+                  <p
+                    style={{
+                      color: "#b91c1c",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      marginBottom: "12px",
+                    }}
+                  >
                     ✕ Your admin access request was declined.
                   </p>
-                  <button type="button" onClick={handleAdminRequestResubmit} className="btn btn-secondary" disabled={submittingAdminRequest}>
-                    {submittingAdminRequest ? 'RESUBMITTING…' : 'RESUBMIT REQUEST'}
+                  <button
+                    type="button"
+                    onClick={handleAdminRequestResubmit}
+                    className="btn btn-secondary"
+                    disabled={submittingAdminRequest}
+                  >
+                    {submittingAdminRequest
+                      ? "RESUBMITTING…"
+                      : "RESUBMIT REQUEST"}
                   </button>
                 </>
               )}

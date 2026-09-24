@@ -1,46 +1,76 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 const STATS = [
-  { num: '06', label: 'Operational Domains', detail: 'Covering HFT C++, AI time-series, derivatives SVI, and decentralized protocols.' },
-  { num: '450+', label: 'Guild Builders', detail: 'Active student researchers, engineers, and faculty advisors at Adamas University.' },
-  { num: '12+', label: 'Production Builds', detail: 'Open-source and audited repositories deployed to public testnets and research archives.' },
-  { num: '₹15M+', label: 'Simulated Volume', detail: 'Order-flow backtested and live paper-traded through empirical microstructure pipelines.' },
+  {
+    num: "06",
+    label: "Operational Domains",
+    detail:
+      "Covering HFT C++, AI time-series, derivatives SVI, and decentralized protocols.",
+  },
+  {
+    num: "450+",
+    label: "Guild Builders",
+    detail:
+      "Active student researchers, engineers, and faculty advisors at Adamas University.",
+  },
+  {
+    num: "12+",
+    label: "Production Builds",
+    detail:
+      "Open-source and audited repositories deployed to public testnets and research archives.",
+  },
+  {
+    num: "₹15M+",
+    label: "Simulated Volume",
+    detail:
+      "Order-flow backtested and live paper-traded through empirical microstructure pipelines.",
+  },
 ];
 
 const ADVANTAGES = [
   {
-    num: '01',
-    title: 'Institutional Quant Codebases',
-    statement: 'Production-grade C++ matching engines, lock-free ring buffers, and Solidity audit frameworks.',
-    detail: 'Members build, benchmark, and deploy real quantitative software using industry-grade development workflows rather than theoretical toy models.',
+    num: "01",
+    title: "Institutional Quant Codebases",
+    statement:
+      "Production-grade C++ matching engines, lock-free ring buffers, and Solidity audit frameworks.",
+    detail:
+      "Members build, benchmark, and deploy real quantitative software using industry-grade development workflows rather than theoretical toy models.",
   },
   {
-    num: '02',
-    title: 'High-Frequency Data Feeds',
-    statement: 'Nanosecond Level 2 order book ticks, market feeds, and dedicated GPU compute credits.',
-    detail: 'Direct access to institutional tick historical archives and compute clusters for empirical market microstructure research.',
+    num: "02",
+    title: "High-Frequency Data Feeds",
+    statement:
+      "Nanosecond Level 2 order book ticks, market feeds, and dedicated GPU compute credits.",
+    detail:
+      "Direct access to institutional tick historical archives and compute clusters for empirical market microstructure research.",
   },
   {
-    num: '03',
-    title: 'Industry Referral Pipeline',
-    statement: 'Direct technical mentorship and referral pipeline to leading algorithmic trading desks and venture labs.',
-    detail: 'Alumni practitioners and guest quants review student codebases and provide direct pathways into elite tech roles.',
+    num: "03",
+    title: "Industry Referral Pipeline",
+    statement:
+      "Direct technical mentorship and referral pipeline to leading algorithmic trading desks and venture labs.",
+    detail:
+      "Alumni practitioners and guest quants review student codebases and provide direct pathways into elite tech roles.",
   },
   {
-    num: '04',
-    title: 'National Hackathon Incubation',
-    statement: 'End-to-end technical incubation from initial mathematical formulation to live deployment.',
-    detail: 'Multi-championship track record across national Web3 and fintech hackathons with institutional support.',
+    num: "04",
+    title: "National Hackathon Incubation",
+    statement:
+      "End-to-end technical incubation from initial mathematical formulation to live deployment.",
+    detail:
+      "Multi-championship track record across national Web3 and fintech hackathons with institutional support.",
   },
 ];
 
 export default function CommunitiesSection() {
   return (
-    <section id="communities" className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]">
+    <section
+      id="communities"
+      className="relative w-full bg-[#FFFFFF] py-14 md:py-20 lg:py-24 border-b border-[#DADADA]"
+    >
       <div className="max-w-[1360px] mx-auto px-5 sm:px-8">
-        
         {/* Section Marker */}
         <div className="flex items-center justify-between pb-4 mb-8 sm:mb-10 border-b border-[#DADADA] font-mono text-[11px] text-[#6B6B6B] tracking-wider uppercase">
           <span>CONTROLLED ENGINEERING</span>
@@ -61,7 +91,10 @@ export default function CommunitiesSection() {
           </div>
           <div className="lg:col-span-6">
             <p className="text-base sm:text-lg text-[#4A4A4A] font-sans-body leading-relaxed font-light">
-              We operate as an applied research guild. Everything we do is structured around empirical rigor, production execution, and direct technical career mobility into quantitative finance and high-throughput engineering.
+              We operate as an applied research guild. Everything we do is
+              structured around empirical rigor, production execution, and
+              direct technical career mobility into quantitative finance and
+              high-throughput engineering.
             </p>
           </div>
         </div>
@@ -72,7 +105,7 @@ export default function CommunitiesSection() {
             <div
               key={idx}
               className="bg-[#F2F2F2] rounded-3xl p-8 border border-[#DADADA] hover:border-[#0A0A0A] transition-all duration-300 group"
-              style={{ boxShadow: '0 8px 24px rgba(30,30,30,0.03)' }}
+              style={{ boxShadow: "0 8px 24px rgba(30,30,30,0.03)" }}
             >
               <span className="font-serif text-6xl sm:text-7xl font-normal text-[#0A0A0A] block mb-4 transition-transform">
                 {stat.num}
@@ -110,7 +143,6 @@ export default function CommunitiesSection() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

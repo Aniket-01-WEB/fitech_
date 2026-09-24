@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { usePortal } from '@/context/PortalContext';
-import { useToast } from '@/components/layout/Toast';
-import { STATUS_LABEL } from '@/constants/statusLabels';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePortal } from "@/context/PortalContext";
+import { useToast } from "@/components/layout/Toast";
+import { STATUS_LABEL } from "@/constants/statusLabels";
 
 export default function AdminPortalPage() {
   const {
@@ -25,37 +25,37 @@ export default function AdminPortalPage() {
     resubmitNote,
     members,
     saveMember,
-    getRegisteredStudentsForEvent
+    getRegisteredStudentsForEvent,
   } = usePortal();
   const { notify, notifyError } = useToast();
 
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('events');
+  const [activeTab, setActiveTab] = useState("events");
 
   // Modal / Form state for events
   const [showEventForm, setShowEventForm] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
   const [eventForm, setEventForm] = useState({
-    title: '',
-    type: 'Summit',
-    time: '',
-    venue: '',
-    description: '',
-    banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)'
+    title: "",
+    type: "Summit",
+    time: "",
+    venue: "",
+    description: "",
+    banner: "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
   });
 
   // Notes Modal state
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [noteForm, setNoteForm] = useState({
-    title: '',
-    domain: 'Quantitative Finance & Algo Trading',
-    author: '',
-    fileType: 'PDF / Research Notes',
-    description: '',
-    topicsStr: 'Quant Models, Market Microstructure',
-    link: '',
-    fileName: '',
-    file: null
+    title: "",
+    domain: "Quantitative Finance & Algo Trading",
+    author: "",
+    fileType: "PDF / Research Notes",
+    description: "",
+    topicsStr: "Quant Models, Market Microstructure",
+    link: "",
+    fileName: "",
+    file: null,
   });
 
   // Inspector state
@@ -64,15 +64,15 @@ export default function AdminPortalPage() {
   // Recording form state
   const [showRecForm, setShowRecForm] = useState(false);
   const [recForm, setRecForm] = useState({
-    title: '',
-    type: 'Algo Workshop',
-    date: '',
-    duration: '',
-    speaker: '',
-    description: '',
-    videoUrl: '',
-    fileName: '',
-    file: null
+    title: "",
+    type: "Algo Workshop",
+    date: "",
+    duration: "",
+    speaker: "",
+    description: "",
+    videoUrl: "",
+    fileName: "",
+    file: null,
   });
   const [uploadingRec, setUploadingRec] = useState(false);
   const [uploadingNote, setUploadingNote] = useState(false);
@@ -80,21 +80,21 @@ export default function AdminPortalPage() {
   const handleRecFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    setRecForm(prev => ({ ...prev, fileName: file.name, file }));
+    setRecForm((prev) => ({ ...prev, fileName: file.name, file }));
   };
 
   // Sync redirect for non-admin
   useEffect(() => {
     if (!currentUser) {
-      router.push('/login');
-    } else if (currentUser.role === 'superadmin') {
-      router.push('/super-admin');
-    } else if (currentUser.role !== 'admin') {
-      router.push('/student-portal');
+      router.push("/login");
+    } else if (currentUser.role === "superadmin") {
+      router.push("/super-admin");
+    } else if (currentUser.role !== "admin") {
+      router.push("/student-portal");
     }
   }, [currentUser, router]);
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser || currentUser.role !== "admin") return null;
 
   const handleSaveEvent = async (e) => {
     e.preventDefault();
@@ -105,12 +105,19 @@ export default function AdminPortalPage() {
         await createEvent(eventForm);
       }
     } catch (err) {
-      notifyError(err, 'Failed to save event.');
+      notifyError(err, "Failed to save event.");
       return;
     }
     setShowEventForm(false);
     setEditingEventId(null);
-    setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' });
+    setEventForm({
+      title: "",
+      type: "Summit",
+      time: "",
+      venue: "",
+      description: "",
+      banner: "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
+    });
   };
 
   const handleEditEventClick = (evt) => {
@@ -121,7 +128,7 @@ export default function AdminPortalPage() {
       time: evt.time,
       venue: evt.venue,
       description: evt.description,
-      banner: evt.banner || 'linear-gradient(135deg, #0A0A0A, #0A0A0A)'
+      banner: evt.banner || "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
     });
     setShowEventForm(true);
   };
@@ -129,33 +136,39 @@ export default function AdminPortalPage() {
   const handleNoteFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    setNoteForm(prev => ({ ...prev, fileName: file.name, file }));
+    setNoteForm((prev) => ({ ...prev, fileName: file.name, file }));
   };
 
   const handleSaveNoteSubmit = async (e) => {
     e.preventDefault();
     if (!noteForm.file && !noteForm.link.trim()) {
-      notify('Attach a file or provide a link before uploading a note.', 'error');
+      notify(
+        "Attach a file or provide a link before uploading a note.",
+        "error",
+      );
       return;
     }
     const topics = noteForm.topicsStr
-      ? noteForm.topicsStr.split(',').map(t => t.trim()).filter(Boolean)
-      : ['General Notes'];
+      ? noteForm.topicsStr
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : ["General Notes"];
 
     setUploadingNote(true);
     try {
       await saveNote({
         title: noteForm.title,
         domain: noteForm.domain,
-        author: noteForm.author || (currentUser ? currentUser.email : 'Admin'),
+        author: noteForm.author || (currentUser ? currentUser.email : "Admin"),
         fileType: noteForm.fileType,
         description: noteForm.description,
         topics: topics,
         link: noteForm.link,
-        file: noteForm.file
+        file: noteForm.file,
       });
     } catch (err) {
-      notifyError(err, 'Failed to upload note.');
+      notifyError(err, "Failed to upload note.");
       setUploadingNote(false);
       return;
     }
@@ -163,83 +176,146 @@ export default function AdminPortalPage() {
 
     setShowNoteModal(false);
     setNoteForm({
-      title: '',
-      domain: 'Quantitative Finance & Algo Trading',
-      author: '',
-      fileType: 'PDF / Research Notes',
-      description: '',
-      topicsStr: 'Quant Models, Market Microstructure',
-      link: '',
-      fileName: '',
-      file: null
+      title: "",
+      domain: "Quantitative Finance & Algo Trading",
+      author: "",
+      fileType: "PDF / Research Notes",
+      description: "",
+      topicsStr: "Quant Models, Market Microstructure",
+      link: "",
+      fileName: "",
+      file: null,
     });
   };
 
   const handleSaveRec = async (e) => {
     e.preventDefault();
     if (!recForm.file && !recForm.videoUrl.trim()) {
-      notify('Attach a video file or provide a video link before saving.', 'error');
+      notify(
+        "Attach a video file or provide a video link before saving.",
+        "error",
+      );
       return;
     }
     setUploadingRec(true);
     try {
       await saveRecording(recForm);
     } catch (err) {
-      notifyError(err, 'Failed to save recording.');
+      notifyError(err, "Failed to save recording.");
       setUploadingRec(false);
       return;
     }
     setUploadingRec(false);
     setShowRecForm(false);
-    setRecForm({ title: '', type: 'Algo Workshop', date: '', duration: '', speaker: '', description: '', videoUrl: '', fileName: '', file: null });
+    setRecForm({
+      title: "",
+      type: "Algo Workshop",
+      date: "",
+      duration: "",
+      speaker: "",
+      description: "",
+      videoUrl: "",
+      fileName: "",
+      file: null,
+    });
   };
 
-  const registeredStudentsForSelectedEvent = inspectEventId ? getRegisteredStudentsForEvent(inspectEventId) : [];
-  const inspectEventObj = events.find(e => e.id === inspectEventId);
-  const memberList = (Object.values(members || {}) as any[]);
+  const registeredStudentsForSelectedEvent = inspectEventId
+    ? getRegisteredStudentsForEvent(inspectEventId)
+    : [];
+  const inspectEventObj = events.find((e) => e.id === inspectEventId);
+  const memberList = Object.values(members || {}) as any[];
   const notesList = notes || [];
 
   return (
-    <div className="portal-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+    <div
+      className="portal-page"
+      style={{ paddingTop: "100px", paddingBottom: "80px" }}
+    >
       <div className="container">
         {/* ADMIN HEADER - BLACK & WHITE THEME */}
         <div
           className="portal-header-card"
           style={{
-            background: '#0A0A0A',
-            color: '#ffffff',
-            padding: '36px 32px',
-            borderRadius: '16px',
-            marginBottom: '32px',
-            border: '1.5px solid #27272a',
-            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)'
+            background: "#0A0A0A",
+            color: "#ffffff",
+            padding: "36px 32px",
+            borderRadius: "16px",
+            marginBottom: "32px",
+            border: "1.5px solid #27272a",
+            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)",
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+              gap: "20px",
+            }}
+          >
             <div>
-              <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.5px', textTransform: 'uppercase', color: '#a1a1aa' }}>
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: "800",
+                  letterSpacing: "1.5px",
+                  textTransform: "uppercase",
+                  color: "#a1a1aa",
+                }}
+              >
                 ADMINISTRATIVE CONTROL CONSOLE
               </span>
-              <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(26px, 3.2vw, 38px)', fontWeight: '900', margin: '8px 0', letterSpacing: '-0.5px' }}>
+              <h1
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "clamp(26px, 3.2vw, 38px)",
+                  fontWeight: "900",
+                  margin: "8px 0",
+                  letterSpacing: "-0.5px",
+                }}
+              >
                 MATRIX CLUB ADMINISTRATION
               </h1>
-              <p style={{ color: '#a1a1aa', fontSize: '14px', margin: 0 }}>
-                Authenticated as: <strong style={{ color: '#ffffff' }}>{currentUser.name || currentUser.email}</strong>
-                {currentUser.name && <span style={{ color: '#71717a' }}> ({currentUser.email})</span>}
+              <p style={{ color: "#a1a1aa", fontSize: "14px", margin: 0 }}>
+                Authenticated as:{" "}
+                <strong style={{ color: "#ffffff" }}>
+                  {currentUser.name || currentUser.email}
+                </strong>
+                {currentUser.name && (
+                  <span style={{ color: "#71717a" }}>
+                    {" "}
+                    ({currentUser.email})
+                  </span>
+                )}
               </p>
             </div>
 
             {/* BUTTON CONTROLS: CREATE EVENT + UPLOAD NOTES */}
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <button
                 type="button"
                 onClick={() => {
                   setEditingEventId(null);
-                  setEventForm({ title: '', type: 'Summit', time: '', venue: '', description: '', banner: 'linear-gradient(135deg, #0A0A0A, #0A0A0A)' });
+                  setEventForm({
+                    title: "",
+                    type: "Summit",
+                    time: "",
+                    venue: "",
+                    description: "",
+                    banner: "linear-gradient(135deg, #0A0A0A, #0A0A0A)",
+                  });
                   setShowEventForm(true);
                 }}
                 className="admin-btn admin-btn-edit"
-                style={{ padding: '12px 20px', fontSize: '12px', background: '#ffffff', color: '#0A0A0A', border: '1.5px solid #ffffff' }}
+                style={{
+                  padding: "12px 20px",
+                  fontSize: "12px",
+                  background: "#ffffff",
+                  color: "#0A0A0A",
+                  border: "1.5px solid #ffffff",
+                }}
               >
                 + CREATE NEW EVENT
               </button>
@@ -248,25 +324,25 @@ export default function AdminPortalPage() {
                 type="button"
                 onClick={() => {
                   setNoteForm({
-                    title: '',
-                    domain: 'Quantitative Finance & Algo Trading',
-                    author: 'Admin / Lead Strategist',
-                    fileType: 'PDF / Research Notes',
-                    description: '',
-                    topicsStr: 'Quant Models, Market Microstructure',
-                    link: '',
-                    fileName: '',
-                    file: null
+                    title: "",
+                    domain: "Quantitative Finance & Algo Trading",
+                    author: "Admin / Lead Strategist",
+                    fileType: "PDF / Research Notes",
+                    description: "",
+                    topicsStr: "Quant Models, Market Microstructure",
+                    link: "",
+                    fileName: "",
+                    file: null,
                   });
                   setShowNoteModal(true);
                 }}
                 className="admin-btn"
                 style={{
-                  padding: '12px 20px',
-                  fontSize: '12px',
-                  background: 'transparent',
-                  color: '#ffffff',
-                  border: '1.5px solid #ffffff'
+                  padding: "12px 20px",
+                  fontSize: "12px",
+                  background: "transparent",
+                  color: "#ffffff",
+                  border: "1.5px solid #ffffff",
                 }}
               >
                 + UPLOAD NOTES
@@ -276,44 +352,64 @@ export default function AdminPortalPage() {
         </div>
 
         {/* TABS - MONOCHROME SWITCHER */}
-        <div className="portal-role-switch" style={{ marginBottom: '32px' }}>
+        <div className="portal-role-switch" style={{ marginBottom: "32px" }}>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'events' ? 'active' : ''}`}
-            onClick={() => setActiveTab('events')}
-            style={activeTab === 'events' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
+            className={`portal-role-tab ${activeTab === "events" ? "active" : ""}`}
+            onClick={() => setActiveTab("events")}
+            style={
+              activeTab === "events"
+                ? { background: "#0A0A0A", color: "#ffffff" }
+                : { color: "#0A0A0A" }
+            }
           >
             EVENTS MANAGEMENT ({events.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'notes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notes')}
-            style={activeTab === 'notes' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
+            className={`portal-role-tab ${activeTab === "notes" ? "active" : ""}`}
+            onClick={() => setActiveTab("notes")}
+            style={
+              activeTab === "notes"
+                ? { background: "#0A0A0A", color: "#ffffff" }
+                : { color: "#0A0A0A" }
+            }
           >
             NOTES & STUDY MATERIAL ({notesList.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'inspector' ? 'active' : ''}`}
-            onClick={() => setActiveTab('inspector')}
-            style={activeTab === 'inspector' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
+            className={`portal-role-tab ${activeTab === "inspector" ? "active" : ""}`}
+            onClick={() => setActiveTab("inspector")}
+            style={
+              activeTab === "inspector"
+                ? { background: "#0A0A0A", color: "#ffffff" }
+                : { color: "#0A0A0A" }
+            }
           >
             STUDENT REGISTRATION INSPECTOR
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'members' ? 'active' : ''}`}
-            onClick={() => setActiveTab('members')}
-            style={activeTab === 'members' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
+            className={`portal-role-tab ${activeTab === "members" ? "active" : ""}`}
+            onClick={() => setActiveTab("members")}
+            style={
+              activeTab === "members"
+                ? { background: "#0A0A0A", color: "#ffffff" }
+                : { color: "#0A0A0A" }
+            }
           >
             MEMBER DIRECTORY ({memberList.length})
           </button>
           <button
             type="button"
-            className={`portal-role-tab ${activeTab === 'recordings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('recordings')}
-            style={activeTab === 'recordings' ? { background: '#0A0A0A', color: '#ffffff' } : { color: '#0A0A0A' }}
+            className={`portal-role-tab ${activeTab === "recordings" ? "active" : ""}`}
+            onClick={() => setActiveTab("recordings")}
+            style={
+              activeTab === "recordings"
+                ? { background: "#0A0A0A", color: "#ffffff" }
+                : { color: "#0A0A0A" }
+            }
           >
             RECORDINGS ({recordings.length})
           </button>
@@ -321,23 +417,78 @@ export default function AdminPortalPage() {
 
         {/* CREATE / EDIT EVENT FORM MODAL */}
         {showEventForm && (
-          <div className="portal-detail-backdrop active" onClick={(e) => { if (e.target === e.currentTarget) setShowEventForm(false); }}>
-            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #0A0A0A', background: '#ffffff' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #0A0A0A', paddingBottom: '12px' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
-                  {editingEventId ? 'EDIT EVENT DETAILS' : 'CREATE NEW CLUB EVENT'}
+          <div
+            className="portal-detail-backdrop active"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowEventForm(false);
+            }}
+          >
+            <div
+              className="portal-detail-dialog"
+              style={{
+                maxWidth: "640px",
+                padding: "32px",
+                borderRadius: "16px",
+                border: "2px solid #0A0A0A",
+                background: "#ffffff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  borderBottom: "1.5px solid #0A0A0A",
+                  paddingBottom: "12px",
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "20px",
+                    fontWeight: "900",
+                    margin: 0,
+                    color: "#0A0A0A",
+                  }}
+                >
+                  {editingEventId
+                    ? "EDIT EVENT DETAILS"
+                    : "CREATE NEW CLUB EVENT"}
                 </h3>
-                <button type="button" onClick={() => setShowEventForm(false)} className="join-modal-close">×</button>
+                <button
+                  type="button"
+                  onClick={() => setShowEventForm(false)}
+                  className="join-modal-close"
+                >
+                  ×
+                </button>
               </div>
 
               <form onSubmit={handleSaveEvent} className="form-grid">
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Event Title</label>
-                  <input type="text" value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Event Title
+                  </label>
+                  <input
+                    type="text"
+                    value={eventForm.title}
+                    onChange={(e) =>
+                      setEventForm({ ...eventForm, title: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Category / Type</label>
-                  <select value={eventForm.type} onChange={(e) => setEventForm({ ...eventForm, type: e.target.value })}>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Category / Type
+                  </label>
+                  <select
+                    value={eventForm.type}
+                    onChange={(e) =>
+                      setEventForm({ ...eventForm, type: e.target.value })
+                    }
+                  >
                     <option value="Summit">Summit</option>
                     <option value="Workshop">Workshop</option>
                     <option value="Hackathon">Hackathon</option>
@@ -347,20 +498,61 @@ export default function AdminPortalPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Date & Time</label>
-                  <input type="text" value={eventForm.time} onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })} placeholder="Mar 20, 2026 • 3:00 PM" required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Date & Time
+                  </label>
+                  <input
+                    type="text"
+                    value={eventForm.time}
+                    onChange={(e) =>
+                      setEventForm({ ...eventForm, time: e.target.value })
+                    }
+                    placeholder="Mar 20, 2026 • 3:00 PM"
+                    required
+                  />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Venue / Location</label>
-                  <input type="text" value={eventForm.venue} onChange={(e) => setEventForm({ ...eventForm, venue: e.target.value })} placeholder="Auditorium B / Lab 301" required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Venue / Location
+                  </label>
+                  <input
+                    type="text"
+                    value={eventForm.venue}
+                    onChange={(e) =>
+                      setEventForm({ ...eventForm, venue: e.target.value })
+                    }
+                    placeholder="Auditorium B / Lab 301"
+                    required
+                  />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Full Description</label>
-                  <textarea rows={4} value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Full Description
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={eventForm.description}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        description: e.target.value,
+                      })
+                    }
+                    required
+                  />
                 </div>
-                <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '16px' }}>
-                  <button type="submit" className="admin-btn admin-btn-inspect" style={{ width: '100%', padding: '14px', fontSize: '13px' }}>
-                    {editingEventId ? 'SAVE EVENT CHANGES →' : 'SUBMIT FOR SUPER ADMIN APPROVAL →'}
+                <div
+                  className="form-actions"
+                  style={{ gridColumn: "1 / -1", marginTop: "16px" }}
+                >
+                  <button
+                    type="submit"
+                    className="admin-btn admin-btn-inspect"
+                    style={{ width: "100%", padding: "14px", fontSize: "13px" }}
+                  >
+                    {editingEventId
+                      ? "SAVE EVENT CHANGES →"
+                      : "SUBMIT FOR SUPER ADMIN APPROVAL →"}
                   </button>
                 </div>
               </form>
@@ -370,95 +562,215 @@ export default function AdminPortalPage() {
 
         {/* UPLOAD NOTES MODAL */}
         {showNoteModal && (
-          <div className="portal-detail-backdrop active" onClick={(e) => { if (e.target === e.currentTarget) setShowNoteModal(false); }}>
-            <div className="portal-detail-dialog" style={{ maxWidth: '640px', padding: '32px', borderRadius: '16px', border: '2px solid #0A0A0A', background: '#ffffff' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1.5px solid #0A0A0A', paddingBottom: '12px' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
+          <div
+            className="portal-detail-backdrop active"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowNoteModal(false);
+            }}
+          >
+            <div
+              className="portal-detail-dialog"
+              style={{
+                maxWidth: "640px",
+                padding: "32px",
+                borderRadius: "16px",
+                border: "2px solid #0A0A0A",
+                background: "#ffffff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  borderBottom: "1.5px solid #0A0A0A",
+                  paddingBottom: "12px",
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "20px",
+                    fontWeight: "900",
+                    margin: 0,
+                    color: "#0A0A0A",
+                  }}
+                >
                   UPLOAD CLUB NOTES & STUDY MATERIAL
                 </h3>
-                <button type="button" onClick={() => setShowNoteModal(false)} className="join-modal-close">×</button>
+                <button
+                  type="button"
+                  onClick={() => setShowNoteModal(false)}
+                  className="join-modal-close"
+                >
+                  ×
+                </button>
               </div>
 
               <form onSubmit={handleSaveNoteSubmit} className="form-grid">
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Document / Notes Title</label>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Document / Notes Title
+                  </label>
                   <input
                     type="text"
                     value={noteForm.title}
-                    onChange={(e) => setNoteForm({ ...noteForm, title: e.target.value })}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, title: e.target.value })
+                    }
                     placeholder="e.g. Quantitative Market Making & Order Book Mechanics"
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Academic Domain</label>
-                  <select value={noteForm.domain} onChange={(e) => setNoteForm({ ...noteForm, domain: e.target.value })}>
-                    <option value="Quantitative Finance & Algo Trading">Quantitative Finance & Algo Trading</option>
-                    <option value="DeFi & Blockchain Infrastructure">DeFi & Blockchain Infrastructure</option>
-                    <option value="AI & Machine Learning in Finance">AI & Machine Learning in Finance</option>
-                    <option value="Risk Analytics & Economic Modeling">Risk Analytics & Economic Modeling</option>
-                    <option value="High-Frequency Trading & Systems">High-Frequency Trading & Systems</option>
-                    <option value="Venture Capital & Fintech Sandbox">Venture Capital & Fintech Sandbox</option>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Academic Domain
+                  </label>
+                  <select
+                    value={noteForm.domain}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, domain: e.target.value })
+                    }
+                  >
+                    <option value="Quantitative Finance & Algo Trading">
+                      Quantitative Finance & Algo Trading
+                    </option>
+                    <option value="DeFi & Blockchain Infrastructure">
+                      DeFi & Blockchain Infrastructure
+                    </option>
+                    <option value="AI & Machine Learning in Finance">
+                      AI & Machine Learning in Finance
+                    </option>
+                    <option value="Risk Analytics & Economic Modeling">
+                      Risk Analytics & Economic Modeling
+                    </option>
+                    <option value="High-Frequency Trading & Systems">
+                      High-Frequency Trading & Systems
+                    </option>
+                    <option value="Venture Capital & Fintech Sandbox">
+                      Venture Capital & Fintech Sandbox
+                    </option>
                   </select>
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Format / File Type</label>
-                  <select value={noteForm.fileType} onChange={(e) => setNoteForm({ ...noteForm, fileType: e.target.value })}>
-                    <option value="PDF / Mathematical Guide">PDF / Mathematical Guide</option>
-                    <option value="Formula Sheet / Cheat Sheet">Formula Sheet / Cheat Sheet</option>
-                    <option value="Technical Architecture Doc">Technical Architecture Doc</option>
-                    <option value="Jupyter Notebook / Code Walkthrough">Jupyter Notebook / Code Walkthrough</option>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Format / File Type
+                  </label>
+                  <select
+                    value={noteForm.fileType}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, fileType: e.target.value })
+                    }
+                  >
+                    <option value="PDF / Mathematical Guide">
+                      PDF / Mathematical Guide
+                    </option>
+                    <option value="Formula Sheet / Cheat Sheet">
+                      Formula Sheet / Cheat Sheet
+                    </option>
+                    <option value="Technical Architecture Doc">
+                      Technical Architecture Doc
+                    </option>
+                    <option value="Jupyter Notebook / Code Walkthrough">
+                      Jupyter Notebook / Code Walkthrough
+                    </option>
                   </select>
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Author / Instructor Name</label>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Author / Instructor Name
+                  </label>
                   <input
                     type="text"
                     value={noteForm.author}
-                    onChange={(e) => setNoteForm({ ...noteForm, author: e.target.value })}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, author: e.target.value })
+                    }
                     placeholder="Admin / Dr. Vikram Sethi / Quant Research Lead"
                     required
                   />
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Key Topics Covered (Comma separated)</label>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Key Topics Covered (Comma separated)
+                  </label>
                   <input
                     type="text"
                     value={noteForm.topicsStr}
-                    onChange={(e) => setNoteForm({ ...noteForm, topicsStr: e.target.value })}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, topicsStr: e.target.value })
+                    }
                     placeholder="e.g. Mean-Variance, Covariance, Black-Scholes PDE, Python Scipy"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Upload File (PDF, DOC, image…)</label>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Upload File (PDF, DOC, image…)
+                  </label>
                   <input type="file" onChange={handleNoteFileChange} />
-                  {noteForm.fileName && <span style={{ fontSize: '12px', color: '#0A0A0A', marginTop: '4px', display: 'block' }}>Attached: {noteForm.fileName}</span>}
+                  {noteForm.fileName && (
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        color: "#0A0A0A",
+                        marginTop: "4px",
+                        display: "block",
+                      }}
+                    >
+                      Attached: {noteForm.fileName}
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Or External Link (Google Drive / URL — optional if a file is attached)</label>
-                  <input type="url" value={noteForm.link} onChange={(e) => setNoteForm({ ...noteForm, link: e.target.value })} placeholder="https://drive.google.com/..." />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Or External Link (Google Drive / URL — optional if a file is
+                    attached)
+                  </label>
+                  <input
+                    type="url"
+                    value={noteForm.link}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, link: e.target.value })
+                    }
+                    placeholder="https://drive.google.com/..."
+                  />
                 </div>
 
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Notes Summary & Key Formulas</label>
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Notes Summary & Key Formulas
+                  </label>
                   <textarea
                     rows={4}
                     value={noteForm.description}
-                    onChange={(e) => setNoteForm({ ...noteForm, description: e.target.value })}
+                    onChange={(e) =>
+                      setNoteForm({ ...noteForm, description: e.target.value })
+                    }
                     placeholder="Provide a comprehensive summary of equations, proofs, and code implementations covered in this document..."
                     required
                   />
                 </div>
 
-                <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '16px' }}>
-                  <button type="submit" className="admin-btn admin-btn-inspect" style={{ width: '100%', padding: '14px', fontSize: '13px' }} disabled={uploadingNote}>
-                    {uploadingNote ? 'UPLOADING…' : 'SUBMIT FOR SUPER ADMIN APPROVAL →'}
+                <div
+                  className="form-actions"
+                  style={{ gridColumn: "1 / -1", marginTop: "16px" }}
+                >
+                  <button
+                    type="submit"
+                    className="admin-btn admin-btn-inspect"
+                    style={{ width: "100%", padding: "14px", fontSize: "13px" }}
+                    disabled={uploadingNote}
+                  >
+                    {uploadingNote
+                      ? "UPLOADING…"
+                      : "SUBMIT FOR SUPER ADMIN APPROVAL →"}
                   </button>
                 </div>
               </form>
@@ -467,14 +779,21 @@ export default function AdminPortalPage() {
         )}
 
         {/* TAB 1: EVENTS MANAGEMENT WITH PROPERLY ALIGNED BUTTONS */}
-        {activeTab === 'events' && (
+        {activeTab === "events" && (
           <div>
             <div className="admin-card-container">
-              {events.map(evt => (
+              {events.map((evt) => (
                 <div key={evt.id} className="admin-event-card">
                   <div className="admin-card-top-content">
-                    <span className={`status-pill ${evt.status || 'approved'}`}>{STATUS_LABEL[evt.status || 'approved']}</span>
-                    <span className="admin-badge-type" style={{ marginTop: '8px' }}>{evt.type}</span>
+                    <span className={`status-pill ${evt.status || "approved"}`}>
+                      {STATUS_LABEL[evt.status || "approved"]}
+                    </span>
+                    <span
+                      className="admin-badge-type"
+                      style={{ marginTop: "8px" }}
+                    >
+                      {evt.type}
+                    </span>
                     <h3 className="admin-event-title">{evt.title}</h3>
                     <p className="admin-event-desc">{evt.description}</p>
                   </div>
@@ -491,7 +810,7 @@ export default function AdminPortalPage() {
                         type="button"
                         onClick={() => {
                           setInspectEventId(evt.id);
-                          setActiveTab('inspector');
+                          setActiveTab("inspector");
                         }}
                         className="admin-btn admin-btn-inspect"
                       >
@@ -504,10 +823,12 @@ export default function AdminPortalPage() {
                       >
                         EDIT
                       </button>
-                      {evt.status === 'rejected' && (
+                      {evt.status === "rejected" && (
                         <button
                           type="button"
-                          onClick={() => resubmitEvent(evt.id).catch(notifyError)}
+                          onClick={() =>
+                            resubmitEvent(evt.id).catch(notifyError)
+                          }
                           className="admin-btn admin-btn-edit"
                         >
                           RESUBMIT
@@ -515,7 +836,10 @@ export default function AdminPortalPage() {
                       )}
                       <button
                         type="button"
-                        onClick={() => { if (confirm('Delete this event?')) deleteEvent(evt.id).catch(notifyError); }}
+                        onClick={() => {
+                          if (confirm("Delete this event?"))
+                            deleteEvent(evt.id).catch(notifyError);
+                        }}
                         className="admin-btn admin-btn-delete"
                       >
                         DELETE
@@ -529,15 +853,39 @@ export default function AdminPortalPage() {
         )}
 
         {/* TAB 2: NOTES & STUDY MATERIAL */}
-        {activeTab === 'notes' && (
+        {activeTab === "notes" && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "24px",
+                flexWrap: "wrap",
+                gap: "16px",
+              }}
+            >
               <div>
-                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "24px",
+                    fontWeight: "900",
+                    margin: 0,
+                    color: "#0A0A0A",
+                  }}
+                >
                   STUDY MATERIAL & QUANTITATIVE NOTES REPOSITORY
                 </h2>
-                <p style={{ color: '#8A8A8A', fontSize: '13px', margin: '4px 0 0 0' }}>
-                  Manage and publish mathematical guides, formula sheets, and code notes for club members.
+                <p
+                  style={{
+                    color: "#8A8A8A",
+                    fontSize: "13px",
+                    margin: "4px 0 0 0",
+                  }}
+                >
+                  Manage and publish mathematical guides, formula sheets, and
+                  code notes for club members.
                 </p>
               </div>
 
@@ -545,76 +893,137 @@ export default function AdminPortalPage() {
                 type="button"
                 onClick={() => {
                   setNoteForm({
-                    title: '',
-                    domain: 'Quantitative Finance & Algo Trading',
-                    author: 'Admin / Lead Strategist',
-                    fileType: 'PDF / Research Notes',
-                    description: '',
-                    topicsStr: 'Quant Models, Market Microstructure',
-                    link: '',
-                    fileName: '',
-                    file: null
+                    title: "",
+                    domain: "Quantitative Finance & Algo Trading",
+                    author: "Admin / Lead Strategist",
+                    fileType: "PDF / Research Notes",
+                    description: "",
+                    topicsStr: "Quant Models, Market Microstructure",
+                    link: "",
+                    fileName: "",
+                    file: null,
                   });
                   setShowNoteModal(true);
                 }}
                 className="admin-btn admin-btn-inspect"
-                style={{ padding: '10px 18px' }}
+                style={{ padding: "10px 18px" }}
               >
                 + UPLOAD NEW NOTES
               </button>
             </div>
 
             <div className="admin-card-container">
-              {notesList.map(note => (
+              {notesList.map((note) => (
                 <div key={note.id} className="admin-note-card">
                   <div>
                     <div className="admin-note-header">
-                      <span className={`status-pill ${note.status || 'approved'}`}>{STATUS_LABEL[note.status || 'approved']}</span>
+                      <span
+                        className={`status-pill ${note.status || "approved"}`}
+                      >
+                        {STATUS_LABEL[note.status || "approved"]}
+                      </span>
                     </div>
-                    <div className="admin-note-header" style={{ marginTop: '6px' }}>
+                    <div
+                      className="admin-note-header"
+                      style={{ marginTop: "6px" }}
+                    >
                       <span className="admin-badge-type">{note.domain}</span>
-                      <span style={{ fontSize: '11px', fontWeight: '700', color: '#8A8A8A' }}>{note.fileType}</span>
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          fontWeight: "700",
+                          color: "#8A8A8A",
+                        }}
+                      >
+                        {note.fileType}
+                      </span>
                     </div>
 
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#0A0A0A', margin: '0 0 8px 0', lineHeight: '1.3' }}>
+                    <h3
+                      style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "20px",
+                        fontWeight: "800",
+                        color: "#0A0A0A",
+                        margin: "0 0 8px 0",
+                        lineHeight: "1.3",
+                      }}
+                    >
                       {note.title}
                     </h3>
-                    <p style={{ fontSize: '12px', fontWeight: '700', color: '#334155', margin: '0 0 10px 0' }}>
-                      ✍️ {note.uploadedBy} • 📅 {new Date(note.uploadedAt).toLocaleDateString()}
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "700",
+                        color: "#334155",
+                        margin: "0 0 10px 0",
+                      }}
+                    >
+                      ✍️ {note.uploadedBy} • 📅{" "}
+                      {new Date(note.uploadedAt).toLocaleDateString()}
                     </p>
-                    <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: '1.55', margin: 0 }}>
+                    <p
+                      style={{
+                        fontSize: "13.5px",
+                        color: "#475569",
+                        lineHeight: "1.55",
+                        margin: 0,
+                      }}
+                    >
                       {note.description}
                     </p>
 
                     <div className="admin-note-tags">
-                      {note.topics && note.topics.map((t, idx) => (
-                        <span key={idx} className="admin-note-tag-pill">✦ {t}</span>
-                      ))}
+                      {note.topics &&
+                        note.topics.map((t, idx) => (
+                          <span key={idx} className="admin-note-tag-pill">
+                            ✦ {t}
+                          </span>
+                        ))}
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #DADADA' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      marginTop: "20px",
+                      paddingTop: "16px",
+                      borderTop: "1px solid #DADADA",
+                    }}
+                  >
                     <button
                       type="button"
                       onClick={() => {
                         if (note.fileData) {
-                          const a = document.createElement('a');
+                          const a = document.createElement("a");
                           a.href = note.fileData;
                           a.download = note.fileName || `${note.title}.pdf`;
                           document.body.appendChild(a);
                           a.click();
                           document.body.removeChild(a);
                         } else if (note.link) {
-                          window.open(note.link, '_blank', 'noopener,noreferrer');
+                          window.open(
+                            note.link,
+                            "_blank",
+                            "noopener,noreferrer",
+                          );
                         }
                       }}
                       disabled={!note.fileData && !note.link}
                       className="admin-btn admin-btn-inspect"
-                      style={{ flex: 1, opacity: (note.fileData || note.link) ? 1 : 0.5, cursor: (note.fileData || note.link) ? 'pointer' : 'not-allowed' }}
+                      style={{
+                        flex: 1,
+                        opacity: note.fileData || note.link ? 1 : 0.5,
+                        cursor:
+                          note.fileData || note.link
+                            ? "pointer"
+                            : "not-allowed",
+                      }}
                     >
                       VIEW / DOWNLOAD NOTE ↗
                     </button>
-                    {note.status === 'rejected' && (
+                    {note.status === "rejected" && (
                       <button
                         type="button"
                         onClick={() => resubmitNote(note.id).catch(notifyError)}
@@ -625,7 +1034,10 @@ export default function AdminPortalPage() {
                     )}
                     <button
                       type="button"
-                      onClick={() => { if (confirm('Delete this note?')) deleteNote(note.id).catch(notifyError); }}
+                      onClick={() => {
+                        if (confirm("Delete this note?"))
+                          deleteNote(note.id).catch(notifyError);
+                      }}
                       className="admin-btn admin-btn-delete"
                     >
                       DELETE
@@ -638,57 +1050,134 @@ export default function AdminPortalPage() {
         )}
 
         {/* TAB 3: REGISTERED STUDENTS INSPECTOR */}
-        {activeTab === 'inspector' && (
+        {activeTab === "inspector" && (
           <div>
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#0A0A0A', marginBottom: '8px' }}>
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                  color: "#0A0A0A",
+                  marginBottom: "8px",
+                }}
+              >
                 SELECT EVENT TO INSPECT REGISTERED MEMBERS:
               </label>
               <select
-                value={inspectEventId || ''}
+                value={inspectEventId || ""}
                 onChange={(e) => setInspectEventId(e.target.value)}
-                style={{ width: '100%', maxWidth: '480px', padding: '12px', borderRadius: '8px', border: '1.5px solid #0A0A0A', fontFamily: 'inherit', fontWeight: '600', background: '#ffffff', color: '#0A0A0A' }}
+                style={{
+                  width: "100%",
+                  maxWidth: "480px",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1.5px solid #0A0A0A",
+                  fontFamily: "inherit",
+                  fontWeight: "600",
+                  background: "#ffffff",
+                  color: "#0A0A0A",
+                }}
               >
                 <option value="">-- Choose Event --</option>
-                {events.map(evt => (
-                  <option key={evt.id} value={evt.id}>{evt.title} ({evt.time})</option>
+                {events.map((evt) => (
+                  <option key={evt.id} value={evt.id}>
+                    {evt.title} ({evt.time})
+                  </option>
                 ))}
               </select>
             </div>
 
             {inspectEventObj ? (
-              <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A' }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '4px', color: '#0A0A0A' }}>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "24px",
+                  borderRadius: "12px",
+                  border: "1.5px solid #0A0A0A",
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "20px",
+                    fontWeight: "900",
+                    marginBottom: "4px",
+                    color: "#0A0A0A",
+                  }}
+                >
                   {inspectEventObj.title}
                 </h3>
-                <p style={{ color: '#8A8A8A', fontSize: '13px', marginBottom: '20px' }}>
-                  Total Registered Students: <strong style={{ color: '#0A0A0A' }}>{registeredStudentsForSelectedEvent.length}</strong>
+                <p
+                  style={{
+                    color: "#8A8A8A",
+                    fontSize: "13px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Total Registered Students:{" "}
+                  <strong style={{ color: "#0A0A0A" }}>
+                    {registeredStudentsForSelectedEvent.length}
+                  </strong>
                 </p>
 
                 {registeredStudentsForSelectedEvent.length === 0 ? (
-                  <p style={{ color: '#8A8A8A', fontStyle: 'italic' }}>No students registered for this event yet.</p>
+                  <p style={{ color: "#8A8A8A", fontStyle: "italic" }}>
+                    No students registered for this event yet.
+                  </p>
                 ) : (
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+                  <div style={{ overflowX: "auto" }}>
+                    <table
+                      style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        fontSize: "13px",
+                        textAlign: "left",
+                      }}
+                    >
                       <thead>
-                        <tr style={{ background: '#0A0A0A', color: '#ffffff', borderBottom: '2px solid #0A0A0A' }}>
-                          <th style={{ padding: '12px' }}>NAME</th>
-                          <th style={{ padding: '12px' }}>ROLL NO.</th>
-                          <th style={{ padding: '12px' }}>REG NO.</th>
-                          <th style={{ padding: '12px' }}>DEPARTMENT & YEAR</th>
-                          <th style={{ padding: '12px' }}>CONTACT</th>
-                          <th style={{ padding: '12px' }}>GMAIL</th>
+                        <tr
+                          style={{
+                            background: "#0A0A0A",
+                            color: "#ffffff",
+                            borderBottom: "2px solid #0A0A0A",
+                          }}
+                        >
+                          <th style={{ padding: "12px" }}>NAME</th>
+                          <th style={{ padding: "12px" }}>ROLL NO.</th>
+                          <th style={{ padding: "12px" }}>REG NO.</th>
+                          <th style={{ padding: "12px" }}>DEPARTMENT & YEAR</th>
+                          <th style={{ padding: "12px" }}>CONTACT</th>
+                          <th style={{ padding: "12px" }}>GMAIL</th>
                         </tr>
                       </thead>
                       <tbody>
                         {registeredStudentsForSelectedEvent.map((st, idx) => (
-                          <tr key={idx} style={{ borderBottom: '1px solid #DADADA', background: idx % 2 === 0 ? '#ffffff' : '#F2F2F2' }}>
-                            <td style={{ padding: '12px', fontWeight: '700', color: '#0A0A0A' }}>{st.name}</td>
-                            <td style={{ padding: '12px' }}>{st.rollNumber}</td>
-                            <td style={{ padding: '12px' }}>{st.regNumber}</td>
-                            <td style={{ padding: '12px' }}>{st.department} ({st.currentYear})</td>
-                            <td style={{ padding: '12px' }}>{st.contactNumber}</td>
-                            <td style={{ padding: '12px' }}>{st.gmail}</td>
+                          <tr
+                            key={idx}
+                            style={{
+                              borderBottom: "1px solid #DADADA",
+                              background: idx % 2 === 0 ? "#ffffff" : "#F2F2F2",
+                            }}
+                          >
+                            <td
+                              style={{
+                                padding: "12px",
+                                fontWeight: "700",
+                                color: "#0A0A0A",
+                              }}
+                            >
+                              {st.name}
+                            </td>
+                            <td style={{ padding: "12px" }}>{st.rollNumber}</td>
+                            <td style={{ padding: "12px" }}>{st.regNumber}</td>
+                            <td style={{ padding: "12px" }}>
+                              {st.department} ({st.currentYear})
+                            </td>
+                            <td style={{ padding: "12px" }}>
+                              {st.contactNumber}
+                            </td>
+                            <td style={{ padding: "12px" }}>{st.gmail}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -697,36 +1186,82 @@ export default function AdminPortalPage() {
                 )}
               </div>
             ) : (
-              <p style={{ color: '#8A8A8A' }}>Select an event above to inspect student details.</p>
+              <p style={{ color: "#8A8A8A" }}>
+                Select an event above to inspect student details.
+              </p>
             )}
           </div>
         )}
 
         {/* TAB 4: MEMBER DIRECTORY */}
-        {activeTab === 'members' && (
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', marginBottom: '20px', color: '#0A0A0A' }}>
+        {activeTab === "members" && (
+          <div
+            style={{
+              background: "#ffffff",
+              padding: "24px",
+              borderRadius: "12px",
+              border: "1.5px solid #0A0A0A",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "20px",
+                fontWeight: "900",
+                marginBottom: "20px",
+                color: "#0A0A0A",
+              }}
+            >
               REGISTERED MEMBERS DIRECTORY
             </h3>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: "13px",
+                  textAlign: "left",
+                }}
+              >
                 <thead>
-                  <tr style={{ background: '#0A0A0A', color: '#ffffff', borderBottom: '2px solid #0A0A0A' }}>
-                    <th style={{ padding: '12px' }}>NAME</th>
-                    <th style={{ padding: '12px' }}>ROLL / REG NO.</th>
-                    <th style={{ padding: '12px' }}>SCHOOL / DEPT</th>
-                    <th style={{ padding: '12px' }}>TRACK INTEREST</th>
-                    <th style={{ padding: '12px' }}>CONTACT GMAIL</th>
+                  <tr
+                    style={{
+                      background: "#0A0A0A",
+                      color: "#ffffff",
+                      borderBottom: "2px solid #0A0A0A",
+                    }}
+                  >
+                    <th style={{ padding: "12px" }}>NAME</th>
+                    <th style={{ padding: "12px" }}>ROLL / REG NO.</th>
+                    <th style={{ padding: "12px" }}>SCHOOL / DEPT</th>
+                    <th style={{ padding: "12px" }}>TRACK INTEREST</th>
+                    <th style={{ padding: "12px" }}>CONTACT GMAIL</th>
                   </tr>
                 </thead>
                 <tbody>
                   {memberList.map((m, idx) => (
-                    <tr key={idx} style={{ borderBottom: '1px solid #DADADA', background: idx % 2 === 0 ? '#ffffff' : '#F2F2F2' }}>
-                      <td style={{ padding: '12px', fontWeight: '700', color: '#0A0A0A' }}>{m.name}</td>
-                      <td style={{ padding: '12px' }}>{m.rollNumber} / {m.regNumber}</td>
-                      <td style={{ padding: '12px' }}>{m.department}</td>
-                      <td style={{ padding: '12px' }}>{m.interestedDomain}</td>
-                      <td style={{ padding: '12px' }}>{m.gmail}</td>
+                    <tr
+                      key={idx}
+                      style={{
+                        borderBottom: "1px solid #DADADA",
+                        background: idx % 2 === 0 ? "#ffffff" : "#F2F2F2",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "12px",
+                          fontWeight: "700",
+                          color: "#0A0A0A",
+                        }}
+                      >
+                        {m.name}
+                      </td>
+                      <td style={{ padding: "12px" }}>
+                        {m.rollNumber} / {m.regNumber}
+                      </td>
+                      <td style={{ padding: "12px" }}>{m.department}</td>
+                      <td style={{ padding: "12px" }}>{m.interestedDomain}</td>
+                      <td style={{ padding: "12px" }}>{m.gmail}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -736,66 +1271,187 @@ export default function AdminPortalPage() {
         )}
 
         {/* TAB 5: RECORDINGS MANAGER */}
-        {activeTab === 'recordings' && (
+        {activeTab === "recordings" && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', margin: 0, color: '#0A0A0A' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+                flexWrap: "wrap",
+                gap: "12px",
+              }}
+            >
+              <h3
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "20px",
+                  fontWeight: "900",
+                  margin: 0,
+                  color: "#0A0A0A",
+                }}
+              >
                 RECORDED MASTERCLASSES MANAGEMENT
               </h3>
               <button
                 type="button"
                 onClick={() => setShowRecForm(true)}
                 className="admin-btn admin-btn-inspect"
-                style={{ padding: '10px 18px' }}
+                style={{ padding: "10px 18px" }}
               >
                 + ADD RECORDING
               </button>
             </div>
 
             {showRecForm && (
-              <form onSubmit={handleSaveRec} className="form-grid" style={{ background: '#ffffff', padding: '24px', borderRadius: '12px', border: '1.5px solid #0A0A0A', marginBottom: '24px' }}>
+              <form
+                onSubmit={handleSaveRec}
+                className="form-grid"
+                style={{
+                  background: "#ffffff",
+                  padding: "24px",
+                  borderRadius: "12px",
+                  border: "1.5px solid #0A0A0A",
+                  marginBottom: "24px",
+                }}
+              >
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Masterclass Title</label>
-                  <input type="text" value={recForm.title} onChange={(e) => setRecForm({ ...recForm, title: e.target.value })} required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Masterclass Title
+                  </label>
+                  <input
+                    type="text"
+                    value={recForm.title}
+                    onChange={(e) =>
+                      setRecForm({ ...recForm, title: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Speaker / Instructor</label>
-                  <input type="text" value={recForm.speaker} onChange={(e) => setRecForm({ ...recForm, speaker: e.target.value })} required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Speaker / Instructor
+                  </label>
+                  <input
+                    type="text"
+                    value={recForm.speaker}
+                    onChange={(e) =>
+                      setRecForm({ ...recForm, speaker: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Date & Duration</label>
-                  <input type="text" value={recForm.date} onChange={(e) => setRecForm({ ...recForm, date: e.target.value })} placeholder="Feb 10, 2026 • 54m" required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Date & Duration
+                  </label>
+                  <input
+                    type="text"
+                    value={recForm.date}
+                    onChange={(e) =>
+                      setRecForm({ ...recForm, date: e.target.value })
+                    }
+                    placeholder="Feb 10, 2026 • 54m"
+                    required
+                  />
                 </div>
                 <div className="form-group form-group-full">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Description</label>
-                  <textarea rows={3} value={recForm.description} onChange={(e) => setRecForm({ ...recForm, description: e.target.value })} required />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={recForm.description}
+                    onChange={(e) =>
+                      setRecForm({ ...recForm, description: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Upload Video File</label>
-                  <input type="file" accept="video/*" onChange={handleRecFileChange} />
-                  {recForm.fileName && <span style={{ fontSize: '12px', color: '#0A0A0A', marginTop: '4px', display: 'block' }}>Attached: {recForm.fileName}</span>}
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Upload Video File
+                  </label>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleRecFileChange}
+                  />
+                  {recForm.fileName && (
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        color: "#0A0A0A",
+                        marginTop: "4px",
+                        display: "block",
+                      }}
+                    >
+                      Attached: {recForm.fileName}
+                    </span>
+                  )}
                 </div>
                 <div className="form-group">
-                  <label style={{ fontWeight: '700', color: '#0A0A0A' }}>Or External Video Link (YouTube / Drive — optional if a file is attached)</label>
-                  <input type="url" value={recForm.videoUrl} onChange={(e) => setRecForm({ ...recForm, videoUrl: e.target.value })} placeholder="https://youtube.com/..." />
+                  <label style={{ fontWeight: "700", color: "#0A0A0A" }}>
+                    Or External Video Link (YouTube / Drive — optional if a file
+                    is attached)
+                  </label>
+                  <input
+                    type="url"
+                    value={recForm.videoUrl}
+                    onChange={(e) =>
+                      setRecForm({ ...recForm, videoUrl: e.target.value })
+                    }
+                    placeholder="https://youtube.com/..."
+                  />
                 </div>
-                <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '8px' }}>
-                  <button type="submit" className="admin-btn admin-btn-inspect" disabled={uploadingRec}>
-                    {uploadingRec ? 'UPLOADING…' : 'SUBMIT FOR SUPER ADMIN APPROVAL'}
+                <div
+                  style={{ gridColumn: "1 / -1", display: "flex", gap: "8px" }}
+                >
+                  <button
+                    type="submit"
+                    className="admin-btn admin-btn-inspect"
+                    disabled={uploadingRec}
+                  >
+                    {uploadingRec
+                      ? "UPLOADING…"
+                      : "SUBMIT FOR SUPER ADMIN APPROVAL"}
                   </button>
-                  <button type="button" onClick={() => setShowRecForm(false)} className="admin-btn admin-btn-edit">CANCEL</button>
+                  <button
+                    type="button"
+                    onClick={() => setShowRecForm(false)}
+                    className="admin-btn admin-btn-edit"
+                  >
+                    CANCEL
+                  </button>
                 </div>
               </form>
             )}
 
             <div className="admin-card-container">
-              {recordings.map(rec => (
+              {recordings.map((rec) => (
                 <div key={rec.id} className="admin-event-card">
                   <div className="admin-card-top-content">
-                    <span className={`status-pill ${rec.status || 'approved'}`}>{STATUS_LABEL[rec.status || 'approved']}</span>
-                    <span className="admin-badge-type" style={{ display: 'block', marginTop: '8px' }}>{rec.type}</span>
+                    <span className={`status-pill ${rec.status || "approved"}`}>
+                      {STATUS_LABEL[rec.status || "approved"]}
+                    </span>
+                    <span
+                      className="admin-badge-type"
+                      style={{ display: "block", marginTop: "8px" }}
+                    >
+                      {rec.type}
+                    </span>
                     <h3 className="admin-event-title">{rec.title}</h3>
-                    <p style={{ color: '#0A0A0A', fontWeight: '700', fontSize: '13px', margin: '4px 0' }}>🎙 {rec.speaker}</p>
+                    <p
+                      style={{
+                        color: "#0A0A0A",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        margin: "4px 0",
+                      }}
+                    >
+                      🎙 {rec.speaker}
+                    </p>
                     <p className="admin-event-desc">{rec.description}</p>
                   </div>
                   <div className="admin-card-bottom-section">
@@ -804,10 +1460,12 @@ export default function AdminPortalPage() {
                       <span>⏱ {rec.duration}</span>
                     </div>
                     <div className="admin-card-btn-grid">
-                      {rec.status === 'rejected' && (
+                      {rec.status === "rejected" && (
                         <button
                           type="button"
-                          onClick={() => resubmitRecording(rec.id).catch(notifyError)}
+                          onClick={() =>
+                            resubmitRecording(rec.id).catch(notifyError)
+                          }
                           className="admin-btn admin-btn-edit"
                         >
                           RESUBMIT
@@ -815,7 +1473,10 @@ export default function AdminPortalPage() {
                       )}
                       <button
                         type="button"
-                        onClick={() => { if (confirm('Delete this recording?')) deleteRecording(rec.id).catch(notifyError); }}
+                        onClick={() => {
+                          if (confirm("Delete this recording?"))
+                            deleteRecording(rec.id).catch(notifyError);
+                        }}
                         className="admin-btn admin-btn-delete"
                       >
                         DELETE RECORDING

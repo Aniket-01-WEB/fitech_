@@ -56,25 +56,25 @@ A different problem from the one above, on a completely different timescale: Ren
 
 All routes expect `Authorization: Bearer <supabase access token>` except the public `GET` reads.
 
-| Route | Method | Who |
-|---|---|---|
-| `/api/profile` | GET / PATCH | self |
-| `/api/events` | GET (public sees approved only; staff sees all) / POST (admin/superadmin) | |
-| `/api/events/:id` | PATCH / DELETE | admin/superadmin |
-| `/api/events/:id/approve`, `/reject` | POST | superadmin |
-| `/api/events/:id/resubmit` | POST | the event's creator, or superadmin |
-| `/api/registrations` | GET (own, or `?event_id=` for staff) / POST (join) | self / staff |
-| `/api/registrations/:eventId` | DELETE (leave) | self |
-| `/api/recordings`, `/api/notes` | GET (student sees approved only, staff sees all) / POST (admin/superadmin, starts `pending`) | |
-| `/api/recordings/:id` | PATCH / DELETE | admin/superadmin |
-| `/api/notes/:id` | DELETE | admin/superadmin |
-| `/api/recordings/upload-url`, `/api/notes/upload-url` | POST — mints a presigned R2 PUT URL | admin/superadmin |
-| `/api/recordings/:id/approve`, `/reject` · `/api/notes/:id/approve`, `/reject` | POST | superadmin |
-| `/api/recordings/:id/resubmit` · `/api/notes/:id/resubmit` | POST | the uploader, or superadmin |
-| `/api/activity` | GET / PATCH (increment) | self |
-| `/api/members` | GET (full directory) | admin/superadmin (RLS narrows a student's call to just their own row) |
-| `/api/admin-requests` | GET (own, or all for staff) / POST (apply) | self |
-| `/api/admin-requests/:id/approve`, `/reject` | POST — approval grants `role = 'admin'` | superadmin |
-| `/api/admin-requests/:id/resubmit` | POST | the applicant, or superadmin |
+| Route                                                                          | Method                                                                                       | Who                                                                   |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `/api/profile`                                                                 | GET / PATCH                                                                                  | self                                                                  |
+| `/api/events`                                                                  | GET (public sees approved only; staff sees all) / POST (admin/superadmin)                    |                                                                       |
+| `/api/events/:id`                                                              | PATCH / DELETE                                                                               | admin/superadmin                                                      |
+| `/api/events/:id/approve`, `/reject`                                           | POST                                                                                         | superadmin                                                            |
+| `/api/events/:id/resubmit`                                                     | POST                                                                                         | the event's creator, or superadmin                                    |
+| `/api/registrations`                                                           | GET (own, or `?event_id=` for staff) / POST (join)                                           | self / staff                                                          |
+| `/api/registrations/:eventId`                                                  | DELETE (leave)                                                                               | self                                                                  |
+| `/api/recordings`, `/api/notes`                                                | GET (student sees approved only, staff sees all) / POST (admin/superadmin, starts `pending`) |                                                                       |
+| `/api/recordings/:id`                                                          | PATCH / DELETE                                                                               | admin/superadmin                                                      |
+| `/api/notes/:id`                                                               | DELETE                                                                                       | admin/superadmin                                                      |
+| `/api/recordings/upload-url`, `/api/notes/upload-url`                          | POST — mints a presigned R2 PUT URL                                                          | admin/superadmin                                                      |
+| `/api/recordings/:id/approve`, `/reject` · `/api/notes/:id/approve`, `/reject` | POST                                                                                         | superadmin                                                            |
+| `/api/recordings/:id/resubmit` · `/api/notes/:id/resubmit`                     | POST                                                                                         | the uploader, or superadmin                                           |
+| `/api/activity`                                                                | GET / PATCH (increment)                                                                      | self                                                                  |
+| `/api/members`                                                                 | GET (full directory)                                                                         | admin/superadmin (RLS narrows a student's call to just their own row) |
+| `/api/admin-requests`                                                          | GET (own, or all for staff) / POST (apply)                                                   | self                                                                  |
+| `/api/admin-requests/:id/approve`, `/reject`                                   | POST — approval grants `role = 'admin'`                                                      | superadmin                                                            |
+| `/api/admin-requests/:id/resubmit`                                             | POST                                                                                         | the applicant, or superadmin                                          |
 
 See the [root README](../README.md) for the full data model and the security model.
