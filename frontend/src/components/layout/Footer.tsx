@@ -38,13 +38,13 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <Image
                 src="/images/logo.png"
-                alt="FITECH Logo"
+                alt="Fincoders Logo"
                 width={36}
                 height={36}
                 className="w-9 h-9 object-contain"
               />
               <span className="font-serif text-3xl font-normal text-[#0A0A0A] tracking-tight">
-                FITECH
+                Fincoders
               </span>
             </div>
 
@@ -214,7 +214,7 @@ export default function Footer() {
       <div className="border-t border-[#DADADA] bg-[#FFFFFF] py-6">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#6B6B6B]">
           <div>
-            © 2026 FITECH SOCIETY • ADAMAS UNIVERSITY CHAPTER. ALL RIGHTS
+            © 2026 FINCODERS SOCIETY • ADAMAS UNIVERSITY CHAPTER. ALL RIGHTS
             RESERVED.
           </div>
           <div className="flex items-center gap-4">
