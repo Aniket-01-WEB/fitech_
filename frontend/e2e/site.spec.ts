@@ -87,19 +87,24 @@ test.describe("auth", () => {
     }
   });
 
-  test("demo student can sign in and reach the student portal", async ({
+  // Credentials come from the environment so none are committed: set
+  // E2E_STUDENT_EMAIL and E2E_STUDENT_PASSWORD to a real student account
+  // to run this against a live backend + Supabase.
+  test("a student can sign in and reach the student portal", async ({
     page,
   }) => {
+    const email = process.env.E2E_STUDENT_EMAIL;
+    const password = process.env.E2E_STUDENT_PASSWORD;
     test.skip(
-      process.env.E2E_DEMO_LOGIN !== "true",
-      "needs a reachable backend + Supabase; set E2E_DEMO_LOGIN=true",
+      !email || !password,
+      "set E2E_STUDENT_EMAIL and E2E_STUDENT_PASSWORD to run the sign-in test",
     );
     await open(page, "/login");
-    await page.getByLabel(/email/i).first().fill("student@matrix.club");
+    await page.getByLabel(/email/i).first().fill(email!);
     await page
       .getByLabel(/password/i)
       .first()
-      .fill("MatrixDemo-2026!");
+      .fill(password!);
     await page.getByRole("button", { name: /sign in/i }).click();
     await page.waitForURL(/\/student-portal/, { timeout: 30_000 });
     await expect(page.getByText(/student member dashboard/i)).toBeVisible();

@@ -34,9 +34,9 @@ None found.
 - **Location:** `frontend/src/app/login/page.tsx` (`DEMO_PASSWORD`), Supabase Auth users `student@`, `admin@`, `superadmin@matrix.club`
 - **Problem:** The Quick Demo buttons sign in with a password that is in the page source. A `superadmin@matrix.club` demo account now exists (created during development so the button works), so anyone reading the source can approve/reject events, notes, recordings and admin requests on the live site.
 - **Impact:** Full administrative control of production content by any visitor.
-- **Fix:** The demo strip is now rendered only when `NEXT_PUBLIC_ENABLE_DEMO_LOGIN=true` or in a development build (`NODE_ENV !== 'production'`). Deleting/re-passwording the demo accounts is a dashboard action.
-- **Status:** Partially fixed — UI gated; accounts still exist.
-- **Verification:** Playwright login test signs in through the form (not the button) and reaches the portal; the gate is a build-time constant, checked by type-check + production build. **Action required before launch:** delete or re-password the three demo users in Supabase Auth (Authentication → Users), or accept them consciously for a showcase site.
+- **Fix:** Resolved in two steps. The UI was first gated behind `NEXT_PUBLIC_ENABLE_DEMO_LOGIN`; the quick-demo strip, its `handleQuickDemo` handler, the shared `DEMO_PASSWORD` constant and the `@matrix.club` placeholders were then deleted outright, so no credential ships in the bundle and no gate flag is needed. All three demo users were deleted from Supabase Auth.
+- **Status:** Fixed.
+- **Verification:** `grep` finds no `matrix.club`, `DEMO_PASSWORD` or `NEXT_PUBLIC_ENABLE_DEMO_LOGIN` reference in `frontend/src`; `auth.users` holds only the owner's three real accounts, each confirmed by a live sign-in that lands on the portal matching its `profiles.role`.
 
 ---
 

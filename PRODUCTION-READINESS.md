@@ -22,7 +22,7 @@ None.
 
 **No automated tests** — the frontend had none; the backend suite (Vitest) existed only as uncommitted work.
 
-- Fix: Backend — 64 unit tests over validation schemas, error mapping, R2 key generation/ownership and config (`backend/src/__tests__/`). Frontend — Playwright E2E, desktop and mobile projects (`frontend/e2e/site.spec.ts`): every public route renders with no runtime errors and no horizontal overflow, security headers present, FAQ toggle behaviour, 404 page, signed-out redirects on all four dashboards, and (opt-in, `E2E_DEMO_LOGIN=true`) a real login round-trip to the student portal.
+- Fix: Backend — 65 unit tests over validation schemas, error mapping, R2 key generation/ownership and config (`backend/src/__tests__/`). Frontend — Playwright E2E, desktop and mobile projects (`frontend/e2e/site.spec.ts`): every public route renders with no runtime errors and no horizontal overflow, security headers present, FAQ toggle behaviour, 404 page, signed-out redirects on all four dashboards, and (opt-in, via `E2E_STUDENT_EMAIL`/`E2E_STUDENT_PASSWORD`) a real login round-trip to the student portal.
 - Status: Fixed. Verification: `npm test -w backend` 64/64; `npm run test:e2e -w frontend` 24/24 including the login test against the running backend.
 
 **Backend type error** — `registrations.ts` passed `string | string[]` where a string was required (surfaced by the newly typed `Request`).
@@ -102,8 +102,8 @@ None.
 
 ## Remaining actions for the owner
 
-1. Delete or re-password `student@`, `admin@`, `superadmin@matrix.club` in Supabase Auth (or knowingly keep them for a showcase).
-2. Enable leaked-password protection in Supabase Auth (dashboard).
-3. Set `NEXT_PUBLIC_ENABLE_DEMO_LOGIN=true` on Vercel only if the demo buttons should stay on the live site.
-4. Optionally schedule the `is_staff` → private-schema migration (SECURITY-AUDIT.md M3).
-5. Add an uptime monitor / log drain for the Render backend.
+1. Enable leaked-password protection in Supabase Auth (dashboard).
+2. Optionally schedule the `is_staff` → private-schema migration (SECURITY-AUDIT.md M3).
+3. Add an uptime monitor / log drain for the Render backend.
+
+Done since this report was written: the shared-password demo accounts were deleted from Supabase Auth and the quick-demo login UI was removed, closing SECURITY-AUDIT.md H2 (the `NEXT_PUBLIC_ENABLE_DEMO_LOGIN` flag no longer exists).

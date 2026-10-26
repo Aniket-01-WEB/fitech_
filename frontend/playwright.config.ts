@@ -1,7 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Runs against a production build of the frontend. Tests that need the
-// backend/Supabase (demo login) skip themselves unless E2E_DEMO_LOGIN=true.
+// Runs against a production build of the frontend. The sign-in test needs
+// a live backend + Supabase and skips itself unless E2E_STUDENT_EMAIL and
+// E2E_STUDENT_PASSWORD are set.
 export default defineConfig({
   testDir: "./e2e",
   timeout: 60_000,

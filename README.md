@@ -26,15 +26,14 @@ This is an npm workspace; run everything from the repository root.
 
 1. Create a `.env` file at the repository root with the variables below. **One `.env` at the root serves both apps** — the backend and the frontend both read it (`backend/src/loadEnv.ts`, `frontend/next.config.mjs`). Never commit it.
 
-   | Variable                                                                 | Used by  | Purpose                                                                                                                                          |
-   | ------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-   | `SUPABASE_URL`, `SUPABASE_ANON_KEY`                                      | backend  | Supabase project URL + anon (publishable) key. No service-role key is used anywhere.                                                             |
-   | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`              | frontend | Same two values, exposed to the browser for Supabase Auth.                                                                                       |
-   | `PORT`                                                                   | backend  | API port (default 4000). Only the backend reads it — the root dev script strips it before starting Next.                                         |
-   | `FRONTEND_ORIGIN`                                                        | backend  | Comma-separated CORS allowlist, e.g. `http://localhost:3000,https://fitech-eta.vercel.app`.                                                      |
-   | `NEXT_PUBLIC_API_URL`                                                    | frontend | Base URL of the backend — the live API is `https://fitech-02.onrender.com`; use `http://localhost:4000` to talk to a local backend.              |
-   | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | backend  | Cloudflare R2 credentials scoped to the one bucket.                                                                                              |
-   | `NEXT_PUBLIC_ENABLE_DEMO_LOGIN`                                          | frontend | Set to `true` to show the one-click demo login buttons. They are always shown in development and hidden in production builds unless this is set. |
+   | Variable                                                                 | Used by  | Purpose                                                                                                                             |
+   | ------------------------------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+   | `SUPABASE_URL`, `SUPABASE_ANON_KEY`                                      | backend  | Supabase project URL + anon (publishable) key. No service-role key is used anywhere.                                                |
+   | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`              | frontend | Same two values, exposed to the browser for Supabase Auth.                                                                          |
+   | `PORT`                                                                   | backend  | API port (default 4000). Only the backend reads it — the root dev script strips it before starting Next.                            |
+   | `FRONTEND_ORIGIN`                                                        | backend  | Comma-separated CORS allowlist, e.g. `http://localhost:3000,https://fitech-eta.vercel.app`.                                         |
+   | `NEXT_PUBLIC_API_URL`                                                    | frontend | Base URL of the backend — the live API is `https://fitech-02.onrender.com`; use `http://localhost:4000` to talk to a local backend. |
+   | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | backend  | Cloudflare R2 credentials scoped to the one bucket.                                                                                 |
 
 2. Install everything: `npm install`
 3. Start both apps: `npm run dev` — frontend on http://localhost:3000, backend on http://localhost:4000.
@@ -50,7 +49,7 @@ npm run build -w frontend        # production build
 npm run test:e2e -w frontend     # Playwright: builds + serves the frontend, runs desktop and mobile
 ```
 
-The E2E suite covers every public route (renders, no runtime errors, no horizontal overflow), the security headers, the FAQ, the 404 page and the signed-out redirects on all portals without needing a backend. The demo-login test additionally needs a running backend and the demo accounts; enable it with `E2E_DEMO_LOGIN=true`. `.github/workflows/ci.yml` runs all of the above on every push and pull request.
+The E2E suite covers every public route (renders, no runtime errors, no horizontal overflow), the security headers, the FAQ, the 404 page and the signed-out redirects on all portals without needing a backend. The sign-in test additionally needs a running backend and a real student account; enable it by setting `E2E_STUDENT_EMAIL` and `E2E_STUDENT_PASSWORD`. `.github/workflows/ci.yml` runs all of the above on every push and pull request.
 
 ## Production build
 
@@ -73,7 +72,7 @@ Render's free tier spins the backend down after 15 minutes of inactivity, and th
 
 Admin accounts aren't self-registered from the login page's Admin Console tab. Instead: anyone signs up as a student first, then applies for admin access from their Student Portal → My Profile tab. That creates a row in `admin_requests` a Super Admin reviews from the Super Admin dashboard's "Admin Requests" tab — approving it actually grants `role = 'admin'` on the applicant's profile (enforced by a trigger, not just app code); rejecting it lets the applicant resubmit later.
 
-Demo accounts (`student@matrix.club`, `admin@matrix.club`, `superadmin@matrix.club`, all with password `MatrixDemo-2026!`) are real, confirmed Supabase Auth users with their roles granted via SQL — the login page's Quick Demo buttons sign in through the same real flow. Because that password is public, the buttons are hidden in production builds unless `NEXT_PUBLIC_ENABLE_DEMO_LOGIN=true`; for a real launch, delete or re-password the demo accounts (see `SECURITY-AUDIT.md`). Grant `superadmin` to any other account via the SQL in "Security model" below.
+There are no demo accounts and no quick-demo buttons: the shared-password accounts and the login page's demo strip were both removed, so no credential ships in the client bundle (see `SECURITY-AUDIT.md`, H2). Sign in with a real account — create one through the Join form, then grant `admin` via the admin-request flow above, or `superadmin` via the SQL in "Security model" below.
 
 See each app's own README ([frontend](frontend/README.md), [backend](backend/README.md)) for app-specific details.
 
