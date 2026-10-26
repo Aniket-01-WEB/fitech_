@@ -26,14 +26,15 @@ This is an npm workspace; run everything from the repository root.
 
 1. Create a `.env` file at the repository root with the variables below. **One `.env` at the root serves both apps** — the backend and the frontend both read it (`backend/src/loadEnv.ts`, `frontend/next.config.mjs`). Never commit it.
 
-   | Variable                                                                 | Used by  | Purpose                                                                                                                             |
-   | ------------------------------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-   | `SUPABASE_URL`, `SUPABASE_ANON_KEY`                                      | backend  | Supabase project URL + anon (publishable) key. No service-role key is used anywhere.                                                |
-   | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`              | frontend | Same two values, exposed to the browser for Supabase Auth.                                                                          |
-   | `PORT`                                                                   | backend  | API port (default 4000). Only the backend reads it — the root dev script strips it before starting Next.                            |
-   | `FRONTEND_ORIGIN`                                                        | backend  | Comma-separated CORS allowlist, e.g. `http://localhost:3000,https://fitech-eta.vercel.app`.                                         |
-   | `NEXT_PUBLIC_API_URL`                                                    | frontend | Base URL of the backend — the live API is `https://fitech-02.onrender.com`; use `http://localhost:4000` to talk to a local backend. |
-   | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | backend  | Cloudflare R2 credentials scoped to the one bucket.                                                                                 |
+   | Variable                                                                 | Used by  | Purpose                                                                                                                                                                                  |
+   | ------------------------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `SUPABASE_URL`, `SUPABASE_ANON_KEY`                                      | backend  | Supabase project URL + anon (publishable) key. No service-role key is used anywhere.                                                                                                     |
+   | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`              | frontend | Same two values, exposed to the browser for Supabase Auth.                                                                                                                               |
+   | `PORT`                                                                   | backend  | API port (default 4000). Only the backend reads it — the root dev script strips it before starting Next.                                                                                 |
+   | `FRONTEND_ORIGIN`                                                        | backend  | Comma-separated CORS allowlist, e.g. `http://localhost:3000,https://fitech-eta.vercel.app`.                                                                                              |
+   | `NEXT_PUBLIC_API_URL`                                                    | frontend | Base URL of the backend — the live API is `https://fitech-02.onrender.com`; use `http://localhost:4000` to talk to a local backend.                                                      |
+   | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | backend  | Cloudflare R2 credentials scoped to the one bucket.                                                                                                                                      |
+   | `NEXT_PUBLIC_SITE_URL`                                                   | frontend | Optional. Canonical origin used for canonical URLs, `sitemap.xml`, `robots.txt` and social-card image URLs. Defaults to the live Vercel origin; set it when a custom domain is in place. |
 
 2. Install everything: `npm install`
 3. Start both apps: `npm run dev` — frontend on http://localhost:3000, backend on http://localhost:4000.

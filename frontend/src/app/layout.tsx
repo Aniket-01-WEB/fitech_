@@ -1,4 +1,10 @@
 import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import {
+  SITE_DESCRIPTION as SUMMARY,
+  SITE_TAGLINE as TAGLINE,
+  SITE_URL,
+} from "@/lib/site";
 import {
   Instrument_Serif,
   Plus_Jakarta_Sans,
@@ -36,27 +42,64 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata = {
-  title: "FITECH | Quantitative Finance & Financial Engineering Society",
-  description:
-    "Adamas University FinTech & Quantitative Engineering Society. Engineering the future of algorithmic trading, decentralized protocols, risk engines, and AI in finance.",
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `Fincoders | ${TAGLINE}`,
+    // Child routes set just their own name, e.g. "Events | Fincoders".
+    template: "%s | Fincoders",
+  },
+  description: SUMMARY,
+  applicationName: "Fincoders",
+  category: "education",
   keywords: [
-    "FITECH",
+    "Fincoders",
     "FinTech",
     "Quantitative Finance",
-    "Algo Trading",
-    "DeFi",
+    "Algorithmic Trading",
     "Financial Engineering",
+    "Risk Modelling",
+    "DeFi",
+    "Decentralized Protocols",
+    "Student Research Society",
     "Adamas University",
+    "SOET",
+    "Kolkata",
   ],
+  authors: [{ name: "Fincoders", url: SITE_URL }],
+  creator: "Fincoders",
+  publisher: "Fincoders",
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "FITECH FinTech Society",
-    description:
-      "Engineering the Future of Financial Technology & Quantitative Systems.",
-    url: "https://fitech.club",
-    siteName: "FITECH FinTech Society",
     type: "website",
+    siteName: "Fincoders",
+    title: `Fincoders | ${TAGLINE}`,
+    description: SUMMARY,
+    url: SITE_URL,
+    locale: "en_IN",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `Fincoders | ${TAGLINE}`,
+    description: SUMMARY,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  referrer: "strict-origin-when-cross-origin",
+  formatDetection: { telephone: false, email: false, address: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A0A",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
