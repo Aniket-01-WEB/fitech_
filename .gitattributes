@@ -1,0 +1,35 @@
+# Normalise line endings so the repo is identical on Windows, macOS and
+# Linux. Without this, a Windows checkout (core.autocrlf=true) rewrites
+# every file to CRLF, which makes Prettier report the whole codebase as
+# unformatted and turns routine edits into whole-file diffs.
+* text=auto eol=lf
+
+# Files that must keep CRLF to run on Windows.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets — never touch their bytes.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.svgz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.mp4 binary
+*.webm binary
+*.mp3 binary
+*.pdf binary
+*.node binary
+*.zip binary
+*.gz binary
+
+# Generated files: collapse them in diffs and exclude from language stats.
+package-lock.json -diff linguist-generated
+frontend/public/intro/bill-dots.json -diff linguist-generated
